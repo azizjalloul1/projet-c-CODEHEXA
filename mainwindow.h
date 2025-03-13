@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "fournisseur.h"
 #include <QSqlQueryModel>
 
 QT_BEGIN_NAMESPACE
@@ -22,7 +21,12 @@ private slots:
     void on_btnModifier_clicked();  // Modifier un fournisseur
     void afficherFournisseurs();    // Afficher les fournisseurs
     void onRechercherClicked();     // Rechercher un fournisseur par nom
-    void onExporterPDFClicked();    // Exporter la liste en PDF
+
+    void chargerListeIDs();
+     void remplirChampsFournisseur();
+      void trierParCommande();
+     void exporterEnPDF();
+
 
 private:
     Ui::MainWindow *ui;

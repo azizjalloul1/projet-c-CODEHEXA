@@ -10,9 +10,9 @@ Connexion::Connexion()
 
 bool Connexion::ouvrirConnexion()
 {
-    db.setDatabaseName("PROJET"); // Remplacez par le nom de votre base de données
-    db.setUserName("louka");      // Remplacez par votre nom d'utilisateur Oracle
-    db.setPassword("louka");      // Remplacez par votre mot de passe Oracle
+    db.setDatabaseName("PROJET");
+    db.setUserName("louka");
+    db.setPassword("louka");
 
     if (!db.open()) {
         qDebug() << "Erreur de connexion à la base de données :" << db.lastError().text();

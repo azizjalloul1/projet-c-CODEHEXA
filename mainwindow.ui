@@ -84,6 +84,16 @@
          background: #2196F3;
          color: white;
        }
+       QTableView {
+           border: 1px solid #5c6bc0;
+           gridline-color: #5c6bc0;
+           background-color: #ffffff;
+           color: black;
+           selection-background-color: #1976D2;
+           selection-color: black; /* Texte en blanc quand sélectionné */
+       }
+
+
 
        QComboBox {
          background-color: #f1f1f1;
@@ -105,7 +115,7 @@
 
        QTableWidget::item:selected {
          background-color: #1976D2;
-         color: white;
+         color: black;
        }
      </string>
    </property>
@@ -122,7 +132,7 @@
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tabAjout_2">
      <attribute name="title">
@@ -328,7 +338,7 @@ color: rgb(31, 141, 234);</string>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="triButton_2">
+         <widget class="QPushButton" name="triButton">
           <property name="text">
            <string>TRIER PAR COMMANDE</string>
           </property>
@@ -409,12 +419,18 @@ font-family: &quot;Arial Rounded MT&quot;</string>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_IdModif">
+        <widget class="QComboBox" name="comboBox_IdModif">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
            <height>50</height>
           </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(31, 143, 236);</string>
+         </property>
+         <property name="currentIndex">
+          <number>-1</number>
          </property>
         </widget>
        </item>
@@ -493,6 +509,9 @@ font-family: &quot;Arial Rounded MT&quot;</string>
            <width>16777215</width>
            <height>50</height>
           </size>
+         </property>
+         <property name="toolTipDuration">
+          <number>1</number>
          </property>
          <property name="styleSheet">
           <string notr="true">

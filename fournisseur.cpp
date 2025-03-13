@@ -1,7 +1,8 @@
 #include "fournisseur.h"
 #include <QSqlQuery>
-#include <QVariant>
+#include <QVariant> // Manipuler les valeurs SQL
 #include <QDebug>
+#include <QSqlError>
 
 // Constructeur
 Fournisseur::Fournisseur(const QString& id_fournisseur, const QString& nom, const QString& num_tel, const QString& type_service)
@@ -20,23 +21,26 @@ void Fournisseur::setNumTel(const QString& num_tel) { this->num_tel = num_tel; }
 void Fournisseur::setTypeService(const QString& type_service) { this->type_service = type_service; }
 
 // Ajouter un fournisseur
+
+
 bool Fournisseur::ajouterFournisseur() {
     QSqlQuery query;
     query.prepare("INSERT INTO FOURNISSEUR (ID_FOURNISSEUR, NOM, NUM_TEL, TYPE_SERVICE) "
-                  "VALUES (:id_fournisseur, :nom, :num_tel, :type_service)");
+                  "VALUES (:id, :nom, :num_tel, :type_service)");
 
-    query.bindValue(":id_fournisseur", id_fournisseur.toInt());
-    query.bindValue(":nom", nom);
-    query.bindValue(":num_tel", num_tel);
-    query.bindValue(":type_service", type_service);
+    query.bindValue(":id", this->id_fournisseur);
+    query.bindValue(":nom", this->nom);
+    query.bindValue(":num_tel", this->num_tel);
+    query.bindValue(":type_service", this->type_service);
 
-    if (query.exec()) {
-        return true;
-    } else {
-        qDebug() << "Erreur SQL lors de l'ajout:" << query.lastError().text();
+    if (!query.exec()) {
+        qDebug() << "Erreur SQL lors de l'ajout :" << query.lastError().text();
         return false;
     }
+
+    return true;
 }
+
 
 // Supprimer un fournisseur
 bool Fournisseur::supprimerFournisseur(const QString& id_fournisseur) {

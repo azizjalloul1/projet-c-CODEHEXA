@@ -8,14 +8,14 @@
 
 class Connexion {
 public:
-    Connexion();
+    Connexion(); // Constructeur
     bool ouvrirConnexion();
     void fermerConnexion();
 
-    QSqlDatabase getDatabase() const; // Ajout du getter pour db
+    QSqlDatabase getDatabase() const;
 
 private:
-    QSqlDatabase db;
+    QSqlDatabase db;  // Objet
 };
 
 #endif // CONNEXION_H
