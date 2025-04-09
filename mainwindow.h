@@ -21,11 +21,14 @@ private slots:
     void on_btnModifier_clicked();  // Modifier un fournisseur
     void afficherFournisseurs();    // Afficher les fournisseurs
     void onRechercherClicked();     // Rechercher un fournisseur par nom
+    void afficherStatistiques();
 
     void chargerListeIDs();
      void remplirChampsFournisseur();
       void trierParCommande();
      void exporterEnPDF();
+      void genererIDFournisseur();
+
 
 
 private:

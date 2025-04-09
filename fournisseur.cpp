@@ -79,7 +79,7 @@ bool Fournisseur::modifierFournisseur() {
     return true;
 }
 
-// Vérifier si un ID existe déjà
+
 bool Fournisseur::idExisteDeja(const QString& id_fournisseur) {
     QSqlQuery query;
     query.prepare("SELECT COUNT(*) FROM FOURNISSEUR WHERE ID_FOURNISSEUR = :id_fournisseur");
@@ -92,18 +92,18 @@ bool Fournisseur::idExisteDeja(const QString& id_fournisseur) {
     return false;
 }
 
-// Afficher la liste des fournisseurs
+
 QList<Fournisseur> Fournisseur::afficherFournisseurs() {
     QList<Fournisseur> fournisseurs;
     QSqlQuery query;
 
-    // 🔥TEST : Vérifie si la requête s'exécute correctement
+
     if (!query.exec("SELECT ID_FOURNISSEUR, NOM, NUM_TEL, TYPE_SERVICE FROM FOURNISSEUR")) {
         qDebug() << " Erreur SQL :" << query.lastError().text();
         return fournisseurs; // Retourne une liste vide en cas d'erreur
     }
 
-    // TEST : Affiche chaque ligne trouvée dans la console
+
     int rowCount = 0;
     while (query.next()) {
         QString id = query.value(0).toString();
@@ -121,7 +121,7 @@ QList<Fournisseur> Fournisseur::afficherFournisseurs() {
         rowCount++;
     }
 
-    //  TEST : Vérifie si au moins une ligne est trouvée
+
     if (rowCount == 0) {
         qDebug() << "Aucun fournisseur trouvé dans la base de données !";
     } else {

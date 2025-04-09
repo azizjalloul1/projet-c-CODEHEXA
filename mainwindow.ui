@@ -186,6 +186,9 @@ font-family: &quot;Arial Rounded MT&quot;</string>
             <height>50</height>
            </size>
           </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -252,7 +255,7 @@ font-family: &quot;Arial Rounded MT&quot;</string>
            <string notr="true">color: rgb(31, 143, 236);</string>
           </property>
           <property name="text">
-           <string>Type de service</string>
+           <string>type de service</string>
           </property>
          </widget>
         </item>
@@ -323,6 +326,13 @@ color: rgb(31, 141, 234);</string>
      <layout class="QVBoxLayout" name="verticalLayout_6">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QPushButton" name="btnStatistiques">
+          <property name="text">
+           <string>statistique</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QLineEdit" name="btnRechercher">
           <property name="placeholderText">
@@ -498,7 +508,7 @@ font-family: &quot;Arial Rounded MT&quot;</string>
           <string notr="true">color: rgb(31, 143, 236);</string>
          </property>
          <property name="text">
-          <string>Type de service</string>
+          <string>type de service</string>
          </property>
         </widget>
        </item>
@@ -539,12 +549,12 @@ color: rgb(31, 143, 236);</string>
          </item>
          <item>
           <property name="text">
-           <string> maintenance et réparation</string>
+           <string>sécurité</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>sécurité</string>
+           <string> maintenance et réparation</string>
           </property>
          </item>
          <item>
