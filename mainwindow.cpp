@@ -16,13 +16,15 @@
 #include <QImage>
 #include "sms.h"
 #include <QtCharts>
+#include <QRegularExpressionValidator>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui->lineEdit_Id->setReadOnly(true);
-
+    QRegularExpression rx("^\\d{0,8}$");
+    ui->lineEdit_NumTel->setValidator(new QRegularExpressionValidator(rx, this));
     Connexion c;
     if (!c.ouvrirConnexion()) {
         QMessageBox::critical(this, "Erreur", "Connexion à la base de données échouée !");
@@ -69,28 +71,36 @@ void MainWindow::on_btnAjouter_clicked() {
     QString nom = ui->lineEdit_Nom->text().trimmed();
     QString num_tel = ui->lineEdit_NumTel->text().trimmed();
     QString type_service = ui->comboBox_TypeService_2->currentText().trimmed();
+    const QString TWILIO_ACCOUNT_SID = "AC1e7459302a1e433b4038abaf76edf9d2";
+    const QString TWILIO_AUTH_TOKEN = "9c77cae2b4092b860ab82e54cca0c8e5";
+    const QString TWILIO_PHONE = "+13156448652";
 
     if (nom.isEmpty() || num_tel.isEmpty() || type_service.isEmpty()) {
         QMessageBox::warning(this, "Erreur", "Tous les champs doivent être remplis !");
         return;
     }
 
-    static const QRegularExpression nomRegex("^[a-zA-Z]+$");
-    static const QRegularExpression telRegex("^[0-9]{8}$");
+    // 🔤 Vérifier que le nom contient uniquement des lettres (pas de chiffres ni symboles)
+    QRegularExpression nomRegex("^[a-zA-Z]+$");
     if (!nomRegex.match(nom).hasMatch()) {
         QMessageBox::warning(this, "Erreur", "Le nom ne doit contenir que des lettres !");
         return;
     }
+
+    // 📱 Vérifier que le numéro contient exactement 8 chiffres
+    QRegularExpression telRegex("^\\d{8}$");
     if (!telRegex.match(num_tel).hasMatch()) {
-        QMessageBox::warning(this, "Erreur", "Le numéro de téléphone doit contenir 8 chiffres !");
+        QMessageBox::warning(this, "Erreur", "Le numéro de téléphone doit contenir exactement 8 chiffres !");
         return;
     }
+
 
     Fournisseur f(id_fournisseur, nom, num_tel, type_service);
     if (f.ajouterFournisseur()) {
         QMessageBox::information(this, "Succès", "Fournisseur ajouté avec succès !");
 
-        SMS sms("AC1e7459302a1e433b4038abaf76edf9d2", "9c77cae2b4092b860ab82e54cca0c8e5", "+13156448652");
+        SMS sms(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE);
+       ;
         sms.envoyerSMS("+21694321511", "Fournisseur ajouté avec ID: " + id_fournisseur);
 
         int quantite = QRandomGenerator::global()->bounded(10, 201);
@@ -105,7 +115,9 @@ void MainWindow::on_btnAjouter_clicked() {
         chargerListeIDs();
 
         ui->lineEdit_Nom->clear();
-        ui->lineEdit_NumTel->clear();
+        ui->lineEdit_NumTel->setValidator(new QRegularExpressionValidator(QRegularExpression("^\\d{0,8}$"), this));
+
+
         ui->comboBox_TypeService_2->setCurrentIndex(0);
 
         genererIDFournisseur(); // re-générer un ID disponible
