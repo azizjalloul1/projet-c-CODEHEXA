@@ -2,6 +2,8 @@ QT += core gui
 QT += sql
 QT += printsupport
 QT += widgets
+QT += charts
+QT += core gui widgets charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,8 +20,11 @@ HEADERS += \
     examen.h \
     mainwindow.h
 
+
+
 FORMS += \
     mainwindow.ui
+
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

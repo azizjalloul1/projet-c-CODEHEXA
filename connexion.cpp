@@ -1,8 +1,12 @@
 #include "connexion.h"
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QString>
+#include <QDebug>
 
 Connexion::Connexion()
 {
-    db = QSqlDatabase::addDatabase("QODBC"); //database system->(sql server,mysql,..)
+    db = QSqlDatabase::addDatabase("QODBC");
 }
 
 bool Connexion::ouvrirConnexion()

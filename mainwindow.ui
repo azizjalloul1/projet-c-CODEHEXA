@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>898</width>
-    <height>569</height>
+    <width>970</width>
+    <height>645</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -114,8 +114,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>891</width>
-      <height>511</height>
+      <width>961</width>
+      <height>591</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -258,6 +258,12 @@ color: rgb(0, 0, 0);</string>
         </item>
         <item>
          <widget class="QDateEdit" name="datajout">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
           <property name="styleSheet">
            <string notr="true">color: rgb(0, 0, 0);</string>
           </property>
@@ -281,6 +287,12 @@ color: rgb(0, 0, 0);</string>
         </item>
         <item>
          <widget class="QTimeEdit" name="herajout">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
           <property name="styleSheet">
            <string notr="true">color: rgb(0, 0, 0);</string>
           </property>
@@ -333,7 +345,7 @@ color: rgb(0, 0, 0);</string>
            <string/>
           </property>
           <property name="placeholderText">
-           <string>Rechercher par code...</string>
+           <string>Rechercher par code ou matiére ...</string>
           </property>
          </widget>
         </item>
@@ -355,6 +367,13 @@ color: rgb(0, 0, 0);</string>
          <widget class="QPushButton" name="trierd">
           <property name="text">
            <string>Trier d</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="stat">
+          <property name="text">
+           <string>stat</string>
           </property>
          </widget>
         </item>
@@ -423,8 +442,8 @@ color: rgb(0, 0, 0);</string>
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>871</width>
-        <height>451</height>
+        <width>941</width>
+        <height>531</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -454,6 +473,13 @@ color: rgb(0, 0, 0);</string>
         <widget class="QComboBox" name="codemod">
          <property name="styleSheet">
           <string notr="true">color: rgb(0, 0, 0);</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="uploadmod">
+         <property name="text">
+          <string>upload pdf</string>
          </property>
         </widget>
        </item>
@@ -665,7 +691,7 @@ color: rgb(0, 0, 0);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>898</width>
+     <width>970</width>
      <height>25</height>
     </rect>
    </property>

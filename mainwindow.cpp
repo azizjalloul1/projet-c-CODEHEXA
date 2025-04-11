@@ -9,6 +9,11 @@
 #include <QTextDocument>
 #include <QFileDialog>
 #include <utility>
+#include <QtCharts>
+#include <QDateTime>
+
+
+
 
 void MainWindow::importerid()
 {
@@ -37,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->nivajout->addItems({"Primaire", "Collège", "Lycée", "Université"});
 
+
     importerid();
 
     afficherExamens();
@@ -50,6 +56,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->recherche, &QLineEdit::textChanged, this, &MainWindow::CHERCHER);
     connect(ui->codemod, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &MainWindow::modif);
+    connect(ui->stat, &QPushButton::clicked, this, &MainWindow::afficherStatistiques);
+    connect(ui->upload, &QPushButton::clicked, this, &MainWindow::uploadPDF);
+    connect(ui->codebar, &QPushButton::clicked, this, &MainWindow::genererCodeBarres);
+
+
+
+
+
+
+
 
 
 
@@ -65,6 +81,9 @@ void MainWindow::afficherExamens()
     QList<Examen> examens = Examen::afficherExamens();
     ui->tabaffiche->setRowCount(0);
 
+    ui->tabaffiche->setColumnCount(7);
+    ui->tabaffiche->setHorizontalHeaderLabels({"Code", "Matière", "Niveau", "Date", "Heure", "Quantité", "PDF"});
+
     for (int i = 0; i < examens.size(); ++i) {
         ui->tabaffiche->insertRow(i);
         ui->tabaffiche->setItem(i, 0, new QTableWidgetItem(examens[i].getCodeExamen()));
@@ -73,11 +92,11 @@ void MainWindow::afficherExamens()
         ui->tabaffiche->setItem(i, 3, new QTableWidgetItem(examens[i].getDate()));
         ui->tabaffiche->setItem(i, 4, new QTableWidgetItem(examens[i].getHeure()));
         ui->tabaffiche->setItem(i, 5, new QTableWidgetItem(QString::number(examens[i].getQuantite())));
-        ui->tabaffiche->setColumnCount(6);
-        ui->tabaffiche->setHorizontalHeaderLabels({"Code", "Matière", "Niveau", "Date", "Heure", "Quantité"});
+        ui->tabaffiche->setItem(i, 6, new QTableWidgetItem(examens[i].getFichierPdf()));
 
     }
 }
+
 
 void MainWindow::ajouterExamen()
 {
@@ -86,62 +105,57 @@ void MainWindow::ajouterExamen()
     QString niveau = ui->nivajout->currentText();
     QString date = ui->datajout->date().toString("yyyy-MM-dd");
     QString time = ui->herajout->text();
+    QString pdfPath = ui->upload->property("selectedPdfPath").toString();
 
-
-    //Vérification des entrées
     bool ok;
     int codeInt = code.toInt(&ok);
 
     if (!ok || codeInt <= 0) {
-        QMessageBox::warning(this, "Erreur", "Veuillez entrer un code valide (numérique et positif).");
+        QMessageBox::warning(this, "Erreur", "Veuillez entrer un code valide.");
         return;
     }
+
     QDate selectedDate = ui->datajout->date();
     QDate currentDate = QDate::currentDate();
 
     if (selectedDate < currentDate) {
-        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner une date égale ou postérieure à la date d'aujourd'hui.");
+        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner une date valide.");
         return;
     }
 
     QTime selectedTime = QTime::fromString(time, "HH:mm");
-
-    if (!selectedTime.isValid()) {
-        QMessageBox::warning(this, "Erreur", "Veuillez entrer une heure valide.");
-        return;
-    }
-
-    QTime minTime(8, 0);
-    QTime maxTime(20, 0);
-
-    if (selectedTime < minTime || selectedTime > maxTime) {
+    if (!selectedTime.isValid() || selectedTime < QTime(8, 0) || selectedTime > QTime(20, 0)) {
         QMessageBox::warning(this, "Erreur", "L'heure doit être entre 08:00 et 20:00.");
         return;
     }
 
-
     int quantite = ui->quantiteajout->text().toInt(&ok);
-
     if (!ok || quantite <= 0) {
-        QMessageBox::warning(this, "Erreur", "Veuillez entrer une quantité valide (numérique et positive).");
+        QMessageBox::warning(this, "Erreur", "Quantité invalide.");
         return;
     }
 
     Examen examen(code, matiere, niveau, date, time, quantite);
+    if (pdfPath.isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un fichier PDF avant d’ajouter l’examen.");
+        return;
+    }
+
+    examen.setFichierPdf(pdfPath);
 
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Confirmation", "Voulez-vous vraiment ajouter cet examen ?", QMessageBox::Yes | QMessageBox::No);
-    if (reply == QMessageBox::No) {
-        return;
-    }
+    if (reply == QMessageBox::No) return;
+
+    // Ajout
     if (examen.ajouterExamen()) {
-        QMessageBox::information(this, "Succès", "Examen ajouté avec succès");
+        QMessageBox::information(this, "Succès", "Examen ajouté !");
         afficherExamens();
     } else {
-        QMessageBox::critical(this, "Erreur", "Échec de l'ajout de l'examen . l'examen existe déjà !");
+        QMessageBox::critical(this, "Erreur", "Échec de l'ajout !");
     }
-
 }
+
 
 void MainWindow::modifierExamen() {
     QString code = ui->codemod->currentText().trimmed();
@@ -200,7 +214,7 @@ void MainWindow::modifierExamen() {
         return;
     }
 
-     bool ok;
+    bool ok;
     int quantite = ui->quantitemod->text().toInt(&ok);
 
     if (!ok || quantite <= 0) {
@@ -390,7 +404,6 @@ void MainWindow::ExporterPDF() {
     QMessageBox::information(this, "Succès", "Exportation en PDF réussie !");
 }
 
-
 void MainWindow::TRIC()
 {
     int rowCount = ui->tabaffiche->rowCount();
@@ -456,11 +469,16 @@ void MainWindow::TRID()
 
 
 
-void MainWindow::CHERCHER(const QString &id)
+void MainWindow::CHERCHER(const QString &texte)
 {
     for (int row = 0; row < ui->tabaffiche->rowCount(); ++row) {
-        QTableWidgetItem *item = ui->tabaffiche->item(row, 0);
-        if (item && item->text().contains(id, Qt::CaseInsensitive)) {
+        QTableWidgetItem *itemId = ui->tabaffiche->item(row, 0);  // ID
+        QTableWidgetItem *itemMatiere = ui->tabaffiche->item(row, 1);  // Matière
+
+        bool matchId = itemId && itemId->text().contains(texte, Qt::CaseInsensitive);
+        bool matchMatiere = itemMatiere && itemMatiere->text().contains(texte, Qt::CaseInsensitive);
+
+        if (matchId || matchMatiere) {
             ui->tabaffiche->setRowHidden(row, false);
         } else {
             ui->tabaffiche->setRowHidden(row, true);
@@ -468,4 +486,116 @@ void MainWindow::CHERCHER(const QString &id)
     }
 }
 
+void MainWindow::afficherStatistiques() {
+    QSqlQuery query("SELECT MATIERE, SUM(QUANTITE) FROM EXAMEN GROUP BY MATIERE");
 
+    QPieSeries *series = new QPieSeries();
+    while (query.next()) {
+        QString matiere = query.value(0).toString();
+        int totalQuantite = query.value(1).toInt();
+        series->append(matiere, totalQuantite);
+    }
+
+    QChart *chart = new QChart();
+    chart->addSeries(series);
+    chart->setTitle("Quantité totale des examens par matière");
+
+    if (chartView) {
+        ui->chartLayout->removeWidget(chartView);
+        delete chartView;
+    }
+
+    chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+    ui->chartLayout->addWidget(chartView);
+}
+void MainWindow::uploadPDF()
+{
+    QString filePath = QFileDialog::getOpenFileName(this, "Sélectionner un fichier PDF", "", "Fichiers PDF (*.pdf)");
+
+    if (filePath.isEmpty()) {
+        return;
+    }
+
+    ui->upload->setText("PDF Sélectionné"); // ou afficher le nom du fichier
+
+    // Stocker temporairement le fichier sélectionné pour l’utiliser dans l'ajout
+    ui->upload->setProperty("selectedPdfPath", filePath);
+}
+void MainWindow::genererCodeBarres()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, "Exporter les codes-barres en PDF", "", "Fichier PDF (*.pdf)");
+    if (fileName.isEmpty()) return;
+
+    QList<Examen> examens = Examen::afficherExamens();
+    QString htmlContent = "<html><head><style>"
+                          "h1 {text-align: center; color: #333;}"
+                          "table {width: 100%; border-collapse: collapse;}"
+                          "td {text-align: center; padding: 10px;}"
+                          "</style></head><body>";
+    htmlContent += "<h1>Codes à Barres des Examens</h1><table>";
+
+    for (int i = 0; i < examens.size(); ++i) {
+        const Examen &e = examens[i];
+
+        QPixmap pix = genererCodeBarImage(e.getCodeExamen());
+        QByteArray ba;
+        QBuffer buffer(&ba);
+        buffer.open(QIODevice::WriteOnly);
+        pix.save(&buffer, "PNG");
+        QString base64 = QString::fromLatin1(ba.toBase64());
+
+        htmlContent += "<tr><td><b>ID:</b> " + e.getCodeExamen() + "</td></tr>";
+        htmlContent += "<tr><td><img src='data:image/png;base64," + base64 + "'/></td></tr>";
+    }
+
+
+    htmlContent += "</table></body></html>";
+
+    QTextDocument doc;
+    doc.setHtml(htmlContent);
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileName);
+    doc.print(&printer);
+
+    QMessageBox::information(this, "Succès", "Les codes-barres ont été exportés en PDF avec succès !");
+}
+
+QPixmap MainWindow::genererCodeBarImage(const QString &text)
+{
+    const int barWidth = 2;
+    const int barSpacing = 1;
+    const int height = 100;
+    const int textHeight = 20;
+
+    int totalWidth = (barWidth + barSpacing) * text.length() * 7 + 40;
+
+    QImage image(totalWidth, height + textHeight, QImage::Format_ARGB32);
+    image.fill(Qt::white);
+    QPainter painter(&image);
+
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(Qt::black);
+
+    int x = 20;
+    for (int i = 0; i < text.length(); ++i) {
+        int ascii = text[i].unicode();
+        for (int j = 7; j >= 0; --j) {
+            if ((ascii >> j) & 1) {
+                painter.drawRect(x, 10, barWidth, height - textHeight - 10);
+            }
+            x += barWidth + barSpacing;
+        }
+        x += 4; // small space between characters
+    }
+
+    // Ajouter le texte en bas du code-barre
+    painter.setPen(Qt::black);
+    QFont font("Arial", 14, QFont::Bold);
+    painter.setFont(font);
+    painter.drawText(QRect(0, height - textHeight + 10, totalWidth, textHeight), Qt::AlignCenter, text);
+
+    painter.end();
+    return QPixmap::fromImage(image);
+}

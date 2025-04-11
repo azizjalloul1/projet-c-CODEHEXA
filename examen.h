@@ -27,12 +27,16 @@ public:
     void setHeure(const QString& heure);
     void setQuantite(const int quantite);
 
+    void setFichierPdf(const QString& fichier);
+
 
     bool codeExisteDeja(const QString& id_examen);
     bool ajouterExamen();
     bool modifierExamen(const QString& id_examen);
     bool supprimerExamen(const QString& id_examen);
     static QList<Examen> afficherExamens();
+
+    QString getFichierPdf() const;
 
 private:
     QString id_examen;
@@ -41,6 +45,8 @@ private:
     QString exam_date;
     QString heure;
     int quantite;
+    QString fichier_pdf;
+
 };
 
 #endif
