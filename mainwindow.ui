@@ -107,6 +107,46 @@
          background-color: #1976D2;
          color: white;
        }
+       #triComboBox {
+           background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+           stop:0 #2196F3, stop:1 #1976D2);
+           color: white;
+           border-radius: 8px;
+           padding-left: 12px;
+           padding-right: 10px;
+           height: 38px;
+           font-size: 16px;
+           font-weight: bold;
+           border: none;
+           min-width: 150px;
+           qproperty-alignment: 'AlignCenter';
+
+       }
+
+       #triComboBox::drop-down {
+           border: none;
+           width: 20px;
+       }
+
+       #triComboBox::down-arrow {
+           image: none;
+       }
+
+       #triComboBox QAbstractItemView {
+           background-color: white;
+           selection-background-color: #1976D2;
+           selection-color: white;
+           font-size: 14px;
+       }
+       #triComboBox QAbstractItemView {
+           background-color: #2196F3;
+           selection-background-color: #1976D2;
+           selection-color: white;
+           color: white;
+           font-size: 14px;
+       }
+
+
      </string>
    </property>
    <widget class="QTabWidget" name="tabWidget">
@@ -122,7 +162,7 @@
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tabAjout">
      <attribute name="title">
@@ -357,16 +397,9 @@ color: rgb(0, 0, 0);</string>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="trierc">
-          <property name="text">
-           <string>Trier c</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="trierd">
-          <property name="text">
-           <string>Trier d</string>
+         <widget class="QComboBox" name="triComboBox">
+          <property name="styleSheet">
+           <string notr="true"/>
           </property>
          </widget>
         </item>
@@ -473,13 +506,6 @@ color: rgb(0, 0, 0);</string>
         <widget class="QComboBox" name="codemod">
          <property name="styleSheet">
           <string notr="true">color: rgb(0, 0, 0);</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="uploadmod">
-         <property name="text">
-          <string>upload pdf</string>
          </property>
         </widget>
        </item>

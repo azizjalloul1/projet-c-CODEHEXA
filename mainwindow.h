@@ -37,6 +37,9 @@ private slots:
     void uploadPDF();
     void genererCodeBarres();
     QPixmap genererCodeBarImage(const QString &text);
+    void TRIDATE();
+    void gererTriCombo(int index);
+
 
 private:
     Ui::MainWindow *ui;

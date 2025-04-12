@@ -43,6 +43,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->nivajout->addItems({"Primaire", "Collège", "Lycée", "Université"});
 
 
+    ui->triComboBox->addItem("Trier par ID croissant");
+    ui->triComboBox->addItem("Trier par ID décroissant");
+    ui->triComboBox->addItem("Trier par Date");
+
+
+
+
     importerid();
 
     afficherExamens();
@@ -51,14 +58,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->modifier, &QPushButton::clicked, this, &MainWindow::modifierExamen);
     connect(ui->supprimer, &QPushButton::clicked, this, &MainWindow::supprimerExamen);
     connect(ui->exporter, &QPushButton::clicked, this, &MainWindow::ExporterPDF);
-    connect(ui->trierc, &QPushButton::clicked, this, &MainWindow::TRIC);
-    connect(ui->trierd, &QPushButton::clicked, this, &MainWindow::TRID);
+
     connect(ui->recherche, &QLineEdit::textChanged, this, &MainWindow::CHERCHER);
     connect(ui->codemod, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &MainWindow::modif);
     connect(ui->stat, &QPushButton::clicked, this, &MainWindow::afficherStatistiques);
     connect(ui->upload, &QPushButton::clicked, this, &MainWindow::uploadPDF);
     connect(ui->codebar, &QPushButton::clicked, this, &MainWindow::genererCodeBarres);
+    connect(ui->triComboBox,
+            QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this,
+            &MainWindow::gererTriCombo);
 
 
 
@@ -352,10 +362,7 @@ void MainWindow::supprimerExamen()
 
 void MainWindow::ExporterPDF() {
     QString fileName = QFileDialog::getSaveFileName(this, "Exporter en PDF", "", "Fichier PDF (*.pdf)");
-
-    if (fileName.isEmpty()) {
-        return;
-    }
+    if (fileName.isEmpty()) return;
 
     QSqlDatabase db = QSqlDatabase::database();
     if (!db.isOpen()) {
@@ -365,34 +372,47 @@ void MainWindow::ExporterPDF() {
         }
     }
 
-    QSqlQuery query;
-    query.prepare("SELECT ID_EXAMEN, MATIERE, NIVEAU, DATE_EXAMEN, HEURE, QUANTITE FROM EXAMEN");
+    QSqlQuery query("SELECT ID_EXAMEN, MATIERE, NIVEAU, DATE_EXAMEN, HEURE, QUANTITE FROM EXAMEN");
 
-    if (!query.exec()) {
+    if (!query.isActive()) {
         QMessageBox::critical(this, "Erreur", "Échec de l'exécution de la requête : " + query.lastError().text());
         return;
     }
 
+
+    QString currentDate = QDate::currentDate().toString("dd/MM/yyyy");
+
     QString pdfContent = "<html><head><style>"
-                         "table {width: 100%; border-collapse: collapse;}"
-                         "th, td {border: 1px solid black; padding: 8px; text-align: center;}"
-                         "th {background-color: #f2f2f2; font-weight: bold;}"
-                         "h1 {text-align: center; color: #333;}"
+                         "body { font-family: 'Arial'; }"
+                         "h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; }"
+                         "p.date { text-align: right; font-size: 12px; margin-bottom: 20px; }"
+                         "table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }"
+                         "th, td { border: 1px solid #888; padding: 10px; text-align: center; font-size: 12px; }"
+                         "th { background-color: #3498db; color: white; font-weight: bold; }"
+                         "footer { text-align: center; font-size: 10px; color: #888; margin-top: 30px; }"
                          "</style></head><body>";
 
-    pdfContent += "<h1>Liste des Examens</h1><table><tr>"
+    pdfContent += "<h1>Liste des Examens</h1>";
+    pdfContent += QString("<p class='date'>Date d'export : %1</p>").arg(currentDate);
+
+    pdfContent += "<table><tr>"
                   "<th>ID Examen</th><th>Matière</th><th>Niveau</th><th>Date</th><th>Heure</th><th>Quantité</th></tr>";
 
     while (query.next()) {
+        QString cleanDate = query.value(3).toDate().toString("yyyy-MM-dd");
+
         pdfContent += "<tr><td>" + query.value(0).toString() + "</td>"
                       + "<td>" + query.value(1).toString() + "</td>"
                       + "<td>" + query.value(2).toString() + "</td>"
-                      + "<td>" + query.value(3).toString() + "</td>"
+                      + "<td>" + cleanDate + "</td>"
                       + "<td>" + query.value(4).toString() + "</td>"
                       + "<td>" + query.value(5).toString() + "</td></tr>";
     }
 
-    pdfContent += "</table></body></html>";
+
+    pdfContent += "</table>";
+    pdfContent += "<footer></footer>";
+    pdfContent += "</body></html>";
 
     QTextDocument document;
     document.setHtml(pdfContent);
@@ -403,6 +423,7 @@ void MainWindow::ExporterPDF() {
 
     QMessageBox::information(this, "Succès", "Exportation en PDF réussie !");
 }
+
 
 void MainWindow::TRIC()
 {
@@ -490,25 +511,44 @@ void MainWindow::afficherStatistiques() {
     QSqlQuery query("SELECT MATIERE, SUM(QUANTITE) FROM EXAMEN GROUP BY MATIERE");
 
     QPieSeries *series = new QPieSeries();
+
     while (query.next()) {
         QString matiere = query.value(0).toString();
         int totalQuantite = query.value(1).toInt();
-        series->append(matiere, totalQuantite);
+        QPieSlice *slice = series->append(matiere, totalQuantite);
+        slice->setLabelVisible(false);  // cacher labels dans le camembert
+    }
+
+    const auto slices = series->slices();
+    for (int i = 0; i < slices.size(); ++i) {
+        QPieSlice *slice = slices.at(i);
+        double percent = slice->percentage() * 100.0;
+        QString matiere = slice->label();
+        slice->setLabel(QString("%1 - %2%").arg(matiere, QString::number(percent, 'f', 1)));
     }
 
     QChart *chart = new QChart();
     chart->addSeries(series);
-    chart->setTitle("Quantité totale des examens par matière");
+    chart->setTitle("Statistiques des examens par matière ");
+    chart->setTitleFont(QFont("Arial", 14, QFont::Bold));
+    chart->legend()->setAlignment(Qt::AlignBottom);
+    chart->setAnimationOptions(QChart::NoAnimation);
 
     if (chartView) {
         ui->chartLayout->removeWidget(chartView);
         delete chartView;
+        chartView = nullptr;
+        return;
     }
 
     chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
+    chartView->setMinimumSize(600, 400);
     ui->chartLayout->addWidget(chartView);
 }
+
+
+
 void MainWindow::uploadPDF()
 {
     QString filePath = QFileDialog::getOpenFileName(this, "Sélectionner un fichier PDF", "", "Fichiers PDF (*.pdf)");
@@ -598,4 +638,35 @@ QPixmap MainWindow::genererCodeBarImage(const QString &text)
 
     painter.end();
     return QPixmap::fromImage(image);
+}
+
+void MainWindow::TRIDATE()
+{
+    int rowCount = ui->tabaffiche->rowCount();
+
+    QVector<int> rowIndices(rowCount);
+    for (int i = 0; i < rowCount; ++i) rowIndices[i] = i;
+
+    std::sort(rowIndices.begin(), rowIndices.end(), [this](int a, int b) {
+        QDate dateA = QDate::fromString(ui->tabaffiche->item(a, 3)->text(), "yyyy-MM-dd");
+        QDate dateB = QDate::fromString(ui->tabaffiche->item(b, 3)->text(), "yyyy-MM-dd");
+        return dateA < dateB; // date proche > date lointaine
+    });
+
+    QVector<QVector<QTableWidgetItem*>> rows(rowCount);
+    for (int i = 0; i < rowCount; ++i)
+        for (int j = 0; j < ui->tabaffiche->columnCount(); ++j)
+            rows[i].append(ui->tabaffiche->takeItem(rowIndices[i], j));
+
+    for (int i = 0; i < rowCount; ++i)
+        for (int j = 0; j < ui->tabaffiche->columnCount(); ++j)
+            ui->tabaffiche->setItem(i, j, rows[i][j]);
+}
+void MainWindow::gererTriCombo(int index) {
+    switch (index) {
+    case 0: TRIC(); break;
+    case 1: TRID(); break;
+    case 2: TRIDATE(); break;
+    default: break;
+    }
 }
