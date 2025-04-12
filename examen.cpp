@@ -78,28 +78,28 @@ bool Examen::ajouterExamen()
 }
 
 
-bool Examen::modifierExamen(const QString& code) {
+bool Examen::modifierExamen(const QString& code)
+{
     QSqlQuery query;
-
-    query.prepare("UPDATE EXAMEN SET MATIERE = :matiere, NIVEAU = :niveau, DATE_EXAMEN = :exam_date, HEURE = :heure, QUANTITE = :quantite WHERE ID_EXAMEN = :code");
+    query.prepare("UPDATE EXAMEN SET "
+                  "MATIERE = :matiere, "
+                  "NIVEAU = :niveau, "
+                  "DATE_EXAMEN = TO_DATE(:exam_date, 'YYYY-MM-DD'), "
+                  "HEURE = :heure, "
+                  "QUANTITE = :quantite "
+                  "WHERE ID_EXAMEN = :code");
 
     query.bindValue(":code", code);
-
-    qDebug() << "Executing query: " << query.lastQuery();
-
-    qDebug() << "Values being bound:";
-    qDebug() << "Code: " << code;
-    qDebug() << "Matiere: " << matiere;
-    qDebug() << "Niveau: " << niveau;
-    qDebug() << "Exam Date: " << exam_date;
-    qDebug() << "Heure: " << heure;
-    qDebug() << "Quantite: " << quantite;
+    query.bindValue(":matiere", matiere);
+    query.bindValue(":niveau", niveau);
+    query.bindValue(":exam_date", exam_date);
+    query.bindValue(":heure", heure);
+    query.bindValue(":quantite", quantite);
 
     if (!query.exec()) {
-        qDebug() << "Error executing query: " << query.lastError().text();
+        qDebug() << "Erreur de modification : " << query.lastError().text();
         return false;
     }
-
 
     return true;
 }

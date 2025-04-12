@@ -4,7 +4,7 @@
 #include <QMessageBox>
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);//gestion l'arguments if (command-line)
+    QApplication a(argc, argv);
     Connexion c ;
     bool test = c.ouvrirConnexion() ;
     if(!test){
@@ -15,5 +15,5 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     w.show();
-    return a.exec(); // les evenement :actions(clic , saisir,.. )/close if return-1 or app off
+    return a.exec();
 }

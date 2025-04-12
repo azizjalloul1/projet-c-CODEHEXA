@@ -23,22 +23,34 @@ public:
 
 private slots:
 
-    void importerid();
     void afficherExamens();
+
     void ajouterExamen();
-    void modifierExamen();
+
+    void remplirCombo();
     void modif(int i);
+    void modifierExamen();
+
+
     void supprimerExamen();
+
     void ExporterPDF();
+
     void TRIC();
     void TRID();
-    void CHERCHER(const QString &id);
-    void afficherStatistiques();
-    void uploadPDF();
-    void genererCodeBarres();
-    QPixmap genererCodeBarImage(const QString &text);
     void TRIDATE();
-    void gererTriCombo(int index);
+    void TriCombo(int i);
+
+
+    void CHERCHER(const QString &id);
+
+    void Statistiques();
+
+    void uploadPDF();
+
+    QPixmap CodeBarImage(const QString &text);
+    void CodeBarres();
+
 
 
 private:
