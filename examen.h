@@ -18,6 +18,8 @@ public:
     QString getDate() const;
     QString getHeure() const;
     int getQuantite() const;
+    QString getFichierPdf() const;
+
 
 
     void setCodeExamen(const QString& id_examen);
@@ -26,17 +28,14 @@ public:
     void setDate(const QString& exam_date);
     void setHeure(const QString& heure);
     void setQuantite(const int quantite);
-
     void setFichierPdf(const QString& fichier);
 
 
     bool codeExisteDeja(const QString& id_examen);
+    static QList<Examen> afficherExamens();
     bool ajouterExamen();
     bool modifierExamen(const QString& id_examen);
     bool supprimerExamen(const QString& id_examen);
-    static QList<Examen> afficherExamens();
-
-    QString getFichierPdf() const;
 
 private:
     QString id_examen;

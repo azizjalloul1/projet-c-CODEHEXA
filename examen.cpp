@@ -1,6 +1,6 @@
 #include "examen.h"
 #include <QSqlQuery>
-#include <QVariant> // var dynamique
+#include <QVariant>
 #include <QSqlError>
 #include <QDate>
 #include <QDebug>
@@ -17,6 +17,7 @@ QString Examen::getNiveau() const { return niveau; }
 QString Examen::getDate() const { return exam_date; }
 QString Examen::getHeure() const { return heure; }
 int Examen::getQuantite() const { return quantite; }
+QString Examen::getFichierPdf() const {return fichier_pdf;}
 
 void Examen::setCodeExamen(const QString& id_examen) { this->id_examen = id_examen; }
 void Examen::setMatiere(const QString& matiere) { this->matiere = matiere; }
@@ -24,14 +25,9 @@ void Examen::setNiveau(const QString& niveau) { this->niveau = niveau; }
 void Examen::setDate(const QString& exam_date) { this->exam_date = exam_date; }
 void Examen::setHeure(const QString& heure) { this->heure = heure; }
 void Examen::setQuantite(const int quantite) { this->quantite = quantite; }
+void Examen::setFichierPdf(const QString& path) { fichier_pdf = path;}
 
-void Examen::setFichierPdf(const QString& path) {
-    fichier_pdf = path;
-}
 
-QString Examen::getFichierPdf() const {
-    return fichier_pdf;
-}
 
 bool Examen::codeExisteDeja(const QString& id_examen)
 {
@@ -43,6 +39,27 @@ bool Examen::codeExisteDeja(const QString& id_examen)
         return true;
     }
     return false;
+}
+
+QList<Examen> Examen::afficherExamens()
+{
+    QList<Examen> examens;
+    QSqlQuery query("SELECT ID_EXAMEN, MATIERE, NIVEAU, DATE_EXAMEN, HEURE, QUANTITE, FICHIER_PDF FROM EXAMEN");
+
+    while (query.next()) {
+        QString code = query.value(0).toString();
+        QString matiere = query.value(1).toString();
+        QString niveau = query.value(2).toString();
+        QString date = query.value(3).toDate().toString("yyyy-MM-dd");
+        QString heure = query.value(4).toString();
+        int quantite = query.value(5).toInt();
+        QString fichier_pdf = query.value(6).toString();
+        Examen e(code, matiere, niveau, date, heure, quantite);
+        e.setFichierPdf(fichier_pdf);
+        examens.append(e);
+    }
+
+    return examens;
 }
 
 
@@ -123,24 +140,5 @@ bool Examen::supprimerExamen(const QString& id_examen)
     return true;
 }
 
-QList<Examen> Examen::afficherExamens()
-{
-    QList<Examen> examens;
-    QSqlQuery query("SELECT ID_EXAMEN, MATIERE, NIVEAU, DATE_EXAMEN, HEURE, QUANTITE, FICHIER_PDF FROM EXAMEN");
 
-    while (query.next()) {
-        QString code = query.value(0).toString();
-        QString matiere = query.value(1).toString();
-        QString niveau = query.value(2).toString();
-        QString date = query.value(3).toDate().toString("yyyy-MM-dd");
-        QString heure = query.value(4).toString();
-        int quantite = query.value(5).toInt();
-        QString fichier_pdf = query.value(6).toString();
-        Examen e(code, matiere, niveau, date, heure, quantite);
-        e.setFichierPdf(fichier_pdf);
-        examens.append(e);
-    }
-
-    return examens;
-}
 

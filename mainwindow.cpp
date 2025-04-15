@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "examen.h"
-
 #include <QMessageBox>
 #include <QDebug>
 #include <QSqlQuery>
