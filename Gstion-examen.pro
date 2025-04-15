@@ -4,6 +4,10 @@ QT += printsupport
 QT += widgets
 QT += charts
 QT += core gui widgets charts
+QT += network
+
+SOURCES +=
+HEADERS += qrcodegen.hpp
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

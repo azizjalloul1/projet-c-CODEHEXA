@@ -406,14 +406,14 @@ color: rgb(0, 0, 0);</string>
         <item>
          <widget class="QPushButton" name="stat">
           <property name="text">
-           <string>stat</string>
+           <string>STAT</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="codebar">
           <property name="text">
-           <string>code a bar</string>
+           <string>QRCODE</string>
           </property>
          </widget>
         </item>

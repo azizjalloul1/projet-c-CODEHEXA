@@ -11,8 +11,10 @@
 #include <utility>
 #include <QtCharts>
 #include <QDateTime>
-
-
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QEventLoop>
 
 
 
@@ -61,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->stat, &QPushButton::clicked, this, &MainWindow::Statistiques);
 
 
-    connect(ui->codebar, &QPushButton::clicked, this, &MainWindow::CodeBarres);
+    connect(ui->codebar, &QPushButton::clicked, this, &MainWindow::QRCode);
 
     connect(ui->triComboBox,QOverload<int>::of(&QComboBox::currentIndexChanged),this,&MainWindow::TriCombo);
 
@@ -543,44 +545,31 @@ void MainWindow::uploadPDF()
 
 
 //CODE A BARRES
-QPixmap MainWindow::CodeBarImage(const QString &text)
+QPixmap MainWindow::QRCodeImage(const QString &text)
 {
-    const int barWidth = 2;
-    const int barSpacing = 1;
-    const int height = 100;
-    const int textHeight = 20;
+    QString url = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + text;
 
-    int totalWidth = (barWidth + barSpacing) * text.length() * 7 + 40;
+    QNetworkAccessManager manager;
+    QNetworkRequest request((QUrl(url)));
+    QNetworkReply *reply = manager.get(request);
 
-    QImage image(totalWidth, height + textHeight, QImage::Format_ARGB32);
-    image.fill(Qt::white);
-    QPainter painter(&image);
+    QEventLoop loop;
+    QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    loop.exec();
 
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(Qt::black);
-
-    int x = 20;
-    for (int i = 0; i < text.length(); ++i) {
-        int ascii = text[i].unicode();
-        for (int j = 7; j >= 0; --j) {
-            if ((ascii >> j) & 1) {
-                painter.drawRect(x, 10, barWidth, height - textHeight - 10);
-            }
-            x += barWidth + barSpacing;
-        }
-        x += 4;
+    QPixmap pix;
+    if (reply->error() == QNetworkReply::NoError) {
+        QByteArray data = reply->readAll();
+        pix.loadFromData(data);
     }
 
-    painter.setPen(Qt::black);
-    QFont font("Arial", 14, QFont::Bold);
-    painter.setFont(font);
-    painter.drawText(QRect(0, height - textHeight + 10, totalWidth, textHeight), Qt::AlignCenter, text);
-
-    painter.end();
-    return QPixmap::fromImage(image);
+    reply->deleteLater();
+    return pix;
 }
 
-void MainWindow::CodeBarres()
+
+
+void MainWindow::QRCode()
 {
     QString fileName = QFileDialog::getSaveFileName(this, "Exporter les codes-barres en PDF", "", "Fichier PDF (*.pdf)");
     if (fileName.isEmpty()) return;
@@ -593,10 +582,20 @@ void MainWindow::CodeBarres()
                           "</style></head><body>";
     htmlContent += "<h1>Codes à Barres des Examens</h1><table>";
 
+
     for (int i = 0; i < examens.size(); ++i) {
         const Examen &e = examens[i];
 
-        QPixmap pix = CodeBarImage(e.getCodeExamen());
+        QString qrText = " Examen Info:\n"
+                         "• ID : " + e.getCodeExamen() + "\n"
+                                               "• Matière : " + e.getMatiere() + "\n"
+                                            "• Niveau : " + e.getNiveau() + "\n"
+                                           "• Date : " + e.getDate() + "\n"
+                                         "• Heure : " + e.getHeure() + "\n"
+                                          "• Quantité : " + QString::number(e.getQuantite()) + " copies";
+
+
+        QPixmap pix = QRCodeImage(qrText);
         QByteArray ba;
         QBuffer buffer(&ba);
         buffer.open(QIODevice::WriteOnly);
@@ -619,5 +618,3 @@ void MainWindow::CodeBarres()
 
     QMessageBox::information(this, "Succès", "Les codes-barres ont été exportés en PDF avec succès !");
 }
-
-

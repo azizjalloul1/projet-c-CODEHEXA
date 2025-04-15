@@ -48,8 +48,8 @@ private slots:
 
     void uploadPDF();
 
-    QPixmap CodeBarImage(const QString &text);
-    void CodeBarres();
+    QPixmap QRCodeImage(const QString &text);
+    void QRCode();
 
 
 
