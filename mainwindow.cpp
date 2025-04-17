@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "accueil.h"
 #include "employee.h"
 
 
@@ -10,7 +11,17 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    //ui->pushButtonMicro->setText("Parler");
+    ui->pushButtonMicro->setIcon(QIcon("C:/Users/Nadim/Desktop/PROJET_QT/GESTION/micro.png"));
+    ui->pushButtonMicro->setIconSize(QSize(35, 35));
+
+    connect(ui->pushButtonMicro, &QPushButton::clicked, this, [this]() {
+        QTimer::singleShot(1000, this, &MainWindow::startDataCollection);
+    });
+
     // Connecter les actions des boutons
+    connect(ui->retour, &QPushButton::clicked, this, &MainWindow::on_btnRetourAccueil_clicked);
+
      connect(ui->addButton, &QPushButton::clicked, this, &MainWindow::ajouterEmploye);
      connect(ui->SuppButton, &QPushButton::clicked, this, &MainWindow::supprimerEmploye);
      connect(ui->exportButton, &QPushButton::clicked, this, &MainWindow::exportPdf);
@@ -30,6 +41,112 @@ MainWindow::~MainWindow()
 }
 
 
+
+void MainWindow::startDataCollection()
+{
+    QTimer::singleShot(0, this, &MainWindow::collectId);
+}
+void MainWindow::collectId()
+{
+    executePythonScript("id", [this]() { QTimer::singleShot(150, this, &MainWindow::collectPassword); });
+}
+void MainWindow::collectPassword()
+{
+    executePythonScript("mot_de_passe", [this]() { QTimer::singleShot(200, this, &MainWindow::collectName);});
+}
+void MainWindow::collectName()
+{
+    executePythonScript("nom", [this]() { QTimer::singleShot(200, this, &MainWindow::collectEmail); });
+}
+void MainWindow::collectEmail()
+{
+    executePythonScript("email", [this]() { QTimer::singleShot(200, this, &MainWindow::collectRole); });
+}
+void MainWindow::collectRole()
+{
+    executePythonScript("role", [this]() { QTimer::singleShot(200, this, &MainWindow::collectSalary); });
+}
+void MainWindow::collectSalary()
+{
+    executePythonScript("salaire", []() { qDebug() << "Collecte des données terminée."; });
+}
+
+void MainWindow::executePythonScript(const QString& promptType, std::function<void()> callback)
+{
+    QString pythonExecutable = "C:/Users/Nadim/Desktop/PROJET_QT/GESTION/venv/Scripts/python.exe";
+    QString scriptPath = "C:/Users/Nadim/Desktop/PROJET_QT/GESTION/speech_to_text.py";
+
+    QProcess *process = new QProcess(this);
+
+    // Configuration de l'environnement
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("PATH", "C:/Users/Nadim/Desktop/PROJET_QT/IA/venv/Scripts;" + env.value("PATH"));
+    process->setProcessEnvironment(env);
+
+    // Définir le répertoire de travail
+    process->setWorkingDirectory("C:/Users/Nadim/Desktop/PROJET_QT/GESTION");
+
+    process->setProgram(pythonExecutable);
+    process->setArguments(QStringList() << scriptPath << promptType);
+
+    // Connexions pour la sortie standard et les erreurs
+    connect(process, &QProcess::readyReadStandardOutput, this, [process, this, promptType]() {
+        QString output = process->readAllStandardOutput().trimmed();  // On enlève les espaces et \n
+
+        if (promptType == "id") {
+            ui->idInput->setText(output);
+        } else if (promptType == "mot_de_passe") {
+            ui->MDPInput->setText(output);
+        } else if (promptType == "nom") {
+            ui->nomInput->setText(output);
+        } else if (promptType == "email") {
+            ui->email->setText(output);
+        } else if (promptType == "role") {
+            int index =  ui->comboBox->findText(output);
+            if (index != -1) {
+                ui->comboBox->setCurrentIndex(index);
+            }
+        } else if (promptType == "salaire") {
+            bool ok;
+            int salaire = output.toInt(&ok);
+            if (ok) {
+                ui->spinBox->setValue(salaire);
+            }
+        }
+
+        qDebug() << "Sortie Python : " << output;
+    });
+
+
+    connect(process, &QProcess::readyReadStandardError, this, [process]() {
+        QString errorOutput = process->readAllStandardError();
+        qDebug() << "Erreur Python : " << errorOutput;
+    });
+
+    connect(process, &QProcess::finished, this, [process, callback](int exitCode, QProcess::ExitStatus exitStatus) {
+        process->deleteLater();
+        if (callback) {
+            callback();
+        }
+    });
+
+    process->start();
+}
+
+void MainWindow::setAccueil(Accueil *accueilWindow) {
+    this->accueil = accueilWindow;
+}
+
+
+void MainWindow::on_btnRetourAccueil_clicked()
+{
+    this->hide();           // cacher MainWindow
+    if (accueil) {
+        accueil->show();    // montrer Accueil
+    }
+}
+
+
 void MainWindow::resetInputs()
 {
     ui->idInput->clear();
@@ -39,6 +156,8 @@ void MainWindow::resetInputs()
     ui->comboBox->setCurrentIndex(0);
     ui->spinBox->setValue(0);
 
+    ui->searchLineEdit->clear();
+
     ui->SuppID->clear();
 
     ui->mod_id->clear();
@@ -46,7 +165,6 @@ void MainWindow::resetInputs()
     ui->mod_mail->clear();
     ui->mod_salaire->setValue(0);
 
-    ui->searchLineEdit->clear();
 }
 
 
@@ -54,8 +172,11 @@ bool MainWindow::validerMotDePasse()
 {
     QString mdp = ui->MDPInput->text().trimmed();
 
-     static int lettreCount = mdp.count(QRegularExpression("[a-zA-Z]"));
-     static int chiffreCount = mdp.count(QRegularExpression("\\d"));
+    static const QRegularExpression lettreRegex("[a-zA-Z]");
+    static const QRegularExpression chiffreRegex("\\d");
+    int lettreCount = mdp.count(lettreRegex);
+    int chiffreCount = mdp.count(chiffreRegex);
+
 
     if (mdp.length() >= 6 && lettreCount >= 2 && chiffreCount >= 1) {
         ui->validation->setText("Fort ✅");
@@ -135,10 +256,10 @@ bool MainWindow::verifierIdExistant()
         ui->mod_nom->setText(nom);
         ui->mod_mail->setText(email);
         ui->mod_salaire->setValue(salaire);
-        QMessageBox::information(this, "Succès", "Employé trouvé !");
+        //QMessageBox::information(this, "Succès", "Employé trouvé !");
         return true;
     } else {
-        QMessageBox::critical(this, "Erreur", "ID introuvable !");
+        //QMessageBox::critical(this, "Erreur", "ID introuvable !");
         return false;
     }
 }
@@ -172,11 +293,18 @@ void MainWindow::ajouterEmploye()
         return;
     }
     if (nom.isEmpty()) {
-        QMessageBox::warning(this, "Erreur", "Il faut insérer un Nom !");
+        QMessageBox::warning(this, "Erreur", "Il faut insérer un Nom Valide  !");
+        return;
+    }
+    QRegularExpression regex("^[a-zA-ZÀ-ÖØ-öø-ÿ\\s]+$");
+    if (!regex.match(nom).hasMatch()) {
+        QMessageBox::warning(this, "Erreur", "Le nom ne doit contenir que des lettres !");
         return;
     }
     if (!validerMotDePasse()) {
-        QMessageBox::warning(this, "Erreur", "Le mot de passe est trop faible !");
+        QMessageBox::warning(this, "Erreur", "Le mot de passe est trop faible ! "
+                                             "Insère au minimum 6 nombres et 2 caractères ");
+
         return;
     }
 
@@ -205,7 +333,7 @@ void MainWindow::afficherEmployes()
     // Appeler directement la méthode statique sans instancier Employee
     QList<Employee> employes = Employee::afficherEmployes();
 
-    // Trier en fonction de la variable triCroissant
+    // Trier
     std::sort(employes.begin(), employes.end(), [this](const Employee &a, const Employee &b) {
         return triCroissant ? (a.getSalaire() < b.getSalaire()) : (a.getSalaire() > b.getSalaire());
     });
@@ -340,22 +468,32 @@ void MainWindow::exportPdf()
     int margin = 30;
     int rowHeight = 25;
     int columnWidth = 100;
-    int currentY = margin;
+    int logoWidth = 70;
+    int logoHeight = 70;
+    int logoY = margin;
+    int currentY ;
+     currentY = qMax(currentY, logoY + logoHeight + 10);
+
 
     QRect pageRect = printer.pageLayout().paintRectPixels(printer.resolution());
 
-    // **Ajout d'un titre centré**
-    painter.setFont(QFont("Arial", 14, QFont::Bold));
+
+    // Charger le logo
+    QPixmap logo("C:/Users/Nadim/Desktop/PROJET_QT/GESTION/logo.png");
+    QPixmap scaledLogo = logo.scaled(logoWidth, logoHeight, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    int logoX = pageRect.width() - margin - logoWidth;
+    painter.drawPixmap(logoX, logoY, scaledLogo);
+
+    // ** titre **
+    painter.setFont(QFont("Arial", 16, QFont::Bold));
     painter.drawText(QRect(margin, currentY, pageRect.width() - 2 * margin, 30), "Tableau des Employées : ");
     currentY += 40;
 
-    // **Définition des couleurs et styles**
+    // ** couleurs et styles**
     QPen borderPen(Qt::black);
     borderPen.setWidth(2);
-    QBrush headerBrush(QColor(200, 200, 250)); // Fond bleu clair pour les en-têtes
-    QBrush cellBrush(QColor(250, 250, 250));   // Fond gris clair pour les lignes
-
-    // **Dessiner les en-têtes avec un fond coloré**
+    QBrush headerBrush(QColor(200, 200, 250)); //  bleu clair : les en-têtes
+    QBrush cellBrush(QColor(250, 250, 250));   //  gris clair : les lignes
     painter.setFont(QFont("Arial", 10, QFont::Bold));
     painter.setBrush(headerBrush);
     painter.setPen(borderPen);
@@ -393,6 +531,19 @@ void MainWindow::exportPdf()
             currentY = margin + 40; // Reprendre après le titre
         }
     }
+
+    QString exportDateTime = "Crée le : " + QDateTime::currentDateTime().toString("dd/MM/yyyy hh:mm");
+    painter.setFont(QFont("Arial", 10, QFont::Normal));
+
+    // Si l'on dépasse la page, créer une nouvelle page
+    if (currentY + 30 > pageRect.height() - margin) {
+        printer.newPage();
+        currentY = margin;
+    }
+
+    currentY += 20;
+    painter.drawText(margin, currentY, exportDateTime);
+
 
     painter.end();
     QMessageBox::information(this, "Succès", "Le tableau a été exporté en PDF avec succès.");
@@ -504,7 +655,7 @@ void MainWindow::afficherStatistiques()
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setMinimumSize(400, 300);  // Ajustez la taille selon votre besoin
 
-    // Ajouter le graphique à votre layout (par exemple, un QVBoxLayout)
+    // Ajouter le graphique
     ui->chartLayout->addWidget(chartView);  // Assurez-vous d'avoir un layout nommé chartLayout dans votre interface
 }
 

@@ -64,24 +64,45 @@ void MDPRestWindow::envoyerCodeParEmail(const QString &email, const QString &cod
     QUrl url("https://api.brevo.com/v3/smtp/email");
     QNetworkRequest request(url);
 
+    // Définir les en-têtes
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    request.setRawHeader("api-key", "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"); // Remplacez par votre clé API
+    request.setRawHeader("api-key", "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");
 
+    // Construire le corps JSON
     QJsonObject json;
     json["sender"] = QJsonObject{{"name", "Si Nadim"}, {"email", "nadimkhchini1@gmail.com"}};
     json["to"] = QJsonArray{QJsonObject{{"email", email}}};
     json["subject"] = "Code de vérification";
     json["htmlContent"] = QString("Votre code de vérification est : <strong>%1</strong>").arg(code);
 
+    // Envoyer la requête
     QNetworkReply *reply = manager->post(request, QJsonDocument(json).toJson());
 
+    // Connexion pour gérer la réponse
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         if (reply->error() == QNetworkReply::NoError) {
             QMessageBox::information(this, "Succès", "Code envoyé avec succès !");
             ui->codeInput->setEnabled(true);
             ui->validerButton->setEnabled(true);
         } else {
-            QMessageBox::critical(this, "Erreur", "Erreur lors de l'envoi du code.");
+            // Récupérer des détails sur l'erreur
+            QString errorDetails = reply->errorString(); // Message d'erreur réseau
+            int httpStatus = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(); // Code HTTP
+            QString responseBody = reply->readAll(); // Réponse brute de l'API
+
+            // Construire un message d'erreur détaillé
+            QString debugMessage = QString("Erreur lors de l'envoi du code.\n"
+                                           "Détails : %1\n"
+                                           "Code HTTP : %2\n"
+                                           "Réponse de l'API : %3")
+                                       .arg(errorDetails)
+                                       .arg(httpStatus)
+                                       .arg(responseBody);
+
+            QMessageBox::critical(this, "Erreur", debugMessage);
+            qDebug() << "Erreur réseau :" << errorDetails;
+            qDebug() << "Code HTTP :" << httpStatus;
+            qDebug() << "Réponse API :" << responseBody;
         }
         reply->deleteLater();
     });

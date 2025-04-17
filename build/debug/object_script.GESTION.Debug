@@ -1,0 +1,11 @@
+debug/accueil.o
+debug/connexion.o
+debug/employee.o
+debug/loginwidget.o
+debug/main.o
+debug/mainwindow.o
+debug/mdprestwindow.o
+debug/moc_accueil.o
+debug/moc_loginwidget.o
+debug/moc_mainwindow.o
+debug/moc_mdprestwindow.o

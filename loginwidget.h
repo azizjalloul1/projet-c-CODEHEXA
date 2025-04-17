@@ -23,7 +23,9 @@ public:
     ~LoginWidget();
 
 signals:
-    void loginSuccessful(const QString &id); // Signal pour une connexion réussie
+signals:
+    void loginSuccessful(const QString &id, const QString &role);
+
 
 private slots:
     void onLoginClicked(); // Slot pour le clic sur le bouton de connexion

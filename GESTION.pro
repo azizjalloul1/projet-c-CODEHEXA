@@ -20,6 +20,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    accueil.cpp \
     connexion.cpp \
     employee.cpp \
     loginwidget.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
     mdprestwindow.cpp
 
 HEADERS += \
+    accueil.h \
     connexion.h \
     employee.h \
     loginwidget.h \
@@ -36,7 +38,7 @@ HEADERS += \
 
 FORMS += \
     MDP_rest.ui \
-    form.ui \
+    accueil.ui \
     loginwidget.ui \
     mainwindow.ui
 

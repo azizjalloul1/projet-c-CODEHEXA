@@ -66,7 +66,7 @@ void LoginWidget::onLoginClicked()
 
     // Récupérer le mot de passe haché et le sel de la base
     QSqlQuery query;
-    query.prepare("SELECT MOT_DE_PASSE, SALT FROM EMPLOYEE WHERE ID = :id");
+    query.prepare("SELECT MOT_DE_PASSE, SALT, ROLE FROM EMPLOYEE WHERE ID = :id");
     query.bindValue(":id", id);
 
     if (!query.exec()) {
@@ -87,13 +87,17 @@ void LoginWidget::onLoginClicked()
     // Transformer et hacher le mot de passe saisi avec le sel
     QString hashedInputPassword = transformerMotDePasse(password, storedSalt);
 
+
+    QString role = query.value("ROLE").toString();
+
     // Comparer les deux hachages
     if (storedHashedPassword == hashedInputPassword) {
-        qDebug() << "Connexion réussie pour l'ID :" << id;
-        emit loginSuccessful(id); // Émettre le signal de connexion réussie
+        qDebug() << "Connexion réussie pour l'ID :" << id << " avec rôle :" << role;
+        emit loginSuccessful(id, role); // <-- Nouveau : on émet aussi le rôle
     } else {
         QMessageBox::critical(this, "Erreur", "Mot de passe incorrect !");
     }
+
 }
 
 void LoginWidget::onMDPOublieClicked()

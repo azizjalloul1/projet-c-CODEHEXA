@@ -37,6 +37,8 @@ public:
     QWidget *tabAjout;
     QVBoxLayout *layoutAjout;
     QVBoxLayout *verticalLayout1;
+    QHBoxLayout *horizontalLayout_4;
+    QPushButton *retour;
     QLabel *label_6;
     QLabel *label;
     QLineEdit *idInput;
@@ -53,7 +55,9 @@ public:
     QComboBox *comboBox;
     QLabel *label_5;
     QSpinBox *spinBox;
+    QHBoxLayout *horizontalLayout_5;
     QPushButton *addButton;
+    QPushButton *pushButtonMicro;
     QWidget *tabAffichage;
     QVBoxLayout *verticalLayout2;
     QHBoxLayout *horizontalLayout;
@@ -194,7 +198,6 @@ public:
         verticalLayout->setObjectName("verticalLayout");
         tabWidget = new QTabWidget(centralwidget);
         tabWidget->setObjectName("tabWidget");
-        tabWidget->setStyleSheet(QString::fromUtf8(""));
         tabAjout = new QWidget();
         tabAjout->setObjectName("tabAjout");
         tabAjout->setMaximumSize(QSize(16777215, 16777215));
@@ -203,6 +206,14 @@ public:
         verticalLayout1 = new QVBoxLayout();
         verticalLayout1->setObjectName("verticalLayout1");
         verticalLayout1->setSizeConstraint(QLayout::SizeConstraint::SetMaximumSize);
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName("horizontalLayout_4");
+        retour = new QPushButton(tabAjout);
+        retour->setObjectName("retour");
+        retour->setMaximumSize(QSize(80, 16777215));
+
+        horizontalLayout_4->addWidget(retour);
+
         label_6 = new QLabel(tabAjout);
         label_6->setObjectName("label_6");
         QFont font;
@@ -213,11 +224,14 @@ public:
         label_6->setFont(font);
         label_6->setStyleSheet(QString::fromUtf8("font-size: 16pt;\n"
 "font-family: \"Arial Rounded MT\";\n"
-"               \n"
+"\n"
 "             "));
         label_6->setAlignment(Qt::AlignmentFlag::AlignCenter);
 
-        verticalLayout1->addWidget(label_6);
+        horizontalLayout_4->addWidget(label_6);
+
+
+        verticalLayout1->addLayout(horizontalLayout_4);
 
         label = new QLabel(tabAjout);
         label->setObjectName("label");
@@ -328,10 +342,21 @@ public:
 
         verticalLayout1->addWidget(spinBox);
 
+        horizontalLayout_5 = new QHBoxLayout();
+        horizontalLayout_5->setObjectName("horizontalLayout_5");
         addButton = new QPushButton(tabAjout);
         addButton->setObjectName("addButton");
 
-        verticalLayout1->addWidget(addButton);
+        horizontalLayout_5->addWidget(addButton);
+
+        pushButtonMicro = new QPushButton(tabAjout);
+        pushButtonMicro->setObjectName("pushButtonMicro");
+        pushButtonMicro->setMaximumSize(QSize(100, 16777215));
+
+        horizontalLayout_5->addWidget(pushButtonMicro);
+
+
+        verticalLayout1->addLayout(horizontalLayout_5);
 
 
         layoutAjout->addLayout(verticalLayout1);
@@ -394,8 +419,8 @@ public:
         label_7->setMaximumSize(QSize(16777215, 50));
         label_7->setStyleSheet(QString::fromUtf8(" font-size: 16pt;\n"
 "   font-family: \"Arial Rounded MT\";\n"
-"  \n"
-"              \n"
+"\n"
+"\n"
 "             "));
         label_7->setAlignment(Qt::AlignmentFlag::AlignCenter);
 
@@ -507,8 +532,8 @@ public:
         label_13->setStyleSheet(QString::fromUtf8("\n"
 "    font-size: 16pt;\n"
 "   font-family: \"Arial Rounded MT\";\n"
-"    \n"
-"    \n"
+"\n"
+"\n"
 ""));
         label_13->setAlignment(Qt::AlignmentFlag::AlignCenter);
         tabWidget->addTab(tabModification, QString());
@@ -535,6 +560,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
+        retour->setText(QCoreApplication::translate("MainWindow", "retour", nullptr));
         label_6->setText(QCoreApplication::translate("MainWindow", "L'ajout d'un employ\303\251e", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "ID :", nullptr));
         idInput->setPlaceholderText(QCoreApplication::translate("MainWindow", "Ins\303\251rer l'identifiant ", nullptr));
@@ -553,6 +579,7 @@ public:
 
         label_5->setText(QCoreApplication::translate("MainWindow", "Salaire :", nullptr));
         addButton->setText(QCoreApplication::translate("MainWindow", "Ajouter", nullptr));
+        pushButtonMicro->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tabAjout), QCoreApplication::translate("MainWindow", "Ajout", nullptr));
         searchLineEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "Rechercher par nom...", nullptr));
         exportButton->setText(QCoreApplication::translate("MainWindow", "Exporter en PDF", nullptr));
@@ -566,7 +593,7 @@ public:
         QTableWidgetItem *___qtablewidgetitem3 = tableWidget->horizontalHeaderItem(3);
         ___qtablewidgetitem3->setText(QCoreApplication::translate("MainWindow", "SALAIRE", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tabAffichage), QCoreApplication::translate("MainWindow", "Affichage", nullptr));
-        label_7->setText(QCoreApplication::translate("MainWindow", "Suppression d'un empoly\303\251e", nullptr));
+        label_7->setText(QCoreApplication::translate("MainWindow", "Suppression d'un employ\303\251e", nullptr));
         SuppID->setPlaceholderText(QCoreApplication::translate("MainWindow", "Ins\303\251rer L'ID \303\240 supprimer ", nullptr));
         SuppButton->setText(QCoreApplication::translate("MainWindow", "Supprimer", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tabSuppression), QCoreApplication::translate("MainWindow", "Suppression", nullptr));
@@ -577,7 +604,7 @@ public:
         mod_id->setPlaceholderText(QCoreApplication::translate("MainWindow", "Ins\303\251rer ID \303\240 modifier ", nullptr));
         id_valide->setText(QCoreApplication::translate("MainWindow", "valide", nullptr));
         label_10->setText(QCoreApplication::translate("MainWindow", "ID \303\240 modifier :", nullptr));
-        label_13->setText(QCoreApplication::translate("MainWindow", "Modification d'un empoly\303\251e", nullptr));
+        label_13->setText(QCoreApplication::translate("MainWindow", "Modification d'un employ\303\251e", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tabModification), QCoreApplication::translate("MainWindow", "Modification", nullptr));
     } // retranslateUi
 

@@ -40,6 +40,7 @@ constexpr auto qt_meta_stringdata_CLASSLoginWidgetENDCLASS = QtMocHelpers::strin
     "loginSuccessful",
     "",
     "id",
+    "role",
     "onLoginClicked",
     "onMDPOublieClicked"
 );
@@ -62,14 +63,14 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSLoginWidgetENDCLASS[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    1,   32,    2, 0x06,    1 /* Public */,
+       1,    2,   32,    2, 0x06,    1 /* Public */,
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       4,    0,   35,    2, 0x08,    3 /* Private */,
-       5,    0,   36,    2, 0x08,    4 /* Private */,
+       5,    0,   37,    2, 0x08,    4 /* Private */,
+       6,    0,   38,    2, 0x08,    5 /* Private */,
 
  // signals: parameters
-    QMetaType::Void, QMetaType::QString,    3,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString,    3,    4,
 
  // slots: parameters
     QMetaType::Void,
@@ -90,6 +91,7 @@ Q_CONSTINIT const QMetaObject LoginWidget::staticMetaObject = { {
         // method 'loginSuccessful'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<const QString &, std::false_type>,
+        QtPrivate::TypeAndForceComplete<const QString &, std::false_type>,
         // method 'onLoginClicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onMDPOublieClicked'
@@ -104,7 +106,7 @@ void LoginWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         auto *_t = static_cast<LoginWidget *>(_o);
         (void)_t;
         switch (_id) {
-        case 0: _t->loginSuccessful((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 0: _t->loginSuccessful((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
         case 1: _t->onLoginClicked(); break;
         case 2: _t->onMDPOublieClicked(); break;
         default: ;
@@ -112,7 +114,7 @@ void LoginWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            using _t = void (LoginWidget::*)(const QString & );
+            using _t = void (LoginWidget::*)(const QString & , const QString & );
             if (_t _q_method = &LoginWidget::loginSuccessful; *reinterpret_cast<_t *>(_a[1]) == _q_method) {
                 *result = 0;
                 return;
@@ -152,9 +154,9 @@ int LoginWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void LoginWidget::loginSuccessful(const QString & _t1)
+void LoginWidget::loginSuccessful(const QString & _t1, const QString & _t2)
 {
-    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))), const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t2))) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_WARNING_POP

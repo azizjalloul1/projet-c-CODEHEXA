@@ -22,6 +22,12 @@
 #include <QRandomGenerator>
 #include <QCryptographicHash>
 
+#include <QTimer>
+#include <QProcessEnvironment>
+#include <QProcess>
+
+// Ne pas inclure accueil.h ici
+class Accueil; // 🔧 Solution
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -36,9 +42,23 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void setAccueil(Accueil *accueilWindow);
+
     void crypterMotDePasse(const QString &mdp, QString &hashedPassword, QString &salt);
+    void collectId();
+    void collectSalary();
+    void collectRole();
+    void collectEmail();
+    void  collectName();
+    void collectPassword();
 
 private slots:
+
+    void on_btnRetourAccueil_clicked();
+
+    void executePythonScript(const QString& promptType, std::function<void()> callback);
+    void startDataCollection();
+
     void resetInputs();
 
     bool validerMotDePasse();
@@ -58,6 +78,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    Accueil *accueil;
+
     struct PasswordData {
         QString hashedPassword;
         QString salt;

@@ -115,9 +115,6 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QTabWidget" name="tabWidget">
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -138,28 +135,45 @@
            <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
           </property>
           <item>
-           <widget class="QLabel" name="label_6">
-            <property name="font">
-             <font>
-              <family>Arial Rounded MT</family>
-              <pointsize>16</pointsize>
-              <bold>false</bold>
-              <kerning>false</kerning>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">font-size: 16pt;
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QPushButton" name="retour">
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>retour</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_6">
+              <property name="font">
+               <font>
+                <family>Arial Rounded MT</family>
+                <pointsize>16</pointsize>
+                <bold>false</bold>
+                <kerning>false</kerning>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">font-size: 16pt;
 font-family: &quot;Arial Rounded MT&quot;;
-               
+
              </string>
-            </property>
-            <property name="text">
-             <string>L'ajout d'un employée</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
-           </widget>
+              </property>
+              <property name="text">
+               <string>L'ajout d'un employée</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <widget class="QLabel" name="label">
@@ -388,11 +402,28 @@ font-family: &quot;Arial Rounded MT&quot;;
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="addButton">
-            <property name="text">
-             <string>Ajouter</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QPushButton" name="addButton">
+              <property name="text">
+               <string>Ajouter</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButtonMicro">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
@@ -478,12 +509,12 @@ font-family: &quot;Arial Rounded MT&quot;;
             <property name="styleSheet">
              <string notr="true"> font-size: 16pt;
    font-family: &quot;Arial Rounded MT&quot;;
-  
-              
+
+
              </string>
             </property>
             <property name="text">
-             <string>Suppression d'un empolyée</string>
+             <string>Suppression d'un employée</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -710,12 +741,12 @@ font-family: &quot;Arial Rounded MT&quot;;
          <string notr="true">
     font-size: 16pt;
    font-family: &quot;Arial Rounded MT&quot;;
-    
-    
+
+
 </string>
         </property>
         <property name="text">
-         <string>Modification d'un empolyée</string>
+         <string>Modification d'un employée</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignCenter</set>
