@@ -2,58 +2,46 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QHttpMultiPart>
-#include <QEventLoop>
 #include <QUrl>
+#include <QEventLoop>
 #include <QByteArray>
+#include <QObject>
 #include <QDebug>
 
-SMS::SMS(const QString& sid, const QString& token, const QString& from)
-    : m_sid(sid), m_token(token), m_from(from) {}
+SMS::SMS(const QString &accountSid, const QString &authToken, const QString &fromNumber)
+    : m_accountSid(accountSid), m_authToken(authToken), m_fromNumber(fromNumber) {}
 
-bool SMS::envoyerSMS(const QString& to, const QString& message) {
-    QNetworkAccessManager manager;
+bool SMS::envoyerSMS(const QString &toNumber, const QString &message)
+{
+    QNetworkAccessManager *manager = new QNetworkAccessManager();
 
-    QUrl url(QString("https://api.twilio.com/2010-04-01/Accounts/%1/Messages.json").arg(m_sid));
+    QUrl url("https://api.twilio.com/2010-04-01/Accounts/" + m_accountSid + "/Messages.json");
     QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
-    QString auth = m_sid + ":" + m_token;
-    QByteArray data = auth.toLocal8Bit().toBase64();
-    request.setRawHeader("Authorization", "Basic " + data);
+    QString auth = m_accountSid + ":" + m_authToken;
+    request.setRawHeader("Authorization", "Basic " + auth.toLocal8Bit().toBase64());
 
-    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    QByteArray params;
+    params.append("To=" + toNumber.toUtf8() + "&");
+    params.append("From=" + m_fromNumber.toUtf8() + "&");
+    params.append("Body=" + message.toUtf8());
 
-    QHttpPart fromPart;
-    fromPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"From\""));
-    fromPart.setBody(m_from.toUtf8());
-
-    QHttpPart toPart;
-    toPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"To\""));
-    toPart.setBody(to.toUtf8());
-
-    QHttpPart bodyPart;
-    bodyPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"Body\""));
-    bodyPart.setBody(message.toUtf8());
-
-    multiPart->append(fromPart);
-    multiPart->append(toPart);
-    multiPart->append(bodyPart);
-
-    QNetworkReply *reply = manager.post(request, multiPart);
+    QNetworkReply *reply = manager->post(request, params);
 
     QEventLoop loop;
-    QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     loop.exec();
 
     if (reply->error() == QNetworkReply::NoError) {
-        qDebug() << "SMS envoyé avec succès !";
-        multiPart->deleteLater();
-        reply->deleteLater();
         return true;
     } else {
-        qDebug() << "Erreur lors de l'envoi du SMS:" << reply->errorString();
-        multiPart->deleteLater();
-        reply->deleteLater();
+        qDebug() << "Erreur d'envoi du SMS: " << reply->errorString();
         return false;
     }
+}
+
+// Implémentation du destructeur virtuel
+SMS::~SMS() {
+    // Nettoyage si nécessaire (mais dans ce cas, aucun nettoyage supplémentaire n'est nécessaire)
 }

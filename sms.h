@@ -1,18 +1,22 @@
 #ifndef SMS_H
 #define SMS_H
 
-#include <QString>
+#include <QObject>
 
-class SMS {
+class SMS : public QObject
+{
+    Q_OBJECT
+
 public:
-    SMS(const QString& sid, const QString& token, const QString& from);
+    SMS(const QString &accountSid, const QString &authToken, const QString &fromNumber);
+    bool envoyerSMS(const QString &toNumber, const QString &message);
 
-    bool envoyerSMS(const QString& to, const QString& message);
+    virtual ~SMS();  // Ajoute un destructeur virtuel
 
 private:
-    QString m_sid;
-    QString m_token;
-    QString m_from;
+    QString m_accountSid;
+    QString m_authToken;
+    QString m_fromNumber;
 };
 
 #endif // SMS_H

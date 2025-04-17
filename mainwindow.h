@@ -1,9 +1,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-
 #include <QMainWindow>
 #include <QSqlQueryModel>
+#include <QMainWindow>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,14 +26,20 @@ private slots:
     void on_btnModifier_clicked();  // Modifier un fournisseur
     void afficherFournisseurs();    // Afficher les fournisseurs
     void onRechercherClicked();     // Rechercher un fournisseur par nom
+    void envoyerSMS() ;
     void afficherStatistiques();
-
+   // void afficherHistoriqueCommandes(const QString& fournisseurId);
+     void trierParCommande();
+    //void afficherMeilleurFournisseur();
+    void genererIDFournisseur();
     void chargerListeIDs();
-     void remplirChampsFournisseur();
-      void trierParCommande();
-     void exporterEnPDF();
-      void genererIDFournisseur();
-
+    void sendEmail(const QString &supplierName, int totalOrders);
+    void onEmailSent(QNetworkReply* reply);
+    void remplirChampsFournisseur();
+   // void addCommande(const QString &id_fournisseur);
+    void exporterEnPDF();
+    //void afficherHistoriqueCommandes();
+    void afficherHistoriqueMeilleurFournisseur();
 
 
 private:

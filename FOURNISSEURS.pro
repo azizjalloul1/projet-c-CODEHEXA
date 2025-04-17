@@ -4,8 +4,15 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 QT += core gui sql printsupport
 QT += core gui sql network
 QT += charts
+QT += core gui network
+QT += core network
+QT += core gui sql charts
 
-CONFIG += c++17
+QT += network
+
+
+
+
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -14,7 +21,7 @@ CONFIG += c++17
 SOURCES += \
     connexion.cpp \
     fournisseur.cpp \
-    main.cpp \
+     main.cpp \
     mainwindow.cpp \
     sms.cpp
 

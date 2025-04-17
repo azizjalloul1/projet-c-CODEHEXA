@@ -16,34 +16,155 @@
 #include <QImage>
 #include "sms.h"
 #include <QtCharts>
-#include <QRegularExpressionValidator>
 
+#include <QUrl>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QMessageBox>
+
+// Constructeur
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->lineEdit_Id->setReadOnly(true);
-    QRegularExpression rx("^\\d{0,8}$");
-    ui->lineEdit_NumTel->setValidator(new QRegularExpressionValidator(rx, this));
+    chargerListeIDs(); //Charge les ID au démarrage
+
     Connexion c;
     if (!c.ouvrirConnexion()) {
         QMessageBox::critical(this, "Erreur", "Connexion à la base de données échouée !");
-        return;
+        qDebug() << "Connexion à la base échouée: " << c.getDatabase().lastError().text();
+    } else {
+        qDebug() << "Connexion à la base réussie !";
     }
+
 
     genererIDFournisseur();
     afficherFournisseurs();
     chargerListeIDs();
 
+    // Connexion des boutons aux fonctions correspondantes
+    //connect(ui->btnAjouter, &QPushButton::clicked, this, &MainWindow::on_btnAjouter_clicked);
+    //connect(ui->btnSupprimer, &QPushButton::clicked, this, &MainWindow::on_btnSupprimer_clicked);
+    //connect(ui->btnModifier, &QPushButton::clicked, this, &MainWindow::on_btnModifier_clicked);
     connect(ui->comboBox_IdModif, &QComboBox::currentIndexChanged, this, &MainWindow::remplirChampsFournisseur);
-    connect(ui->triButton, &QPushButton::clicked, this, &MainWindow::trierParCommande);
+    connect(ui->comboBox_Tri, &QComboBox::currentIndexChanged, this, &MainWindow::trierParCommande);
+    connect(ui->btnMeilleurFournisseur, &QPushButton::clicked, this, &MainWindow::afficherHistoriqueMeilleurFournisseur);
+
     connect(ui->btnExporterPDF, &QPushButton::clicked, this, &MainWindow::exporterEnPDF);
+    connect(ui->btnEnvoyerSMS, &QPushButton::clicked, this, &MainWindow::envoyerSMS);
+    connect(ui->btnStatistiques, &QPushButton::clicked, this, &MainWindow::afficherStatistiques);
     connect(ui->btnRechercher, &QLineEdit::textChanged, this, &MainWindow::onRechercherClicked);
+
 }
 
 MainWindow::~MainWindow() {
     delete ui;
 }
+
+
+
+
+
+
+
+
+
+void MainWindow::afficherHistoriqueMeilleurFournisseur() {
+    QSqlQueryModel *model = new QSqlQueryModel();
+    QSqlQuery query;
+
+    // Query to get the best supplier with the most orders
+    query.prepare("SELECT F.ID_FOURNISSEUR, F.NOM, SUM(C.QUANTITE_COMMANDE) AS TOTAL_COMMANDES "
+                  "FROM FOURNISSEUR F "
+                  "JOIN COMMANDE C ON F.ID_FOURNISSEUR = C.ID_FOURNISSEUR "
+                  "GROUP BY F.ID_FOURNISSEUR, F.NOM "
+                  "ORDER BY TOTAL_COMMANDES DESC");
+
+    qDebug() << "Requête SQL pour le meilleur fournisseur : " << query.lastQuery();
+
+    if (!query.exec()) {
+        qDebug() << "Erreur SQL : " << query.lastError().text();
+        QMessageBox::critical(this, "Erreur", "Impossible d'afficher le meilleur fournisseur !");
+        delete model;
+        return;
+    }
+
+    // Check if the query returns results
+    if (query.next()) {
+        // Found the best supplier, retrieve information
+        QString bestFournisseurId = query.value(0).toString();
+        QString bestFournisseurNom = query.value(1).toString();
+        int totalCommandes = query.value(2).toInt();
+
+        qDebug() << "Meilleur fournisseur trouvé : " << bestFournisseurNom << "avec " << totalCommandes << " commandes.";
+
+        // Configure model to display the best supplier information
+        model->setQuery(std::move(query)); // Configure the model with the results
+
+        model->setHeaderData(0, Qt::Horizontal, "ID FOURNISSEUR");
+        model->setHeaderData(1, Qt::Horizontal, "NOM");
+        model->setHeaderData(2, Qt::Horizontal, "TOTAL COMMANDES");
+
+        // Display the best supplier data in the table
+        ui->tableView_Fournisseurs->setModel(model);
+
+        // Display the history of the best supplier's orders
+        //afficherHistoriqueCommandes(bestFournisseurId);  // Show the best supplier's order history
+
+        // Send an email about the best supplier (Here we add the call to send the email)
+        sendEmail(bestFournisseurNom, totalCommandes);  // Send email with the supplier's details
+    } else {
+        QMessageBox::warning(this, "Aucun résultat", "Aucun fournisseur trouvé.");
+    }
+}
+
+void MainWindow::sendEmail(const QString& fournisseurNom, int totalCommandes) {
+    // Remplacez "YOUR_API_KEY" par la clé API que vous avez obtenue de ElasticMail
+    const QString apiKey = "2CE1121CEA02FDBA599399EF5865E2DBCCCF8849CEB3A8820E4385545EF7B2B18F481FE6F2711BD8B89A273EA1125D49";  // Remplacez par votre clé API ElasticMail
+    const QString url = "https://api.elasticemail.com/v2/email/send"; // Endpoint d'ElasticMail
+
+    // Créer la requête
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+    QNetworkRequest request{QUrl(url)};
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    // Ajouter l'authentification avec la clé API
+    QString authHeader = "Basic " + QByteArray("apikey:").append(apiKey.toUtf8()).toBase64();
+    request.setRawHeader("Authorization", authHeader.toUtf8());
+
+    // Créer le contenu de l'email
+    QJsonObject emailContent;
+    emailContent["from"] = "your_email@example.com";  // Remplacez par votre adresse email
+    emailContent["to"] = QJsonArray{{QJsonObject{{"email", "molkaomrani1412@gmail.com"}}}}; // Remplacez par l'email du destinataire
+    emailContent["subject"] = "Meilleur Fournisseur";
+    emailContent["bodyHtml"] = QString("<html><body><h1>Le meilleur fournisseur est : %1</h1><p>Nombre de commandes : %2</p></body></html>")
+                                   .arg(fournisseurNom)
+                                   .arg(totalCommandes);
+
+    QJsonDocument doc(emailContent);
+    QByteArray data = doc.toJson();
+
+    // Envoyer la requête
+    connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::onEmailSent);
+    manager->post(request, data);
+}
+
+void MainWindow::onEmailSent(QNetworkReply* reply) {
+    if (reply->error() == QNetworkReply::NoError) {
+        qDebug() << "Email envoyé avec succès !";
+    } else {
+        qDebug() << "Échec de l'envoi de l'email : " << reply->errorString();
+        qDebug() << "Détails de la réponse : " << reply->readAll();
+    }
+    reply->deleteLater();
+}
+
+
+
+
 
 void MainWindow::genererIDFournisseur() {
     int generatedID = 1;
@@ -66,94 +187,104 @@ void MainWindow::genererIDFournisseur() {
     ui->lineEdit_Id->setText(QString::number(generatedID));
 }
 
+
+// Ajouter un fournisseur
 void MainWindow::on_btnAjouter_clicked() {
     QString id_fournisseur = ui->lineEdit_Id->text().trimmed();
     QString nom = ui->lineEdit_Nom->text().trimmed();
     QString num_tel = ui->lineEdit_NumTel->text().trimmed();
     QString type_service = ui->comboBox_TypeService_2->currentText().trimmed();
-    const QString TWILIO_ACCOUNT_SID = "AC1e7459302a1e433b4038abaf76edf9d2";
-    const QString TWILIO_AUTH_TOKEN = "9c77cae2b4092b860ab82e54cca0c8e5";
-    const QString TWILIO_PHONE = "+13156448652";
 
-    if (nom.isEmpty() || num_tel.isEmpty() || type_service.isEmpty()) {
+    // **Vérification des champs vides**
+    if (id_fournisseur.isEmpty() || nom.isEmpty() || num_tel.isEmpty() || type_service.isEmpty()) {
         QMessageBox::warning(this, "Erreur", "Tous les champs doivent être remplis !");
         return;
     }
 
-    // 🔤 Vérifier que le nom contient uniquement des lettres (pas de chiffres ni symboles)
-    QRegularExpression nomRegex("^[a-zA-Z]+$");
+    // **Validation de l'ID Fournisseur : uniquement des chiffres**
+    static const QRegularExpression idRegex("^[0-9]+$");
+    if (!idRegex.match(id_fournisseur).hasMatch()) {
+        QMessageBox::warning(this, "Erreur", "L'ID Fournisseur doit contenir uniquement des chiffres !");
+        return;
+    }
+
+    // **Validation du nom : seulement des lettres (majuscules ou minuscules)**
+    static const QRegularExpression nomRegex("^[a-zA-Z]+$");
     if (!nomRegex.match(nom).hasMatch()) {
         QMessageBox::warning(this, "Erreur", "Le nom ne doit contenir que des lettres !");
         return;
     }
 
-    // 📱 Vérifier que le numéro contient exactement 8 chiffres
-    QRegularExpression telRegex("^\\d{8}$");
+    // **Validation du numéro de téléphone : exactement 8 chiffres**
+    static const QRegularExpression telRegex("^[0-9]{8}$");
     if (!telRegex.match(num_tel).hasMatch()) {
         QMessageBox::warning(this, "Erreur", "Le numéro de téléphone doit contenir exactement 8 chiffres !");
         return;
     }
 
+    // **Générer une quantité aléatoire entre 10 et 200**
+    int quantiteAleatoire = QRandomGenerator::global()->bounded(10, 201);
 
     Fournisseur f(id_fournisseur, nom, num_tel, type_service);
     if (f.ajouterFournisseur()) {
         QMessageBox::information(this, "Succès", "Fournisseur ajouté avec succès !");
 
-        SMS sms(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE);
-       ;
-        sms.envoyerSMS("+21694321511", "Fournisseur ajouté avec ID: " + id_fournisseur);
-
-        int quantite = QRandomGenerator::global()->bounded(10, 201);
+        // **Insérer la quantité de commande aléatoire dans COMMANDE**
         QSqlQuery query;
         query.prepare("INSERT INTO COMMANDE (ID_COMMANDE, ID_FOURNISSEUR, QUANTITE_COMMANDE) "
-                      "VALUES ((SELECT COALESCE(MAX(ID_COMMANDE), 0) + 1 FROM COMMANDE), :id, :qte)");
-        query.bindValue(":id", id_fournisseur);
-        query.bindValue(":qte", quantite);
-        query.exec();
+                      "VALUES ((SELECT COALESCE(MAX(ID_COMMANDE), 0) + 1 FROM COMMANDE), :id_fournisseur, :quantite)");
+
+        query.bindValue(":id_fournisseur", id_fournisseur);
+        query.bindValue(":quantite", quantiteAleatoire);
+
+        if (query.exec()) {
+            qDebug() << "Quantité de commande aléatoire ajoutée: " << quantiteAleatoire;
+        } else {
+            qDebug() << "Erreur lors de l'insertion de la quantité: " << query.lastError().text();
+        }
 
         afficherFournisseurs();
-        chargerListeIDs();
 
+        // **Réinitialisation des champs**
+        ui->lineEdit_Id->clear();
         ui->lineEdit_Nom->clear();
-        ui->lineEdit_NumTel->setValidator(new QRegularExpressionValidator(QRegularExpression("^\\d{0,8}$"), this));
-
-
+        ui->lineEdit_NumTel->clear();
         ui->comboBox_TypeService_2->setCurrentIndex(0);
-
-        genererIDFournisseur(); // re-générer un ID disponible
     } else {
         QMessageBox::critical(this, "Erreur", "Échec de l'ajout du fournisseur !");
     }
 }
 
-// Ajoute aussi la déclaration suivante dans mainwindow.h :
-// void genererIDFournisseur();
 
-void MainWindow::afficherStatistiques() {
-    QSqlQuery query("SELECT TYPE_SERVICE, COUNT(*) FROM FOURNISSEUR GROUP BY TYPE_SERVICE");
+void MainWindow::remplirChampsFournisseur() {
+    QString id_fournisseur = ui->comboBox_IdModif->currentText().trimmed();
+    if (id_fournisseur.isEmpty()) return; // Si aucun ID sélectionné, ne rien faire
 
-    QPieSeries *series = new QPieSeries();
-    while (query.next()) {
-        QString type = query.value(0).toString();
-        int count = query.value(1).toInt();
-        series->append(type, count);
+    QSqlQuery query;
+    query.prepare("SELECT NOM, NUM_TEL, TYPE_SERVICE FROM FOURNISSEUR WHERE ID_FOURNISSEUR = :id");
+    query.bindValue(":id", id_fournisseur);
+
+    if (!query.exec()) {
+        qDebug() << "Erreur lors du chargement du fournisseur:" << query.lastError().text();
+        QMessageBox::critical(this, "Erreur", "Impossible de charger les données du fournisseur !");
+        return;
     }
 
-    QChart *chart = new QChart();
-    chart->addSeries(series);
-    chart->setTitle("Répartition des fournisseurs par service");
+    if (query.next()) {
+        ui->lineEdit_NomModif->setText(query.value(0).toString());
+        ui->lineEdit_NumTelModif->setText(query.value(1).toString());
 
-    QChartView *chartView = new QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
+    }QString typeService = query.value(2).toString();
+    int index = ui->comboBox_TypeServiceModif->findText(typeService);
 
-    QDialog *dialog = new QDialog(this);
-    QVBoxLayout *layout = new QVBoxLayout(dialog);
-    layout->addWidget(chartView);
-    dialog->setLayout(layout);
-    dialog->resize(500, 400);
-    dialog->setWindowTitle("Statistiques Fournisseurs");
-    dialog->exec();
+    if (index != -1) {
+        ui->comboBox_TypeServiceModif->setCurrentIndex(index);
+    } else {
+        qDebug() << "Type de service introuvable dans le ComboBox :" << typeService;
+    }
+
 }
+
 
 
 // Modifier un fournisseur
@@ -199,14 +330,14 @@ void MainWindow::on_btnModifier_clicked() {
     if (type_service.isEmpty()) type_service = old_type_service;
 
     // **Validation du nom : seulement des lettres (majuscules ou minuscules)**
-     static const QRegularExpression nomRegex("^[a-zA-Z]+$");
+    static const QRegularExpression nomRegex("^[a-zA-Z]+$");
     if (!nomRegex.match(nom).hasMatch()) {
         QMessageBox::warning(this, "Erreur", "Le nom ne doit contenir que des lettres !");
         return;
     }
 
     // **Validation du numéro de téléphone : exactement 8 chiffres**
-     static const QRegularExpression telRegex("^[0-9]{8}$");
+    static const QRegularExpression telRegex("^[0-9]{8}$");
     if (!telRegex.match(num_tel).hasMatch()) {
         QMessageBox::warning(this, "Erreur", "Le numéro de téléphone doit contenir exactement 8 chiffres !");
         return;
@@ -277,14 +408,12 @@ void MainWindow::on_btnSupprimer_clicked() {
 
 // Afficher les fournisseurs
 void MainWindow::afficherFournisseurs() {
-    // Vérifier si la base de données est bien ouverte
-
     QSqlQueryModel *model = new QSqlQueryModel();
     QSqlQuery query;
 
-    // Requête SQL pour récupérer les fournisseurs et la quantité de commande
+    // Requête SQL pour récupérer les fournisseurs, quantité de commande et fréquence de commande
     query.prepare("SELECT F.ID_FOURNISSEUR, F.NOM, F.NUM_TEL, F.TYPE_SERVICE, "
-                  "NVL(C.QUANTITE_COMMANDE, 0) AS QUANTITE_COMMANDE "
+                  "NVL(C.QUANTITE_COMMANDE, 0) AS QUANTITE_COMMANDE, C.FREQUENCE_COMMANDE "
                   "FROM FOURNISSEUR F "
                   "LEFT JOIN COMMANDE C ON F.ID_FOURNISSEUR = C.ID_FOURNISSEUR");
 
@@ -297,6 +426,7 @@ void MainWindow::afficherFournisseurs() {
         model->setHeaderData(2, Qt::Horizontal, "NUMÉRO TÉLÉPHONE");
         model->setHeaderData(3, Qt::Horizontal, "TYPE DE SERVICE");
         model->setHeaderData(4, Qt::Horizontal, "QUANTITÉ COMMANDE");
+        model->setHeaderData(5, Qt::Horizontal, "Fréquence Commande");
 
         ui->tableView_Fournisseurs->setModel(model);
         qDebug() << "Nombre de fournisseurs trouvés :" << model->rowCount();
@@ -307,20 +437,43 @@ void MainWindow::afficherFournisseurs() {
     }
 }
 
+
 void MainWindow::trierParCommande() {
- QSqlQueryModel *model = new QSqlQueryModel();
+    QSqlQueryModel *model = new QSqlQueryModel();
     QSqlQuery query;
 
-    // Requête SQL pour trier par quantité de commande en croissant
-    query.prepare("SELECT F.ID_FOURNISSEUR, F.NOM, F.NUM_TEL, F.TYPE_SERVICE, "
-                  "NVL(C.QUANTITE_COMMANDE, 0) AS QUANTITE_COMMANDE "
-                  "FROM FOURNISSEUR F "
-                  "LEFT JOIN COMMANDE C ON F.ID_FOURNISSEUR = C.ID_FOURNISSEUR "
-                  "ORDER BY QUANTITE_COMMANDE DESC");  //Cela permet de récupérer tous les fournisseurs, même ceux qui n'ont pas encore de commande.
+    // Convertir le texte en index pour le switch
+    QString selectedText = ui->comboBox_Tri->currentText();
+    int orderIndex = (selectedText == "tri croissant") ? 1 : (selectedText == "tri décroissant") ? 2 : 0;
+
+    // Variable pour le tri
+    QString order;
+    QString message;
+
+    switch (orderIndex) {
+    case 1: // tri croissant
+        order = "ASC";
+        message = "Tri effectué, résultats triés par quantité croissante.";
+        break;
+    case 2: // tri décroissant
+        order = "DESC";
+        message = "Tri effectué, résultats triés par quantité décroissante.";
+        break;
+    default:
+        order = "ASC"; // Par défaut, tri croissant
+        message = "Tri effectué, résultats triés par quantité croissante.";
+        break;
+    }
+
+    // Requête SQL pour trier par quantité de commande
+    query.prepare(QString("SELECT F.ID_FOURNISSEUR, F.NOM, F.NUM_TEL, F.TYPE_SERVICE, "
+                          "NVL(C.QUANTITE_COMMANDE, 0) AS QUANTITE_COMMANDE "
+                          "FROM FOURNISSEUR F "
+                          "LEFT JOIN COMMANDE C ON F.ID_FOURNISSEUR = C.ID_FOURNISSEUR "
+                          "ORDER BY QUANTITE_COMMANDE %1").arg(order));
 
     if (query.exec()) {
-        model->setQuery(std::move(query));
-
+        model->setQuery(std::move(query));  // Effectuer la requête avec les nouvelles données triées
 
         // Définir les en-têtes des colonnes
         model->setHeaderData(0, Qt::Horizontal, "ID FOURNISSEUR");
@@ -329,8 +482,12 @@ void MainWindow::trierParCommande() {
         model->setHeaderData(3, Qt::Horizontal, "TYPE DE SERVICE");
         model->setHeaderData(4, Qt::Horizontal, "QUANTITÉ COMMANDE");
 
+        // Appliquer le modèle au tableau pour afficher les résultats triés
         ui->tableView_Fournisseurs->setModel(model);
-        qDebug() << "Tri effectué, meilleur fournisseur en premier.";
+
+        // Afficher le message adapté au type de tri
+        QMessageBox::information(this, "Tri effectué", message);
+        qDebug() << message;
     } else {
         qDebug() << "Erreur SQL lors du tri :" << query.lastError().text();
         QMessageBox::critical(this, "Erreur", "Impossible de trier les fournisseurs !");
@@ -378,26 +535,30 @@ void MainWindow::onRechercherClicked() {
 
 // Exporter en PDF
 void MainWindow::exporterEnPDF() {
-    QString fileName = QFileDialog::getSaveFileName(this, "Exporter en PDF", "", "Fichiers PDF (*.pdf)");
-    if (fileName.isEmpty()) return;
 
+    QString fileName = QFileDialog::getSaveFileName(this, "Exporter en PDF", "", "Fichiers PDF (*.pdf)");
+    if (fileName.isEmpty()) return; // L'utilisateur a annulé
+
+    // Configurer le PDF**
     QPdfWriter pdfWriter(fileName);
-    pdfWriter.setPageSize(QPageSize(QPageSize::A4));
+    pdfWriter.setPageSize(QPageSize(QPageSize::A4));  // Taille A4
     pdfWriter.setResolution(300);
     QPainter painter(&pdfWriter);
 
-    // 📷 Logo
-    QImage image("C:/Users/ASUS/Desktop/Projet_QT/FOURNISSEURS/mm.png");
+    //  Ajouter une image
+    QImage image("C:/Users/ASUS/Desktop/Projet_QT/FOURNISSEURS/mm.png");  //chemin
     if (!image.isNull()) {
-        QRect imgRect((pdfWriter.width() - 250) / 2, 40, 250, 100);
+        QRect imgRect((pdfWriter.width() - 250) / 2, 50, 250, 120);
         painter.drawImage(imgRect, image);
+    } else {
+        qDebug() << "Image introuvable ! Vérifiez le chemin.";
     }
 
-    // 🏷️ Titre
-    painter.setFont(QFont("Arial", 20, QFont::Bold));
-    painter.drawText(QRect(0, 150, pdfWriter.width(), 50), Qt::AlignCenter, "📋 Liste des Fournisseurs");
+    // **4️⃣ Ajouter un titre plus visible**
+    painter.setFont(QFont("Arial", 18, QFont::Bold));  // Plus grand titre
+    painter.drawText(QRect(0, 200, pdfWriter.width(), 50), Qt::AlignCenter, "Liste des Fournisseurs");
 
-    // 🔍 Requête SQL
+    // **5️⃣ Récupérer les données des fournisseurs**
     QSqlQuery query;
     query.prepare("SELECT F.ID_FOURNISSEUR, F.NOM, F.NUM_TEL, F.TYPE_SERVICE, "
                   "COALESCE(C.QUANTITE_COMMANDE, 0) AS QUANTITE_COMMANDE "
@@ -405,81 +566,155 @@ void MainWindow::exporterEnPDF() {
                   "LEFT JOIN COMMANDE C ON F.ID_FOURNISSEUR = C.ID_FOURNISSEUR");
 
     if (!query.exec()) {
-        QMessageBox::critical(this, "Erreur", "Erreur lors de l'exportation des données !");
+        QMessageBox::critical(this, "Erreur", "Impossible d'exporter les données !");
         return;
     }
 
-    // 📊 Table Configuration
-    int rowHeight = 60;
-    int colWidths[] = {80, 180, 180, 220, 120};
-    int totalWidth = 0;
-    for (int w : colWidths) totalWidth += w;
-    int startX = (pdfWriter.width() - totalWidth) / 2;
-    int startY = 230;
+    // **6️⃣ Configurer le tableau**
+    int startY = 280;  //
+    int rowHeight = 300;
+    int colWidths[] = {100, 200, 300, 240, 200};  // Largeur augmentée
 
+    // **7️⃣ En-têtes du tableau**
     QStringList headers = {"ID", "Nom", "Téléphone", "Service", "Quantité"};
-
-    // 🧾 En-têtes
     painter.setFont(QFont("Arial", 12, QFont::Bold));
-    painter.setBrush(QColor(220, 220, 220));
-    int xPos = startX;
 
-    for (int i = 0; i < headers.size(); ++i) {
+    int xPos = 50;
+    painter.setBrush(QColor(200, 200, 200));  // Fond gris pour les en-têtes
+
+    for (int i = 0; i < headers.size(); i++) {
         painter.drawRect(xPos, startY, colWidths[i], rowHeight);
-        painter.drawText(QRect(xPos, startY, colWidths[i], rowHeight),
-                         Qt::AlignCenter, headers[i]);
+        painter.drawText(xPos + 10, startY + 30, headers[i]);
         xPos += colWidths[i];
     }
 
-    // 🧾 Données
-    painter.setBrush(Qt::NoBrush);
-    painter.setFont(QFont("Arial", 11));
+    painter.setBrush(Qt::NoBrush);  // Supprimer le fond pour les cellules
+
+    //  Remplir le tableau avec les données**
     startY += rowHeight;
+    painter.setFont(QFont("Arial", 11));  // Texte plus grand
 
     while (query.next()) {
-        xPos = startX;
-        for (int i = 0; i < headers.size(); ++i) {
+        xPos = 50;
+        for (int i = 0; i < headers.size(); i++) {
             painter.drawRect(xPos, startY, colWidths[i], rowHeight);
-            painter.drawText(QRect(xPos + 5, startY + 5, colWidths[i] - 10, rowHeight - 10),
-                             Qt::AlignLeft | Qt::AlignVCenter,
-                             query.value(i).toString());
+            painter.drawText(xPos + 10, startY + 30, query.value(i).toString());
             xPos += colWidths[i];
         }
         startY += rowHeight;
     }
 
+
     painter.end();
-    QMessageBox::information(this, "PDF Exporté", "📄 Le fichier a été exporté avec succès !");
+    QMessageBox::information(this, "Succès", "PDF exporté avec succès !");
 }
 
 
-void MainWindow::remplirChampsFournisseur() {
-    QString id_fournisseur = ui->comboBox_IdModif->currentText().trimmed();
-    if (id_fournisseur.isEmpty()) return;
 
-    QSqlQuery query;
-    query.prepare("SELECT NOM, NUM_TEL, TYPE_SERVICE FROM FOURNISSEUR WHERE ID_FOURNISSEUR = :id");
-    query.bindValue(":id", id_fournisseur);
 
-    if (!query.exec()) {
-        qDebug() << "Erreur lors du chargement du fournisseur:" << query.lastError().text();
-        QMessageBox::critical(this, "Erreur", "Impossible de charger les données du fournisseur !");
+
+
+
+void MainWindow::envoyerSMS() {
+    // Vérifier si un fournisseur est sélectionné dans le tableau
+    int row = ui->tableView_Fournisseurs->currentIndex().row(); // Récupère la ligne sélectionnée
+
+    if (row == -1) {
+        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un fournisseur !");
         return;
     }
 
-    if (query.next()) {
-        ui->lineEdit_NomModif->setText(query.value(0).toString());
-        ui->lineEdit_NumTelModif->setText(query.value(1).toString());
-        QString typeService = query.value(2).toString();
-        int index = ui->comboBox_TypeServiceModif->findText(typeService);
-        if (index != -1) {
-            ui->comboBox_TypeServiceModif->setCurrentIndex(index);
-        } else {
-            qDebug() << "Type de service introuvable dans le ComboBox :" << typeService;
-        }
+    // Récupérer l'ID et la quantité du fournisseur sélectionné
+    QString id_fournisseur = ui->tableView_Fournisseurs->model()->data(ui->tableView_Fournisseurs->model()->index(row, 0)).toString();
+    QString quantite = ui->tableView_Fournisseurs->model()->data(ui->tableView_Fournisseurs->model()->index(row, 4)).toString();  // La quantité est dans la 5ème colonne (index 4)
+
+    // Construire le message à envoyer
+    QString message = "Fournisseur ID: " + id_fournisseur + " - Quantité de commande: " + quantite;
+
+    // Paramètres Twilio pour l'envoi du SMS
+    const QString TWILIO_ACCOUNT_SID = "AC1e7459302a1e433b4038abaf76edf9d2";
+    const QString TWILIO_AUTH_TOKEN = "9c77cae2b4092b860ab82e54cca0c8e5";
+    const QString TWILIO_PHONE = "+13156448652";
+
+    // Créer un objet SMS et envoyer le message
+    SMS sms(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE);
+    bool success = sms.envoyerSMS("+21694321511", message); // Utiliser un numéro de téléphone valide
+
+    if (success) {
+        QMessageBox::information(this, "Succès", "Le SMS a été envoyé avec succès !");
+    } else {
+        QMessageBox::critical(this, "Erreur", "L'envoi du SMS a échoué !");
     }
 }
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void MainWindow::afficherStatistiques() {
+    QSqlQuery query("SELECT TYPE_SERVICE, COUNT(*) FROM FOURNISSEUR GROUP BY TYPE_SERVICE");
+
+    QPieSeries *series = new QPieSeries();
+
+    // Total count to calculate percentage
+    int totalCount = 0;
+
+    // First, calculate the total number of suppliers
+    while (query.next()) {
+        totalCount += query.value(1).toInt();
+    }
+
+    // Reset query to loop through again to add slices to the pie chart
+    query.first();  // Reset the query to the first row after calculation
+
+    // Add the data to the pie chart
+    while (query.next()) {
+        QString type = query.value(0).toString();
+        int count = query.value(1).toInt();
+
+        // Add slice to the pie series
+        QPieSlice *slice = series->append(type, count);
+
+        // Calculate the percentage for each slice
+        double percentage = (count * 100.0) / totalCount;
+
+        // Set label with the count and percentage
+        slice->setLabel(QString("%1: %2 (%3%)").arg(type).arg(count).arg(QString::number(percentage, 'f', 1)));  // Example: "logistique: 15 (25.0%)"
+        slice->setLabelVisible(true);  // Make sure labels are visible on the pie slices
+    }
+
+    // Create the chart and add the series
+    QChart *chart = new QChart();
+    chart->addSeries(series);
+    chart->setTitle("Répartition des fournisseurs par service");
+
+    // Create the chart view and set rendering hint for anti-aliasing
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+    // Create a dialog to display the chart
+    QDialog *dialog = new QDialog(this);
+    QVBoxLayout *layout = new QVBoxLayout(dialog);
+    layout->addWidget(chartView);
+    dialog->setLayout(layout);
+    dialog->resize(600, 400);
+    dialog->setWindowTitle("Statistiques Fournisseurs");
+
+    // Execute the dialog
+    dialog->exec();
+}
