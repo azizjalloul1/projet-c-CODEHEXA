@@ -15,7 +15,8 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QEventLoop>
-
+#include <QHostInfo>
+#include <QNetworkInterface>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -544,7 +545,7 @@ void MainWindow::uploadPDF()
 
 
 
-//CODE A BARRES
+//QRCODE
 QPixmap MainWindow::QRCodeImage(const QString &text)
 {
     QString url = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + text;
@@ -569,52 +570,78 @@ QPixmap MainWindow::QRCodeImage(const QString &text)
 
 
 
+
+QString getLocalIPAddress()
+{
+    const QList<QHostAddress> &list = QNetworkInterface::allAddresses();
+    for (const QHostAddress &address : list) {
+        if (address.protocol() == QAbstractSocket::IPv4Protocol && !address.isLoopback())
+            return address.toString();
+    }
+    return "127.0.0.1";
+}
+
 void MainWindow::QRCode()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, "Exporter les codes-barres en PDF", "", "Fichier PDF (*.pdf)");
+    QString dirPath = QFileDialog::getExistingDirectory(this, "Choisir un dossier pour enregistrer les PDFs");
+    if (dirPath.isEmpty()) return;
+
+    QString fileName = QFileDialog::getSaveFileName(this, "Exporter le PDF avec les QR codes", "", "Fichier PDF (*.pdf)");
     if (fileName.isEmpty()) return;
 
+    QString ipAddress = getLocalIPAddress();
     QList<Examen> examens = Examen::afficherExamens();
     QString htmlContent = "<html><head><style>"
-                          "h1 {text-align: center; color: #333;}"
-                          "table {width: 100%; border-collapse: collapse;}"
-                          "td {text-align: center; padding: 10px;}"
+                          "body { font-family: Arial; padding: 30px; color: #222; }"
+                          "h1 { text-align: center; color: #1a73e8; }"
+                          "table { width: 100%; border-collapse: collapse; }"
+                          "td { text-align: center; padding: 20px; border-bottom: 1px solid #ddd; }"
                           "</style></head><body>";
-    htmlContent += "<h1>Codes à Barres des Examens</h1><table>";
+    htmlContent += "<h1>Codes QR des Examens</h1><table>";
 
+    for (const Examen &e : examens) {
+        QString id = e.getCodeExamen();
+        QString pdfFilePath = dirPath + "/examen_" + id + ".pdf";
 
-    for (int i = 0; i < examens.size(); ++i) {
-        const Examen &e = examens[i];
+        QString htmlFiche = "<html><body style='font-family:Arial;padding:40px;'>"
+                            "<h2 style='text-align:center;'>Fiche Examen</h2>"
+                            "<p><b>ID:</b> " + id + "</p>"
+                                   "<p><b>Matière:</b> " + e.getMatiere() + "</p>"
+                                               "<p><b>Niveau:</b> " + e.getNiveau() + "</p>"
+                                              "<p><b>Date:</b> " + e.getDate() + "</p>"
+                                            "<p><b>Heure:</b> " + e.getHeure() + "</p>"
+                                             "<p><b>Quantité:</b> " + QString::number(e.getQuantite()) + " copies</p>"
+                                                                 "</body></html>";
 
-        QString qrText = " Examen Info:\n"
-                         "• ID : " + e.getCodeExamen() + "\n"
-                                               "• Matière : " + e.getMatiere() + "\n"
-                                            "• Niveau : " + e.getNiveau() + "\n"
-                                           "• Date : " + e.getDate() + "\n"
-                                         "• Heure : " + e.getHeure() + "\n"
-                                          "• Quantité : " + QString::number(e.getQuantite()) + " copies";
+        QTextDocument docExamen;
+        docExamen.setHtml(htmlFiche);
+        QPrinter printer(QPrinter::HighResolution);
+        printer.setOutputFormat(QPrinter::PdfFormat);
+        printer.setOutputFileName(pdfFilePath);
+        docExamen.print(&printer);
 
+        QString qrText = "http://" + ipAddress + ":8000/examen_" + id + ".pdf";
 
         QPixmap pix = QRCodeImage(qrText);
+
         QByteArray ba;
         QBuffer buffer(&ba);
         buffer.open(QIODevice::WriteOnly);
         pix.save(&buffer, "PNG");
         QString base64 = QString::fromLatin1(ba.toBase64());
 
-        htmlContent += "<tr><td><b>ID:</b> " + e.getCodeExamen() + "</td></tr>";
+        htmlContent += "<tr><td><b>ID:</b> " + id + "</td></tr>";
         htmlContent += "<tr><td><img src='data:image/png;base64," + base64 + "'/></td></tr>";
     }
-
 
     htmlContent += "</table></body></html>";
 
     QTextDocument doc;
     doc.setHtml(htmlContent);
-    QPrinter printer(QPrinter::HighResolution);
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName(fileName);
-    doc.print(&printer);
+    QPrinter globalPrinter(QPrinter::HighResolution);
+    globalPrinter.setOutputFormat(QPrinter::PdfFormat);
+    globalPrinter.setOutputFileName(fileName);
+    doc.print(&globalPrinter);
 
-    QMessageBox::information(this, "Succès", "Les codes-barres ont été exportés en PDF avec succès !");
+    QMessageBox::information(this, "Succès", "QR codes avec adresse IP locale générés !");
 }
