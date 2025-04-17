@@ -327,7 +327,6 @@ void MainWindow::ExporterPDF() {
         return;
     }
 
-
     QString currentDate = QDate::currentDate().toString("dd/MM/yyyy");
 
     QString pdfContent = "<html><head><style>"
@@ -340,6 +339,8 @@ void MainWindow::ExporterPDF() {
                          "footer { text-align: center; font-size: 10px; color: #888; margin-top: 30px; }"
                          "</style></head><body>";
 
+    // Update logo with the latest image path
+    pdfContent += "<img src=\"C:\\2A12\\2\\projet c++\\Gstion-examen\\img.png\" width=\"80\" style=\"float: left; margin-top: 10px; margin-left: 10px;\" />";
     pdfContent += "<h1>Liste des Examens</h1>";
     pdfContent += QString("<p class='date'>Date d'export : %1</p>").arg(currentDate);
 
@@ -357,7 +358,6 @@ void MainWindow::ExporterPDF() {
                       + "<td>" + query.value(5).toString() + "</td></tr>";
     }
 
-
     pdfContent += "</table>";
     pdfContent += "<footer></footer>";
     pdfContent += "</body></html>";
@@ -371,6 +371,11 @@ void MainWindow::ExporterPDF() {
 
     QMessageBox::information(this, "Succès", "Exportation en PDF réussie !");
 }
+
+
+
+
+
 
 //TRI
 void MainWindow::TRIC()
@@ -567,8 +572,6 @@ QPixmap MainWindow::QRCodeImage(const QString &text)
     reply->deleteLater();
     return pix;
 }
-
-
 
 
 QString getLocalIPAddress()
