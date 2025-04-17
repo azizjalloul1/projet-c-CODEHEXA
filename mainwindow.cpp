@@ -339,10 +339,8 @@ void MainWindow::ExporterPDF() {
                          "footer { text-align: center; font-size: 10px; color: #888; margin-top: 30px; }"
                          "</style></head><body>";
 
-    // Update logo with the latest image path
     pdfContent += "<img src=\"C:\\2A12\\2\\projet c++\\Gstion-examen\\img.png\" width=\"80\" style=\"float: left; margin-top: 10px; margin-left: 10px;\" />";
     pdfContent += "<h1>Liste des Examens</h1>";
-    pdfContent += QString("<p class='date'>Date d'export : %1</p>").arg(currentDate);
 
     pdfContent += "<table><tr>"
                   "<th>ID Examen</th><th>Matière</th><th>Niveau</th><th>Date</th><th>Heure</th><th>Quantité</th></tr>";
@@ -361,6 +359,7 @@ void MainWindow::ExporterPDF() {
     pdfContent += "</table>";
     pdfContent += "<footer></footer>";
     pdfContent += "</body></html>";
+    pdfContent += QString("<p class='date'>Date d'export : %1</p>").arg(currentDate);
 
     QTextDocument document;
     document.setHtml(pdfContent);
@@ -371,10 +370,6 @@ void MainWindow::ExporterPDF() {
 
     QMessageBox::information(this, "Succès", "Exportation en PDF réussie !");
 }
-
-
-
-
 
 
 //TRI
