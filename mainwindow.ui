@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>933</width>
+    <height>784</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">
+     QWidget {
+     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgb(227, 240, 254), stop:1 rgb(187, 222, 251));
+
+       font-family: Arial, sans-serif;
+       font-size: 14px;
+     }
+
+     QLineEdit {
+     border: 2px solid rgb(92, 107, 192);
+
+       border-radius: 8px;
+       padding: 8px;
+       background-color: rgb(249, 249, 249);
+
+       color: #333;
+       font-size: 14px;
+       transition: 0.3s ease-in-out;
+     }
+
+     QLineEdit:focus {
+       border: 2px solid #3f51b5;
+       background-color: #e8eaf6;
+       box-shadow: 0px 0px 5px rgba(63, 81, 181, 0.5);
+     }
+
+     QPushButton {
+       background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #2196F3, stop:1 #1976D2);
+       color: white;
+       border-radius: 8px;
+       padding: 12px;
+       font-size: 16px;
+       font-weight: bold;
+       border: none;
+       transition: all 0.3s ease-in-out;
+       box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+     }
+
+     QPushButton:hover {
+       background: #1976D2;
+       box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+     }
+
+     QPushButton:pressed {
+       background: #0D47A1;
+       box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
+     }
+
+     QPushButton:disabled {
+       background: #BBDEFB;
+       color: #757575;
+       box-shadow: none;
+     }
+
+     QTabWidget::pane {
+       border: 2px solid #3f51b5;
+       border-radius: 8px;
+       background: #ffffff;
+     }
+
+     QTabBar::tab {
+       background: #e3f2fd;
+       padding: 10px;
+       border-radius: 8px 8px 0 0;
+       color: #333;
+       font-weight: bold;
+     }
+
+     QTabBar::tab:selected {
+       background: #2196F3;
+       color: white;
+     }
+
+     QComboBox {
+       background-color: #f1f1f1;
+       border: 2px solid #5c6bc0;
+       border-radius: 8px;
+       padding: 5px;
+       font-size: 14px;
+     }
+
+     QTableWidget {
+       border: 1px solid #5c6bc0;
+       gridline-color: #5c6bc0;
+       background-color: #ffffff;
+     }
+
+     QTableWidget::item {
+       padding: 5px;
+     }
+
+     QTableWidget::item:selected {
+       background-color: #1976D2;
+       color: white;
+     }
+   </string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout1">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="tabAjout">
+       <attribute name="title">
+        <string>Ajout</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="layoutAjout1">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_1">
+          <property name="sizeConstraint">
+           <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
+          </property>
+          <item>
+           <widget class="QLabel" name="logo_label">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+                font-size: 16pt;
+                font-weight: bold;
+             </string>
+            </property>
+            <property name="text">
+             <string>                                L'ajout d'un établissement</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>ID-E:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="ajout_id">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="placeholderText">
+             <string>Insérer l'identifiant </string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>-1</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Nom :</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLineEdit" name="ajout_nom">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="placeholderText">
+               <string>Insérer le nom d'établissement </string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_8">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Adresse :</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="ajout_adresse">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="placeholderText">
+             <string>Insèrer l'adresse</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Contact :</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="ajout_contact">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="placeholderText">
+             <string>Insérer le contact </string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Type d'établissement</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="ajout_type">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: #f1f1f1;</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>Ecole primaire</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>College</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Ecole secondaire</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Université</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Centre de formation</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ajout_button">
+            <property name="text">
+             <string>Ajouter</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabAffichage">
+       <attribute name="title">
+        <string>Affichage</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLineEdit" name="aff_rech">
+            <property name="placeholderText">
+             <string>Rechercher par nom...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="aff_pdf">
+            <property name="text">
+             <string>Exporter en PDF</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="aff_tri">
+            <property name="text">
+             <string>Trier par type</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_path">
+            <property name="text">
+             <string>Chemin le plus court</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_stats">
+            <property name="text">
+             <string>statistiques</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_geo">
+            <property name="text">
+             <string>Géolocaliser</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_13">
+          <property name="minimumSize">
+           <size>
+            <width>40</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>“Sélectionnez une établissement pour afficher le chemin le plus court”</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="chartLayout">
+          <item>
+           <widget class="QTableView" name="tableView_Etablissements">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>true</bool>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabSuppression">
+       <attribute name="title">
+        <string>Suppression</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="layoutAjout">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="sizeConstraint">
+           <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_7">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+    font-size: 16pt;
+    font-weight: bold;
+
+</string>
+            </property>
+            <property name="text">
+             <string>                                               Supprission d'un établissement</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="SuppID">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="placeholderText">
+             <string>Insérer L'ID à supprimer </string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="SuppButton">
+            <property name="text">
+             <string>Supprimer</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabModification">
+       <attribute name="title">
+        <string>Modification</string>
+       </attribute>
+       <widget class="QWidget" name="verticalLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>220</y>
+          <width>891</width>
+          <height>441</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout2_2">
+         <item>
+          <widget class="QLabel" name="label_9">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Nom :</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="mod_nom">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>50</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_11">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Adresse :</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="mod_adresse">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>50</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_12">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Contact :</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="mod_contact">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>50</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_5">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Type d'établissement:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="mod_type">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>50</height>
+            </size>
+           </property>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>école</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Lycée</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Université</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Centre de formation</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="mod_button">
+           <property name="text">
+            <string>Modifier</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="horizontalLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>110</y>
+          <width>891</width>
+          <height>101</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLineEdit" name="mod_id">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="placeholderText">
+            <string>Insérer ID à modifier </string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QLabel" name="label_10">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>70</y>
+          <width>889</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>ID-E :</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>933</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
