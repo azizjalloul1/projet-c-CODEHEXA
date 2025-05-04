@@ -7,7 +7,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-
+#include "smtpclient.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,26 +24,42 @@ private slots:
     void on_btnAjouter_clicked();   // Ajouter un fournisseur
     void on_btnSupprimer_clicked(); // Supprimer un fournisseur
     void on_btnModifier_clicked();  // Modifier un fournisseur
+    void on_btnMeilleurFournisseur_clicked();
     void afficherFournisseurs();    // Afficher les fournisseurs
     void onRechercherClicked();     // Rechercher un fournisseur par nom
-    void envoyerSMS() ;
+   // void sendEmail(const QString& fournisseurNom, int totalCommandes);
+    void envoyerSMS();
     void afficherStatistiques();
+    //void afficherHistoriqueCommandes(const QString &fournisseurId);
    // void afficherHistoriqueCommandes(const QString& fournisseurId);
      void trierParCommande();
     //void afficherMeilleurFournisseur();
     void genererIDFournisseur();
     void chargerListeIDs();
-    void sendEmail(const QString &supplierName, int totalOrders);
-    void onEmailSent(QNetworkReply* reply);
+    // Déclaration dans mainwindow.h
+    //void sendEmail(const QString& fournisseurNom, int totalCommandes, int frequenceCommandes);
+ //void afficherHistoriqueCommandes(const QString& fournisseurId);
+    //void onEmailSent(QNetworkReply* reply);
     void remplirChampsFournisseur();
    // void addCommande(const QString &id_fournisseur);
     void exporterEnPDF();
     //void afficherHistoriqueCommandes();
-    void afficherHistoriqueMeilleurFournisseur();
+    //void afficherHistoriqueMeilleurFournisseur();
 
+
+
+    void afficherHistoriqueCommandes(const QString &fournisseurId);
+    void onSmtpStatus(const QString &msg);
 
 private:
     Ui::MainWindow *ui;
+
+   // SmtpClient    *smtp;
+
+    void envoyerEmailSMTP(const QString &to,
+                          const QString &subject,
+                          const QString &body);
+
 };
 
 #endif // MAINWINDOW_H

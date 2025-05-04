@@ -32,6 +32,17 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     chargerListeIDs(); //Charge les ID au démarrage
 
+  /*  smtp = new SmtpClient(
+        "smtp.gmail.com", 587,
+        "molkaomrani1412@gmail.com",       // remplacez par votre adresse
+        "zylg lvby xvvb opwh",          // mot de passe d’application Google
+        true, this
+        );*/
+
+    // 2) Pour voir le dialogue SMTP dans la console
+   // connect(smtp, &SmtpClient::statusMessage,
+         //   this, &MainWindow::onSmtpStatus);
+
     Connexion c;
     if (!c.ouvrirConnexion()) {
         QMessageBox::critical(this, "Erreur", "Connexion à la base de données échouée !");
@@ -51,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(ui->btnModifier, &QPushButton::clicked, this, &MainWindow::on_btnModifier_clicked);
     connect(ui->comboBox_IdModif, &QComboBox::currentIndexChanged, this, &MainWindow::remplirChampsFournisseur);
     connect(ui->comboBox_Tri, &QComboBox::currentIndexChanged, this, &MainWindow::trierParCommande);
-    connect(ui->btnMeilleurFournisseur, &QPushButton::clicked, this, &MainWindow::afficherHistoriqueMeilleurFournisseur);
+    connect(ui->btnMeilleurFournisseur, &QPushButton::clicked, this, &MainWindow::on_btnMeilleurFournisseur_clicked);
 
     connect(ui->btnExporterPDF, &QPushButton::clicked, this, &MainWindow::exporterEnPDF);
     connect(ui->btnEnvoyerSMS, &QPushButton::clicked, this, &MainWindow::envoyerSMS);
@@ -72,95 +83,115 @@ MainWindow::~MainWindow() {
 
 
 
-void MainWindow::afficherHistoriqueMeilleurFournisseur() {
-    QSqlQueryModel *model = new QSqlQueryModel();
+void MainWindow::on_btnMeilleurFournisseur_clicked()
+{
     QSqlQuery query;
-
-    // Query to get the best supplier with the most orders
-    query.prepare("SELECT F.ID_FOURNISSEUR, F.NOM, SUM(C.QUANTITE_COMMANDE) AS TOTAL_COMMANDES "
-                  "FROM FOURNISSEUR F "
-                  "JOIN COMMANDE C ON F.ID_FOURNISSEUR = C.ID_FOURNISSEUR "
-                  "GROUP BY F.ID_FOURNISSEUR, F.NOM "
-                  "ORDER BY TOTAL_COMMANDES DESC");
-
-    qDebug() << "Requête SQL pour le meilleur fournisseur : " << query.lastQuery();
+    query.prepare(R"(
+        SELECT ID_FOURNISSEUR,
+               NOM,
+               TYPE_SERVICE,
+               TOTAL_COMMANDES
+        FROM (
+          SELECT F.ID_FOURNISSEUR,
+                 F.NOM,
+                 F.TYPE_SERVICE,
+                 SUM(C.QUANTITE_COMMANDE) AS TOTAL_COMMANDES
+            FROM FOURNISSEUR F
+            JOIN COMMANDE C
+              ON F.ID_FOURNISSEUR = C.ID_FOURNISSEUR
+           GROUP BY F.ID_FOURNISSEUR, F.NOM, F.TYPE_SERVICE
+           ORDER BY TOTAL_COMMANDES DESC
+        )
+        WHERE ROWNUM = 1
+    )");
 
     if (!query.exec()) {
-        qDebug() << "Erreur SQL : " << query.lastError().text();
-        QMessageBox::critical(this, "Erreur", "Impossible d'afficher le meilleur fournisseur !");
-        delete model;
+        QMessageBox::critical(this, "Erreur SQL",
+                              query.lastError().text());
+        return;
+    }
+    if (!query.next()) {
+        QMessageBox::information(this, "Info",
+                                 "Aucun fournisseur trouvé.");
         return;
     }
 
-    // Check if the query returns results
-    if (query.next()) {
-        // Found the best supplier, retrieve information
-        QString bestFournisseurId = query.value(0).toString();
-        QString bestFournisseurNom = query.value(1).toString();
-        int totalCommandes = query.value(2).toInt();
+    // Extraction
+    QString id    = query.value(0).toString();
+    QString nom   = query.value(1).toString();
+    QString type  = query.value(2).toString();
+    int     total = query.value(3).toInt();
 
-        qDebug() << "Meilleur fournisseur trouvé : " << bestFournisseurNom << "avec " << totalCommandes << " commandes.";
+    // Affichage unique
+    auto *model = new QSqlQueryModel(this);
+    model->setQuery(std::move(query));  // Qt6 move
+    model->setHeaderData(0, Qt::Horizontal, "ID");
+    model->setHeaderData(1, Qt::Horizontal, "Nom");
+    model->setHeaderData(2, Qt::Horizontal, "Type Service");
+    model->setHeaderData(3, Qt::Horizontal, "Total Cmds");
+    ui->tableView_Fournisseurs->setModel(model);
 
-        // Configure model to display the best supplier information
-        model->setQuery(std::move(query)); // Configure the model with the results
+    // Préparer et envoyer l'email à moi-même
+    const QString destinataire = "molkaomrani1412@gmail.com";
+    QString sujet = QString("Meilleur fournisseur : %1").arg(nom);
+    QString corps = QString(
+                        "Détails du fournisseur n°1 :\n\n"
+                        "• ID           : %1\n"
+                        "• Nom          : %2\n"
+                        "• Type service : %3\n"
+                        "• Total        : %4 commandes\n"
+                        ).arg(id, nom, type)
+                        .arg(QString::number(total));
 
-        model->setHeaderData(0, Qt::Horizontal, "ID FOURNISSEUR");
-        model->setHeaderData(1, Qt::Horizontal, "NOM");
-        model->setHeaderData(2, Qt::Horizontal, "TOTAL COMMANDES");
+    envoyerEmailSMTP(destinataire, sujet, corps);
+}
 
-        // Display the best supplier data in the table
-        ui->tableView_Fournisseurs->setModel(model);
+void MainWindow::envoyerEmailSMTP(const QString &to,
+                                  const QString &subject,
+                                  const QString &body)
+{
+    // 1) Crée un client SMTP neuf pour cet envoi
+    auto *client = new SmtpClient(
+        "smtp.gmail.com", 587,
+        "molkaomrani1412@gmail.com",   // votre adresse expéditrice
+        "<zylg lvby xvvb opwh>",       // mot de passe d’application
+        true,
+        this                       // parent = MainWindow → auto delete
+        );
 
-        // Display the history of the best supplier's orders
-        //afficherHistoriqueCommandes(bestFournisseurId);  // Show the best supplier's order history
+    // 2) Logguez le dialogue SMTP
+    connect(client, &SmtpClient::statusMessage,
+            this, &MainWindow::onSmtpStatus);
 
-        // Send an email about the best supplier (Here we add the call to send the email)
-        sendEmail(bestFournisseurNom, totalCommandes);  // Send email with the supplier's details
-    } else {
-        QMessageBox::warning(this, "Aucun résultat", "Aucun fournisseur trouvé.");
+    // 3) Lance l’envoi
+    client->sendMail("votre.email@gmail.com",
+                     to,
+                     subject,
+                     body);
+
+    // 4) Quand le client a fini (221 Bye), on peut le supprimer.
+    //    Ajoutez un signal dans SmtpClient émis après le QUIT, ou
+    //    supprimez après un court délai :
+    connect(client, &SmtpClient::statusMessage, client, [client](const QString &msg){
+        if (msg.startsWith("221")) { client->deleteLater(); }
+    });
+}
+
+
+
+void MainWindow::onSmtpStatus(const QString &msg)
+{
+    qDebug() << "[SMTP]" << msg;
+    // Optionnel : pop-up utilisateur quand le mail est vraiment parti
+    if (msg.startsWith("250 ")) {
+        QMessageBox::information(this, "Email",
+                                 "Le message a été envoyé avec succès !");
     }
 }
 
-void MainWindow::sendEmail(const QString& fournisseurNom, int totalCommandes) {
-    // Remplacez "YOUR_API_KEY" par la clé API que vous avez obtenue de ElasticMail
-    const QString apiKey = "2CE1121CEA02FDBA599399EF5865E2DBCCCF8849CEB3A8820E4385545EF7B2B18F481FE6F2711BD8B89A273EA1125D49";  // Remplacez par votre clé API ElasticMail
-    const QString url = "https://api.elasticemail.com/v2/email/send"; // Endpoint d'ElasticMail
 
-    // Créer la requête
-    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
-    QNetworkRequest request{QUrl(url)};
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    // Ajouter l'authentification avec la clé API
-    QString authHeader = "Basic " + QByteArray("apikey:").append(apiKey.toUtf8()).toBase64();
-    request.setRawHeader("Authorization", authHeader.toUtf8());
 
-    // Créer le contenu de l'email
-    QJsonObject emailContent;
-    emailContent["from"] = "your_email@example.com";  // Remplacez par votre adresse email
-    emailContent["to"] = QJsonArray{{QJsonObject{{"email", "molkaomrani1412@gmail.com"}}}}; // Remplacez par l'email du destinataire
-    emailContent["subject"] = "Meilleur Fournisseur";
-    emailContent["bodyHtml"] = QString("<html><body><h1>Le meilleur fournisseur est : %1</h1><p>Nombre de commandes : %2</p></body></html>")
-                                   .arg(fournisseurNom)
-                                   .arg(totalCommandes);
-
-    QJsonDocument doc(emailContent);
-    QByteArray data = doc.toJson();
-
-    // Envoyer la requête
-    connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::onEmailSent);
-    manager->post(request, data);
-}
-
-void MainWindow::onEmailSent(QNetworkReply* reply) {
-    if (reply->error() == QNetworkReply::NoError) {
-        qDebug() << "Email envoyé avec succès !";
-    } else {
-        qDebug() << "Échec de l'envoi de l'email : " << reply->errorString();
-        qDebug() << "Détails de la réponse : " << reply->readAll();
-    }
-    reply->deleteLater();
-}
 
 
 
@@ -286,6 +317,32 @@ void MainWindow::remplirChampsFournisseur() {
 }
 
 
+void MainWindow::afficherHistoriqueCommandes(const QString &fournisseurId)
+{
+    QSqlQueryModel *histModel = new QSqlQueryModel(this);
+    QSqlQuery query;
+    query.prepare(
+        "SELECT ID_COMMANDE, DATE_COMMANDE, QUANTITE_COMMANDE, MONTANT_TOTAL "
+        "FROM COMMANDE "
+        "WHERE ID_FOURNISSEUR = :id "
+        "ORDER BY DATE_COMMANDE DESC"
+        );
+    query.bindValue(":id", fournisseurId);
+
+    if (!query.exec()) {
+        qDebug() << "Erreur SQL historique commandes :" << query.lastError().text();
+        QMessageBox::critical(this, "Erreur", "Impossible de charger l'historique.");
+        return;
+    }
+
+    histModel->setQuery(std::move(query));
+    histModel->setHeaderData(0, Qt::Horizontal, "ID Commande");
+    histModel->setHeaderData(1, Qt::Horizontal, "Date");
+    histModel->setHeaderData(2, Qt::Horizontal, "Quantité");
+    histModel->setHeaderData(3, Qt::Horizontal, "Montant (€)");
+
+    ui->tableView_Historique->setModel(histModel);
+}
 
 // Modifier un fournisseur
 void MainWindow::on_btnModifier_clicked() {

@@ -132,7 +132,7 @@
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="tabAjout_2">
      <attribute name="title">
@@ -649,6 +649,21 @@ color: rgb(31, 143, 236);</string>
        </layout>
       </item>
      </layout>
+    </widget>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Page</string>
+     </attribute>
+     <widget class="QTableView" name="tableView_Historique">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>11</y>
+        <width>1091</width>
+        <height>741</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
