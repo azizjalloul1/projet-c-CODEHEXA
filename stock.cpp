@@ -99,3 +99,28 @@ QList<Stock> Stock::afficherStocks() {
 
     return stocks;
 }
+// Display stocks sorted by quantity (descending order)
+QList<Stock> Stock::afficherStocksTriesParQuantiteDesc() {
+    QList<Stock> stocks;
+    QSqlQuery query("SELECT REF, PRIX_UNITAIRE, TYPE, QUANTITE FROM STOCK ORDER BY QUANTITE DESC");
+
+    while (query.next()) {
+        stocks.append(Stock(query.value(0).toInt(), query.value(1).toDouble(), query.value(2).toString(), query.value(3).toInt()));
+    }
+
+    return stocks;
+}
+// Search for stock by REF dynamically
+QList<Stock> Stock::afficherStocksParRef(int ref) {
+    QList<Stock> stocks;
+    QSqlQuery query;
+    query.prepare("SELECT REF, PRIX_UNITAIRE, TYPE, QUANTITE FROM STOCK WHERE REF LIKE :ref");
+    query.bindValue(":ref", QString::number(ref) + "%"); // Supports partial search
+
+    if (query.exec()) {
+        while (query.next()) {
+            stocks.append(Stock(query.value(0).toInt(), query.value(1).toDouble(), query.value(2).toString(), query.value(3).toInt()));
+        }
+    }
+    return stocks;
+}

@@ -1,13 +1,14 @@
-QT+= core gui \
-    quick
-QT+= sql
+QT += core gui \
+    quick \
+    sql \
+    charts  # ✅ Add this line for Qt Charts
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
 
-# You can make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+# Uncomment to disable deprecated APIs before Qt 6
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000
 
 SOURCES += \
     connexion.cpp \
@@ -16,6 +17,8 @@ SOURCES += \
     stock.cpp
 
 HEADERS += \
+    AnimatedDialog.h \
+    CustomComboBox.h \
     connexion.h \
     mainwindow.h \
     stock.h

@@ -28,6 +28,8 @@ public:
     bool modifierStock();
     static bool idExisteDeja(int ref);
     QList<Stock> afficherStocks();
+    QList<Stock> afficherStocksTriesParQuantiteDesc(); // Sorting function
+    QList<Stock> afficherStocksParRef(int ref); // Search function
 
 private:
     int ref;
