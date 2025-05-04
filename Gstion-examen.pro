@@ -6,6 +6,8 @@ QT += charts
 QT += core gui widgets charts
 QT += network
 
+QT += serialport
+
 SOURCES +=
 HEADERS += qrcodegen.hpp
 

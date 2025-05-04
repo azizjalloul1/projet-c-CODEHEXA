@@ -4,6 +4,7 @@
 #include <QtCharts>
 #include <QChartView>
 #include <QVBoxLayout>
+#include <QSerialPort>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -50,12 +51,15 @@ private slots:
 
     QPixmap QRCodeImage(const QString &text);
     void QRCode();
-
-
+ void lireDonneesArduino();
+    void ValeurSuperieuregaz(int valeurGaz);
+    //void lireDonneesArduino();
 
 private:
     Ui::MainWindow *ui;
     QChartView *chartView = nullptr;
+    QSerialPort *arduino;
+
 };
 
 #endif

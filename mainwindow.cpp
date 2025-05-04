@@ -17,6 +17,13 @@
 #include <QEventLoop>
 #include <QHostInfo>
 #include <QNetworkInterface>
+#include <QSqlQueryModel>
+#include <QSerialPort>
+#include <QSerialPortInfo>
+#include <QSerialPort>
+#include <QSqlQuery>
+#include <QRandomGenerator>
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -38,6 +45,24 @@ MainWindow::MainWindow(QWidget *parent)
     ui->triComboBox->addItem("Trier par ID décroissant");
     ui->triComboBox->addItem("Trier par Date");
 
+
+    //ALERT
+    arduino = new QSerialPort(this);
+    arduino->setPortName("COM6");
+    arduino->setBaudRate(QSerialPort::Baud9600);
+    arduino->setDataBits(QSerialPort::Data8);
+    arduino->setParity(QSerialPort::NoParity);
+    arduino->setStopBits(QSerialPort::OneStop);
+    arduino->setFlowControl(QSerialPort::NoFlowControl);
+
+    if (arduino->open(QIODevice::ReadOnly)) {
+        connect(arduino, &QSerialPort::readyRead, this, &MainWindow::lireDonneesArduino);
+        qDebug() << " Arduino connecté.";
+    } else {
+        qDebug() << " Erreur de connexion Arduino:" << arduino->errorString();
+    }
+
+    //
 
 
     remplirCombo();
@@ -67,6 +92,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->codebar, &QPushButton::clicked, this, &MainWindow::QRCode);
 
     connect(ui->triComboBox,QOverload<int>::of(&QComboBox::currentIndexChanged),this,&MainWindow::TriCombo);
+
+
+
 
 }
 
@@ -569,15 +597,7 @@ QPixmap MainWindow::QRCodeImage(const QString &text)
 }
 
 
-QString getLocalIPAddress()
-{
-    const QList<QHostAddress> &list = QNetworkInterface::allAddresses();
-    for (const QHostAddress &address : list) {
-        if (address.protocol() == QAbstractSocket::IPv4Protocol && !address.isLoopback())
-            return address.toString();
-    }
-    return "127.0.0.1";
-}
+
 
 void MainWindow::QRCode()
 {
@@ -587,8 +607,7 @@ void MainWindow::QRCode()
     QString fileName = QFileDialog::getSaveFileName(this, "Exporter le PDF avec les QR codes", "", "Fichier PDF (*.pdf)");
     if (fileName.isEmpty()) return;
 
-    QString ipAddress = getLocalIPAddress();
-    QList<Examen> examens = Examen::afficherExamens();
+    QString ipAddress = "192.168.1.168";      QList<Examen> examens = Examen::afficherExamens();
     QString htmlContent = "<html><head><style>"
                           "body { font-family: Arial; padding: 30px; color: #222; }"
                           "h1 { text-align: center; color: #1a73e8; }"
@@ -643,3 +662,88 @@ void MainWindow::QRCode()
 
     QMessageBox::information(this, "Succès", "QR codes avec adresse IP locale générés !");
 }
+
+//ALERTE
+void MainWindow::ValeurSuperieuregaz(int valeurGaz) {
+    qDebug() << " Valeur reçue : " << valeurGaz;
+
+    int etat = (valeurGaz > 400) ? 1 : 0;
+
+
+
+    QStringList types = {"stylo", "feuille", "souris", "cahier", "clavier"};
+    QString type = types.at(QRandomGenerator::global()->bounded(0, types.size()));
+    double prix = QRandomGenerator::global()->bounded(100, 1000) / 10.0;
+
+    QSqlQuery countQuery;
+    countQuery.exec("SELECT COUNT(*) FROM STOCK");
+
+    int count = 0;
+    if (countQuery.next()) {
+        count = countQuery.value(0).toInt();
+    }
+
+    if (count > 0) {
+        int refToUpdate = -1;
+        QSqlQuery select;
+        if (select.exec("SELECT REF FROM STOCK WHERE ROWNUM = 1")) {
+            if (select.next()) {
+                refToUpdate = select.value(0).toInt();
+            }
+        }
+
+        if (refToUpdate != -1) {
+            QSqlQuery update;
+            update.prepare("UPDATE STOCK SET PRIX_UNITAIRE = :prix, TYPE = :type, GAZ = :gaz, ETAT = :etat WHERE REF = :ref");
+            update.bindValue(":prix", prix);
+            update.bindValue(":type", type);
+            update.bindValue(":gaz", valeurGaz);
+            update.bindValue(":etat", etat);
+            update.bindValue(":ref", refToUpdate);
+
+            if (update.exec()) {
+                qDebug() << " Ligne REF = " << refToUpdate << " mise à jour.";
+            } else {
+                qDebug() << " Erreur UPDATE : " << update.lastError().text();
+            }
+        }
+    } else {
+        QSqlQuery insert;
+        insert.prepare("INSERT INTO STOCK (PRIX_UNITAIRE, TYPE, GAZ, ETAT) "
+                       "VALUES (:prix, :type, :gaz, :etat)");
+        insert.bindValue(":prix", prix);
+        insert.bindValue(":type", type);
+        insert.bindValue(":gaz", valeurGaz);
+        insert.bindValue(":etat", etat);
+
+        if (insert.exec()) {
+            qDebug() << " Première ligne insérée.";
+        } else {
+            qDebug() << " Erreur INSERT : " << insert.lastError().text();
+        }
+    }
+
+
+}
+
+
+void MainWindow::lireDonneesArduino()
+{
+    QByteArray data = arduino->readAll();
+    QString ligne = QString::fromUtf8(data).trimmed();
+
+    qDebug() << " Donnée reçue : " << ligne;
+
+    if (ligne.contains("Gaz")) {
+        QRegularExpression regex("Gaz\\s*=\\s*(\\d+)");
+        QRegularExpressionMatch match = regex.match(ligne);
+        if (match.hasMatch()) {
+            int valGaz = match.captured(1).toInt();
+            qDebug() << " Valeur Gaz détectée : " << valGaz;
+            ValeurSuperieuregaz(valGaz);
+
+
+        }
+    }
+}
+
