@@ -10,6 +10,12 @@
     <height>784</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>50</width>
+    <height>50</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -89,7 +95,7 @@
      }
 
      QComboBox {
-       background-color: #f1f1f1;
+       background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #2196F3, stop:1 #1976D2);
        border: 2px solid #5c6bc0;
        border-radius: 8px;
        padding: 5px;
@@ -132,13 +138,6 @@
            <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
           </property>
           <item>
-           <widget class="QLabel" name="logo_label">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QLabel" name="label_6">
             <property name="font">
              <font>
@@ -154,7 +153,7 @@
              </string>
             </property>
             <property name="text">
-             <string>                                L'ajout d'un établissement</string>
+             <string>                                    L'ajout d'un établissement</string>
             </property>
            </widget>
           </item>
@@ -213,21 +212,17 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QLineEdit" name="ajout_nom">
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>50</height>
-               </size>
-              </property>
-              <property name="placeholderText">
-               <string>Insérer le nom d'établissement </string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <widget class="QLineEdit" name="ajout_nom">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="placeholderText">
+             <string>Insérer le nom d'établissement </string>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_8">
@@ -333,6 +328,33 @@
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="label_14">
+            <property name="text">
+             <string>Latitude:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="ajout_latitude"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>Longitude:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="ajout_longitude"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="logo_label">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="ajout_button">
             <property name="text">
              <string>Ajouter</string>
@@ -358,23 +380,29 @@
            </widget>
           </item>
           <item>
+           <widget class="QComboBox" name="triComboBox">
+            <property name="minimumSize">
+             <size>
+              <width>37</width>
+              <height>37</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>Trier par ID croissant</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Trier par ID décroissant</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="aff_pdf">
             <property name="text">
              <string>Exporter en PDF</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="aff_tri">
-            <property name="text">
-             <string>Trier par type</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btn_path">
-            <property name="text">
-             <string>Chemin le plus court</string>
             </property>
            </widget>
           </item>
@@ -386,9 +414,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="btn_geo">
+           <widget class="QPushButton" name="btn_path">
             <property name="text">
-             <string>Géolocaliser</string>
+             <string>Chemin</string>
             </property>
            </widget>
           </item>
@@ -417,6 +445,9 @@
               <height>0</height>
              </size>
             </property>
+            <property name="layoutDirection">
+             <enum>Qt::LayoutDirection::LeftToRight</enum>
+            </property>
             <property name="alternatingRowColors">
              <bool>true</bool>
             </property>
@@ -425,6 +456,19 @@
             </property>
             <property name="selectionBehavior">
              <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QQuickWidget" name="quickWidget_MapView">
+            <property name="minimumSize">
+             <size>
+              <width>290</width>
+              <height>290</height>
+             </size>
+            </property>
+            <property name="resizeMode">
+             <enum>QQuickWidget::ResizeMode::SizeRootObjectToView</enum>
             </property>
            </widget>
           </item>
@@ -496,7 +540,7 @@
           <x>10</x>
           <y>220</y>
           <width>891</width>
-          <height>441</height>
+          <height>445</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout2_2">
@@ -592,17 +636,17 @@
            </property>
            <item>
             <property name="text">
-             <string/>
+             <string>Ecole primaire</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>école</string>
+             <string>College</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Lycée</string>
+             <string>Ecole secondaire</string>
             </property>
            </item>
            <item>
@@ -616,6 +660,26 @@
             </property>
            </item>
           </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_16">
+           <property name="text">
+            <string>Latitude:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="mod_latitude"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_17">
+           <property name="text">
+            <string>Longitude:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="mod_longitude"/>
          </item>
          <item>
           <widget class="QPushButton" name="mod_button">
@@ -681,6 +745,13 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QQuickWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">QtQuickWidgets/QQuickWidget</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

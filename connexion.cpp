@@ -1,3 +1,4 @@
+
 #include "connexion.h"
 
 Connection::Connection()

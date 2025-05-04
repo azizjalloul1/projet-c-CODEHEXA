@@ -10,120 +10,162 @@
 #include <QIntValidator>
 #include <QRegularExpressionValidator>
 #include "statswindow.h"
-#include <QDesktopServices>
-#include <QUrl>
-
+#include <QQuickItem>
+#include <QQmlContext>
+#include <QQmlContext>         // pour rootContext()
+#include <QQmlEngine>          // pour QQmlEngine
+#include <QtQuickWidgets/QQuickWidget>  // pour QQuickWidget
+#include "PathWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
+    currentPosition = QGeoCoordinate(36.899, 10.19); // ✔️ ESPRIT Petite Ariana
+
+    qDebug() << "Position fixe définie :" << currentPosition;
+
+
+
+
+    // Chargement dynamique des établissements pour la carte
+    afficherCarteEtablissements();
 
     this->setStyleSheet(R"(
-    QWidget {
-        font-family: 'Segoe UI', sans-serif;
-        font-size: 14px;
-        background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 #dbeeff, stop:1 #eaf6ff);
-    }
+        QWidget {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 14px;
+            background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 #dbeeff, stop:1 #eaf6ff);
+        }
+        QPushButton {
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+        }
+        QPushButton:hover {
+            background-color: #005fa1;
+        }
+        QLineEdit, QComboBox {
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 6px;
+            border-radius: 4px;
+        }
+        QTableView {
+            background-color: white;
+            border: 1px solid #ccc;
+            gridline-color: #e0e0e0;
+            selection-background-color: #a6d5ff;
+            selection-color: black;
+        }
+        QHeaderView::section {
+            background-color: #004b91;
+            color: white;
+            font-weight: bold;
+            padding: 6px;
+            border: 1px solid #ddd;
+        }
+        QGroupBox {
+            border: 1px solid #9fbcd9;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+        QLabel {
+            font-weight: bold;
+            color: #333;
+        }
+        QComboBox {
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            min-width: 160px;
+        }
+        QComboBox:hover {
+            background-color: #005fa1;
+        }
+        QComboBox::drop-down {
+            border: none;
+            background: transparent;
+        }
+        QComboBox QAbstractItemView {
+            background-color: white;
+            selection-background-color: #0078d7;
+            selection-color: white;
+            font-weight: normal;
+        }
+    )");
 
-    QPushButton {
-        background-color: #0078d7;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 6px;
-    }
-
-    QPushButton:hover {
-        background-color: #005fa1;
-    }
-
-    QLineEdit, QComboBox {
-        background-color: white;
-        border: 1px solid #ccc;
-        padding: 6px;
-        border-radius: 4px;
-    }
-
-    QTableView {
-        background-color: white;
-        border: 1px solid #ccc;
-        gridline-color: #e0e0e0;
-        selection-background-color: #a6d5ff;
-        selection-color: black;
-    }
-
-    QHeaderView::section {
-        background-color: #004b91;
-        color: white;
-        font-weight: bold;
-        padding: 6px;
-        border: 1px solid #ddd;
-    }
-
-    QGroupBox {
-        border: 1px solid #9fbcd9;
-        border-radius: 8px;
-        margin-top: 12px;
-    }
-
-    QLabel {
-        font-weight: bold;
-        color: #333;
-    }
-
-)");
+    // Connexion du changement d'onglet
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, [=](int index){
-        // index 1 correspond à l’onglet Affichage (à vérifier dans ton ordre d’onglets)
         if (index == 1) {
             afficherEtablissement();
         }
     });
 
-
-
-
-
-    //  Contrôle ID & Contact
+    // Validateurs
     QIntValidator *idValidator = new QIntValidator(0, 99999999, this);
     QIntValidator *contactValidator = new QIntValidator(10000000, 99999999, this);
+    QRegularExpression regex("^[A-Za-zÀ-ÿ\\s]+$");
+    QRegularExpressionValidator *lettreValidator = new QRegularExpressionValidator(regex, this);
 
     ui->ajout_id->setValidator(idValidator);
     ui->mod_id->setValidator(idValidator);
     ui->SuppID->setValidator(idValidator);
     ui->ajout_contact->setValidator(contactValidator);
     ui->mod_contact->setValidator(contactValidator);
-
-    //  Contrôle Nom & Adresse = lettres uniquement
-    QRegularExpression regex("^[A-Za-zÀ-ÿ\\s]+$");
-    QRegularExpressionValidator *lettreValidator = new QRegularExpressionValidator(regex, this);
     ui->ajout_nom->setValidator(lettreValidator);
     ui->mod_nom->setValidator(lettreValidator);
     ui->ajout_adresse->setValidator(lettreValidator);
     ui->mod_adresse->setValidator(lettreValidator);
 
-    // 🔗 Connexions
+    // Connexions des boutons
     connect(ui->ajout_button, &QPushButton::clicked, this, &MainWindow::on_addButton_clicked);
     connect(ui->SuppButton, &QPushButton::clicked, this, &MainWindow::on_SuppButton_clicked);
     connect(ui->mod_button, &QPushButton::clicked, this, &MainWindow::on_mod_button_clicked);
     connect(ui->aff_pdf, &QPushButton::clicked, this, &MainWindow::on_aff_pdf_clicked);
     connect(ui->aff_rech, &QLineEdit::textChanged, this, &MainWindow::on_aff_rech_clicked);
-    connect(ui->aff_tri, &QPushButton::clicked, this, &MainWindow::on_aff_tri_clicked);
+    connect(ui->triComboBox, &QComboBox::currentTextChanged, this, &MainWindow::on_triComboBox_currentTextChanged);
     connect(ui->mod_id, &QLineEdit::textChanged, this, &MainWindow::remplirChampsModification);
     connect(ui->btn_stats, &QPushButton::clicked, this, &MainWindow::on_btn_stats_clicked);
-    connect(ui->btn_geo, &QPushButton::clicked, this, &MainWindow::on_btn_geo_clicked);
+    connect(ui->tableView_Etablissements, &QTableView::clicked,
+            this, &MainWindow::on_tableView_Etablissements_clicked);
     connect(ui->btn_path, &QPushButton::clicked, this, &MainWindow::on_btn_path_clicked);
+
+
 
 }
 
 MainWindow::~MainWindow() {
     delete ui;
 }
-
 void MainWindow::afficherEtablissement() {
     QSqlQueryModel *model = new QSqlQueryModel(this);
-    model->setQuery("SELECT ID_E, NOM, ADRESSE, CONTACT, TYPE_ETABLISSEMENT FROM ETABLISSEMENT");
+    model->setQuery("SELECT ID_E, NOM, ADRESSE, CONTACT, TYPE_ETABLISSEMENT, LATITUDE, LONGITUDE FROM ETABLISSEMENT");
     ui->tableView_Etablissements->setModel(model);
 }
+
+void MainWindow::afficherCarteEtablissements() {
+    QList<Etablissement> etablissements = Etablissement::afficherEtablissement();
+
+    QVariantList markers;
+    for (const Etablissement &e : etablissements) {
+        QVariantMap marker;
+        marker["latitude"] = e.getLatitude().toDouble();
+        marker["longitude"] = e.getLongitude().toDouble();
+        marker["nom"] = e.getNOM();
+        markers.append(marker);
+    }
+
+    ui->quickWidget_MapView->engine()->rootContext()->setContextProperty("etabModel", QVariant::fromValue(markers));
+    ui->quickWidget_MapView->setSource(QUrl(QStringLiteral("qrc:/MapView.qml")));
+    ui->quickWidget_MapView->setResizeMode(QQuickWidget::SizeRootObjectToView);
+    ui->quickWidget_MapView->show();
+}
+
 
 void MainWindow::clearInputs() {
     ui->ajout_id->clear();
@@ -131,11 +173,15 @@ void MainWindow::clearInputs() {
     ui->ajout_adresse->clear();
     ui->ajout_contact->clear();
     ui->ajout_type->setCurrentIndex(0);
+    ui->ajout_latitude->clear();
+    ui->ajout_longitude->clear();
     ui->mod_id->clear();
     ui->mod_nom->clear();
     ui->mod_adresse->clear();
     ui->mod_contact->clear();
     ui->mod_type->setCurrentIndex(0);
+    ui->mod_latitude->clear();
+    ui->mod_longitude->clear();
     ui->SuppID->clear();
     ui->aff_rech->clear();
 }
@@ -146,14 +192,17 @@ void MainWindow::on_addButton_clicked() {
     QString adresse = ui->ajout_adresse->text().trimmed();
     QString contact = ui->ajout_contact->text().trimmed();
     QString type_etablissement = ui->ajout_type->currentText().trimmed();
+    QString latitude = ui->ajout_latitude->text().trimmed();
+    QString longitude = ui->ajout_longitude->text().trimmed();
 
-    // 🔒 Vérification d'abord : tous les champs remplis
-    if (id_E.isEmpty() || nom.isEmpty() || adresse.isEmpty() || contact.isEmpty() || type_etablissement.isEmpty()) {
+
+
+    if (id_E.isEmpty() || nom.isEmpty() || adresse.isEmpty() || contact.isEmpty() || type_etablissement.isEmpty() || latitude.isEmpty() || longitude.isEmpty() ) {
         QMessageBox::warning(this, "Erreur", "Tous les champs doivent être remplis !");
         return;
     }
 
-    // 📌 Regex de validation
+
     QRegularExpression regexLettre("^[A-Za-zÀ-ÿ\\s]+$");
     QRegularExpression regexChiffre("^[0-9]+$");
 
@@ -177,8 +226,8 @@ void MainWindow::on_addButton_clicked() {
         return;
     }
 
-    // ✅ Si tout est OK, on ajoute
-    Etablissement e(id_E, nom, adresse, contact, type_etablissement);
+
+    Etablissement e(id_E, nom, adresse, contact, type_etablissement, latitude, longitude);
     if (e.ajouterEtablissement()) {
         QMessageBox::information(this, "Succès", "Établissement ajouté avec succès !");
         afficherEtablissement();
@@ -194,13 +243,16 @@ void MainWindow::on_mod_button_clicked() {
     QString adresse = ui->mod_adresse->text().trimmed();
     QString contact = ui->mod_contact->text().trimmed();
     QString type_etablissement = ui->mod_type->currentText().trimmed();
+    QString latitude = ui->mod_latitude->text().trimmed();
+    QString longitude = ui->mod_longitude->text().trimmed();
 
-    // Regex
-    QRegularExpression regexLettre("^[A-Za-zÀ-ÿ\\s]+$");  // Lettres avec accents
-    QRegularExpression regexChiffre("^[0-9]+$");          // Chiffres uniquement
 
-    // ✅ Vérifications
-    if (id_E.isEmpty() || nom.isEmpty() || adresse.isEmpty() || contact.isEmpty() || type_etablissement.isEmpty()) {
+
+    QRegularExpression regexLettre("^[A-Za-zÀ-ÿ\\s]+$");
+    QRegularExpression regexChiffre("^[0-9]+$");
+
+
+    if (id_E.isEmpty() || nom.isEmpty() || adresse.isEmpty() || contact.isEmpty() || type_etablissement.isEmpty() || latitude.isEmpty() || longitude.isEmpty()) {
         QMessageBox::warning(this, "Erreur", "Tous les champs doivent être remplis.");
         return;
     }
@@ -230,9 +282,9 @@ void MainWindow::on_mod_button_clicked() {
         return;
     }
 
-    // ✅ Si tout est bon, on modifie
-    Etablissement e(id_E, nom, adresse, contact, type_etablissement);
-    if (e.modifierEtablissement(id_E, nom, adresse, contact, type_etablissement)) {
+
+    Etablissement e(id_E, nom, adresse, contact, type_etablissement, latitude, longitude);
+    if (e.modifierEtablissement(id_E, nom, adresse, contact, type_etablissement, latitude, longitude)) {
         QMessageBox::information(this, "Succès", "Modification réussie !");
         afficherEtablissement();
         clearInputs();
@@ -252,11 +304,16 @@ void MainWindow::remplirChampsModification(const QString& id_E) {
         ui->mod_adresse->setText(query.value(1).toString());
         ui->mod_contact->setText(query.value(2).toString());
         ui->mod_type->setCurrentText(query.value(3).toString());
+        ui->mod_latitude->setText(query.value(4).toString());
+        ui->mod_longitude->setText(query.value(5).toString());
+
     } else {
         ui->mod_nom->clear();
         ui->mod_adresse->clear();
         ui->mod_contact->clear();
         ui->mod_type->setCurrentIndex(0);
+        ui->mod_latitude->clear();
+        ui->mod_longitude->clear();
     }
 }
 void MainWindow::on_aff_rech_clicked() {
@@ -269,7 +326,7 @@ void MainWindow::on_aff_rech_clicked() {
         return;
     }
 
-    query.prepare("SELECT ID_E, NOM, ADRESSE, CONTACT, TYPE_ETABLISSEMENT FROM ETABLISSEMENT WHERE NOM LIKE :nom");
+    query.prepare("SELECT ID_E, NOM, ADRESSE, CONTACT, TYPE_ETABLISSEMENT, LATITUDE, LONGITUDE FROM ETABLISSEMENT WHERE NOM LIKE :nom");
     query.bindValue(":nom", "%" + rech_nom + "%");
 
     if (!query.exec()) {
@@ -283,6 +340,8 @@ void MainWindow::on_aff_rech_clicked() {
     model->setHeaderData(2, Qt::Horizontal, "Adresse");
     model->setHeaderData(3, Qt::Horizontal, "Contact");
     model->setHeaderData(4, Qt::Horizontal, "Type");
+    model->setHeaderData(5, Qt::Horizontal, "Latitude");
+    model->setHeaderData(6, Qt::Horizontal, "Longitude");
 
     ui->tableView_Etablissements->setModel(model);
 }
@@ -303,23 +362,56 @@ void MainWindow::on_SuppButton_clicked() {
         QMessageBox::critical(this, "Erreur", "Suppression échouée !");
     }
 }
-
 void MainWindow::on_aff_pdf_clicked() {
     QString fileName = QFileDialog::getSaveFileName(this, "Exporter en PDF", "", "Fichier PDF (*.pdf)");
     if (fileName.isEmpty()) return;
 
-    QSqlQuery query("SELECT ID_E, NOM, ADRESSE, CONTACT, TYPE_ETABLISSEMENT FROM ETABLISSEMENT");
+    QSqlQuery query("SELECT ID_E, NOM, ADRESSE, CONTACT, TYPE_ETABLISSEMENT, LATITUDE, LONGITUDE FROM ETABLISSEMENT");
+
+    QString imagePath = "file:///C:/Users/khemi/Desktop/etablissements/logo.png";
+
+
     QString html = R"(
-        <html><head><style>
-        h1 { text-align: center; font-weight: bold; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid black; padding: 6px; text-align: center; }
-        th { background-color: #002366; color: white; }
-        footer { margin-top: 20px; font-size: 10pt; text-align: right; }
-        </style></head><body>
-        <h1>Rapport des Établissements</h1>
-        <table><tr>
-        <th>ID</th><th>Nom</th><th>Adresse</th><th>Contact</th><th>Type</th>
+        <html>
+        <head>
+        <style>
+            h1 {
+                text-align: center;
+                font-weight: bold;
+                color: #002366;
+                margin-top: 10px;
+            }
+            table {
+                width: 95%;
+                border-collapse: collapse;
+                margin: 30px auto;
+            }
+            th, td {
+                border: 1px solid black;
+                padding: 6px;
+                text-align: center;
+            }
+            th {
+                background-color: #002366;
+                color: white;
+            }
+            footer {
+                margin-top: 20px;
+                font-size: 10pt;
+                text-align: right;
+            }
+        </style>
+        </head>
+        <body>
+    )";
+
+    html += "<img src=\"" + imagePath + "\" width=\"80\" style=\"float: left; margin: 10px;\" />";
+    html += "<h1>Rapport des Établissements</h1><br><br><br>";
+
+    html += R"(
+        <table>
+        <tr>
+            <th>ID</th><th>Nom</th><th>Adresse</th><th>Contact</th><th>Type</th>
         </tr>
     )";
 
@@ -328,7 +420,9 @@ void MainWindow::on_aff_pdf_clicked() {
                                                          "<td>" + query.value(1).toString() + "</td>"
                                               "<td>" + query.value(2).toString() + "</td>"
                                               "<td>" + query.value(3).toString() + "</td>"
-                                              "<td>" + query.value(4).toString() + "</td></tr>";
+                                              "<td>" + query.value(4).toString() + "</td>"
+                                              "<td>" + query.value(5).toString() + "</td>"
+                                              "<td>" + query.value(6).toString() + "</td></tr>";
     }
 
     html += "</table><footer>Généré le : " + QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm:ss") + "</footer></body></html>";
@@ -344,61 +438,118 @@ void MainWindow::on_aff_pdf_clicked() {
     QMessageBox::information(this, "Succès", "Export PDF réussi !");
 }
 
-void MainWindow::on_aff_tri_clicked() {
+
+void MainWindow::on_triComboBox_currentTextChanged(const QString &text) {
     QSqlQueryModel *model = new QSqlQueryModel(this);
-    QSqlQuery query("SELECT ID_E, NOM, ADRESSE, CONTACT, TYPE_ETABLISSEMENT FROM ETABLISSEMENT ORDER BY TYPE_ETABLISSEMENT ASC");
-    model->setQuery(std::move(query));
-    ui->tableView_Etablissements->setModel(model);
+    QSqlQuery query;
+
+    if (text == "Trier par ID croissant") {
+        query.prepare("SELECT ID_E, NOM, ADRESSE, CONTACT, TYPE_ETABLISSEMENT, LATITUDE, LONGITUDE FROM ETABLISSEMENT ORDER BY ID_E ASC");
+    } else if (text == "Trier par ID décroissant") {
+        query.prepare("SELECT ID_E, NOM, ADRESSE, CONTACT, TYPE_ETABLISSEMENT, LATITUDE, LONGITUDE FROM ETABLISSEMENT ORDER BY ID_E DESC");
+    }
+
+    if (query.exec()) {
+        model->setQuery(std::move(query));
+        ui->tableView_Etablissements->setModel(model);
+    } else {
+        QMessageBox::warning(this, "Erreur", "Impossible de trier les données !");
+    }
 }
+
 
 void MainWindow::on_btn_stats_clicked() {
     StatsWindow *stats = new StatsWindow(this);
     stats->exec();
 }
+void MainWindow::on_tableView_Etablissements_clicked(const QModelIndex &index) {
+    int row = index.row();
 
-void MainWindow::on_btn_geo_clicked() {
-    QModelIndex index = ui->tableView_Etablissements->currentIndex();
-    if (!index.isValid()) {
-        QMessageBox::warning(this, "Aucun établissement sélectionné", "Veuillez sélectionner un établissement.");
+    QString nom = ui->tableView_Etablissements->model()->index(row, 1).data().toString();
+    QString latitudeStr = ui->tableView_Etablissements->model()->index(row, 5).data().toString();
+    QString longitudeStr = ui->tableView_Etablissements->model()->index(row, 6).data().toString();
+
+    // Nettoyage : supprimer les caractères non numériques, points ou tirets
+    latitudeStr.remove(QRegularExpression("[^\\d\\.-]"));
+    longitudeStr.remove(QRegularExpression("[^\\d\\.-]"));
+
+    bool okLat, okLon;
+    double latitude = latitudeStr.toDouble(&okLat);
+    double longitude = longitudeStr.toDouble(&okLon);
+
+    if (okLat && okLon) {
+        QObject *qmlRoot = ui->quickWidget_MapView->rootObject();
+
+        if (qmlRoot) {
+            QMetaObject::invokeMethod(qmlRoot, "addSingleMarker",
+                                      Q_ARG(QVariant, latitude),
+                                      Q_ARG(QVariant, longitude),
+                                      Q_ARG(QVariant, nom));
+        }
+    } else {
+        QMessageBox::warning(this, "Erreur", "Impossible de convertir les coordonnées.");
+    }
+}
+void MainWindow::calculerCheminVersEtablissement(double destLat, double destLon) {
+    if (!currentPosition.isValid()) {
+        QMessageBox::warning(this, "Erreur", "Position actuelle invalide.");
         return;
     }
 
-    QString nom = ui->tableView_Etablissements->model()->data(ui->tableView_Etablissements->model()->index(index.row(), 1)).toString();
-    QString adresse = ui->tableView_Etablissements->model()->data(ui->tableView_Etablissements->model()->index(index.row(), 2)).toString();
+    double userLat = currentPosition.latitude();
+    double userLon = currentPosition.longitude();
 
-    if (nom.isEmpty() || adresse.isEmpty()) {
-        QMessageBox::warning(this, "Données manquantes", "Nom ou adresse de l’établissement manquant.");
-        return;
+    QVariantList coords;
+    QVariantMap from, to;
+
+    from["latitude"] = userLat;
+    from["longitude"] = userLon;
+    to["latitude"] = destLat;
+    to["longitude"] = destLon;
+
+    coords.append(from);
+    coords.append(to);
+
+    QMetaObject::invokeMethod(
+        ui->quickWidget_MapView->rootObject(),
+        "setRoute",
+        Q_ARG(QVariant, QVariant::fromValue(coords))
+        );
+}
+
+void MainWindow::mettreAJourPositionUtilisateur(const QGeoPositionInfo &info) {
+    if (info.isValid()) {
+        currentPosition = info.coordinate();
+        qDebug() << "Position actuelle mise à jour :" << currentPosition;
     }
-
-    QString recherche = nom + ", " + adresse;
-    QString url = "https://www.google.com/maps/search/?api=1&query=" + QUrl::toPercentEncoding(recherche);
-    QDesktopServices::openUrl(QUrl(url));
 }
 
 
-void MainWindow::on_btn_path_clicked() {
+void MainWindow::on_btn_path_clicked()
+{
     QModelIndex index = ui->tableView_Etablissements->currentIndex();
     if (!index.isValid()) {
-        QMessageBox::warning(this, "Sélection invalide", "Veuillez sélectionner un établissement dans le tableau.");
+        QMessageBox::warning(this, "Sélection manquante", "Veuillez sélectionner un établissement.");
         return;
     }
 
-    // Récupérer le nom et l'adresse de l'établissement sélectionné
-    QString nom = ui->tableView_Etablissements->model()->data(ui->tableView_Etablissements->model()->index(index.row(), 1)).toString();
-    QString adresse = ui->tableView_Etablissements->model()->data(ui->tableView_Etablissements->model()->index(index.row(), 2)).toString();
+    QString latStr = ui->tableView_Etablissements->model()->index(index.row(), 5).data().toString();
+    QString lonStr = ui->tableView_Etablissements->model()->index(index.row(), 6).data().toString();
 
-    if (nom.isEmpty() || adresse.isEmpty()) {
-        QMessageBox::warning(this, "Données manquantes", "Nom ou adresse manquant(e) pour l’établissement sélectionné.");
+    latStr.remove(QRegularExpression("[^\\d\\.\\-]"));
+    lonStr.remove(QRegularExpression("[^\\d\\.\\-]"));
+
+    bool okLat = false, okLon = false;
+    double latitude = latStr.toDouble(&okLat);
+    double longitude = lonStr.toDouble(&okLon);
+
+    if (!okLat || !okLon) {
+        QMessageBox::critical(this, "Erreur", "Coordonnées invalides.");
         return;
     }
 
-    QString destination = nom + ", " + adresse;
+    QGeoCoordinate userPos(36.899256, 10.189198); // Position fixe : ESPRIT
+    QGeoCoordinate destination(latitude, longitude);
 
-    // Utilise la position actuelle automatiquement détectée par le navigateur
-    QString url = "https://www.google.com/maps/dir/?api=1"
-                  "&origin=My+Location"
-                  "&destination=" + QUrl::toPercentEncoding(destination);
-
-    QDesktopServices::openUrl(QUrl(url));
+    PathWindow::showPath(userPos, destination);
 }
