@@ -24,6 +24,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QMessageBox>
+#include <QSslSocket>
 
 // Constructeur
 MainWindow::MainWindow(QWidget *parent)
@@ -31,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     chargerListeIDs(); //Charge les ID au démarrage
+    qDebug() << "SSL supporté ? " << QSslSocket::supportsSsl();
+    qDebug() << "Version SSL build : " << QSslSocket::sslLibraryBuildVersionString();
+    qDebug() << "Version SSL runtime : " << QSslSocket::sslLibraryVersionString();
 
   /*  smtp = new SmtpClient(
         "smtp.gmail.com", 587,
@@ -62,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(ui->btnModifier, &QPushButton::clicked, this, &MainWindow::on_btnModifier_clicked);
     connect(ui->comboBox_IdModif, &QComboBox::currentIndexChanged, this, &MainWindow::remplirChampsFournisseur);
     connect(ui->comboBox_Tri, &QComboBox::currentIndexChanged, this, &MainWindow::trierParCommande);
-    connect(ui->btnMeilleurFournisseur, &QPushButton::clicked, this, &MainWindow::on_btnMeilleurFournisseur_clicked);
+   // connect(ui->btnMeilleurFournisseur, &QPushButton::clicked, this, &MainWindow::on_btnMeilleurFournisseur_clicked);
 
     connect(ui->btnExporterPDF, &QPushButton::clicked, this, &MainWindow::exporterEnPDF);
     connect(ui->btnEnvoyerSMS, &QPushButton::clicked, this, &MainWindow::envoyerSMS);
@@ -79,26 +83,18 @@ MainWindow::~MainWindow() {
 
 
 
-
-
-
-
 void MainWindow::on_btnMeilleurFournisseur_clicked()
 {
     QSqlQuery query;
     query.prepare(R"(
-        SELECT ID_FOURNISSEUR,
-               NOM,
-               TYPE_SERVICE,
-               TOTAL_COMMANDES
+        SELECT ID_FOURNISSEUR, NOM, TYPE_SERVICE, TOTAL_COMMANDES
         FROM (
           SELECT F.ID_FOURNISSEUR,
                  F.NOM,
                  F.TYPE_SERVICE,
                  SUM(C.QUANTITE_COMMANDE) AS TOTAL_COMMANDES
             FROM FOURNISSEUR F
-            JOIN COMMANDE C
-              ON F.ID_FOURNISSEUR = C.ID_FOURNISSEUR
+            JOIN COMMANDE C ON F.ID_FOURNISSEUR = C.ID_FOURNISSEUR
            GROUP BY F.ID_FOURNISSEUR, F.NOM, F.TYPE_SERVICE
            ORDER BY TOTAL_COMMANDES DESC
         )
@@ -106,41 +102,39 @@ void MainWindow::on_btnMeilleurFournisseur_clicked()
     )");
 
     if (!query.exec()) {
-        QMessageBox::critical(this, "Erreur SQL",
-                              query.lastError().text());
+        QMessageBox::critical(this, "Erreur SQL", query.lastError().text());
         return;
     }
     if (!query.next()) {
-        QMessageBox::information(this, "Info",
-                                 "Aucun fournisseur trouvé.");
+        QMessageBox::information(this, "Info", "Aucun fournisseur trouvé.");
         return;
     }
 
-    // Extraction
     QString id    = query.value(0).toString();
     QString nom   = query.value(1).toString();
     QString type  = query.value(2).toString();
     int     total = query.value(3).toInt();
 
-    // Affichage unique
     auto *model = new QSqlQueryModel(this);
-    model->setQuery(std::move(query));  // Qt6 move
+    model->setQuery(std::move(query));
     model->setHeaderData(0, Qt::Horizontal, "ID");
     model->setHeaderData(1, Qt::Horizontal, "Nom");
     model->setHeaderData(2, Qt::Horizontal, "Type Service");
     model->setHeaderData(3, Qt::Horizontal, "Total Cmds");
     ui->tableView_Fournisseurs->setModel(model);
 
-    // Préparer et envoyer l'email à moi-même
     const QString destinataire = "molkaomrani1412@gmail.com";
     QString sujet = QString("Meilleur fournisseur : %1").arg(nom);
-    QString corps = QString(
-                        "Détails du fournisseur n°1 :\n\n"
-                        "• ID           : %1\n"
-                        "• Nom          : %2\n"
-                        "• Type service : %3\n"
-                        "• Total        : %4 commandes\n"
-                        ).arg(id, nom, type)
+    QString corps = QString(R"(
+Détails du fournisseur n°1 :
+
+• ID           : %1
+• Nom          : %2
+• Type service : %3
+• Total        : %4 commandes
+)"
+                            )
+                        .arg(id, nom, type)
                         .arg(QString::number(total));
 
     envoyerEmailSMTP(destinataire, sujet, corps);
@@ -150,46 +144,41 @@ void MainWindow::envoyerEmailSMTP(const QString &to,
                                   const QString &subject,
                                   const QString &body)
 {
-    // 1) Crée un client SMTP neuf pour cet envoi
+    // Usage SMTPS sur port 465
     auto *client = new SmtpClient(
-        "smtp.gmail.com", 587,
-        "molkaomrani1412@gmail.com",   // votre adresse expéditrice
-        "<zylg lvby xvvb opwh>",       // mot de passe d’application
+        "smtp.gmail.com", 465,
+        "molkaomrani1412@gmail.com",
+        "ZylgLvByXVvbOpWh",
         true,
-        this                       // parent = MainWindow → auto delete
+        this
         );
 
-    // 2) Logguez le dialogue SMTP
     connect(client, &SmtpClient::statusMessage,
             this, &MainWindow::onSmtpStatus);
 
-    // 3) Lance l’envoi
-    client->sendMail("votre.email@gmail.com",
-                     to,
-                     subject,
-                     body);
+    // Expéditeur identique à l'utilisateur
+    client->sendMail(
+        "molkaomrani1412@gmail.com",
+        to,
+        subject,
+        body
+        );
 
-    // 4) Quand le client a fini (221 Bye), on peut le supprimer.
-    //    Ajoutez un signal dans SmtpClient émis après le QUIT, ou
-    //    supprimez après un court délai :
-    connect(client, &SmtpClient::statusMessage, client, [client](const QString &msg){
-        if (msg.startsWith("221")) { client->deleteLater(); }
-    });
+    connect(client, &SmtpClient::statusMessage, client,
+            [client](const QString &msg) {
+                if (msg.startsWith("221"))
+                    client->deleteLater();
+            });
 }
-
-
 
 void MainWindow::onSmtpStatus(const QString &msg)
 {
     qDebug() << "[SMTP]" << msg;
-    // Optionnel : pop-up utilisateur quand le mail est vraiment parti
     if (msg.startsWith("250 ")) {
         QMessageBox::information(this, "Email",
                                  "Le message a été envoyé avec succès !");
     }
 }
-
-
 
 
 
