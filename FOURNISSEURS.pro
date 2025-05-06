@@ -7,6 +7,8 @@ QT += charts
 QT += core gui network
 QT += core network
 QT += core gui sql charts
+QT += widgets sql charts network
+
 
 QT += network
 
@@ -22,19 +24,19 @@ SOURCES += \
     connexion.cpp \
     fournisseur.cpp \
      main.cpp \
-    mainwindow.cpp \
+    mainwindowF.cpp \
     sms.cpp \
     smtpclient.cpp
 
 HEADERS += \
     connexion.h \
     fournisseur.h \
-    mainwindow.h \
+    mainwindowF.h \
     sms.h \
     smtpclient.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindowF.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

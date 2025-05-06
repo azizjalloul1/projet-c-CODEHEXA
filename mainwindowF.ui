@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>MainWindowF</class>
+ <widget class="QMainWindow" name="MainWindowF">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -363,9 +363,37 @@ color: rgb(31, 141, 234);</string>
         </item>
         <item>
          <widget class="QComboBox" name="comboBox_Tri">
+          <property name="styleSheet">
+           <string notr="true">
+              /* Fond dégradé bleu, coins arrondis et texte blanc */
+              QComboBox#comboBox_Tri {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                            stop:0 #2196F3, stop:1 #1976D2);
+                color: white;
+                padding: 6px 12px;
+                border: none;
+                border-radius: 8px;
+                font-weight: bold;
+              }
+              /* Suppression de la bordure gauche du dropdown */
+              QComboBox#comboBox_Tri::drop-down {
+                subcontrol-origin: padding;
+                subcontrol-position: top right;
+                width: 20px;
+                border-left: none;
+              }
+              /* Style de la liste déroulante */
+              QComboBox#comboBox_Tri QAbstractItemView {
+                background: white;
+                color: black;
+                selection-background-color: #1976D2;
+                selection-color: white;
+              }
+            </string>
+          </property>
           <item>
            <property name="text">
-            <string>tri croissant </string>
+            <string>tri croissant</string>
            </property>
           </item>
           <item>

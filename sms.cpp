@@ -1,47 +1,50 @@
-#include "sms.h"
-#include <QNetworkAccessManager>
+#include "SMS.h"
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QUrl>
-#include <QEventLoop>
-#include <QByteArray>
-#include <QObject>
-#include <QDebug>
+#include <QUrlQuery>
 
-SMS::SMS(const QString &accountSid, const QString &authToken, const QString &fromNumber)
-    : m_accountSid(accountSid), m_authToken(authToken), m_fromNumber(fromNumber) {}
-
-bool SMS::envoyerSMS(const QString &toNumber, const QString &message)
+SMS::SMS(const QString& accountSid,
+         const QString& authToken,
+         const QString& fromNumber,
+         QObject* parent)
+    : QObject(parent)
+    , m_accountSid(accountSid)
+    , m_authToken(authToken)
+    , m_fromNumber(fromNumber)
 {
-    QNetworkAccessManager *manager = new QNetworkAccessManager();
-
-    QUrl url("https://api.twilio.com/2010-04-01/Accounts/" + m_accountSid + "/Messages.json");
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-
-    QString auth = m_accountSid + ":" + m_authToken;
-    request.setRawHeader("Authorization", "Basic " + auth.toLocal8Bit().toBase64());
-
-    QByteArray params;
-    params.append("To=" + toNumber.toUtf8() + "&");
-    params.append("From=" + m_fromNumber.toUtf8() + "&");
-    params.append("Body=" + message.toUtf8());
-
-    QNetworkReply *reply = manager->post(request, params);
-
-    QEventLoop loop;
-    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    loop.exec();
-
-    if (reply->error() == QNetworkReply::NoError) {
-        return true;
-    } else {
-        qDebug() << "Erreur d'envoi du SMS: " << reply->errorString();
-        return false;
-    }
+    m_manager = new QNetworkAccessManager(this);
+    connect(m_manager, &QNetworkAccessManager::finished,
+            this, &SMS::onReplyFinished);
 }
 
-// Implémentation du destructeur virtuel
-SMS::~SMS() {
-    // Nettoyage si nécessaire (mais dans ce cas, aucun nettoyage supplémentaire n'est nécessaire)
+bool SMS::envoyerSMS(const QString& to, const QString& body)
+{
+    QUrl url(QString("https://api.twilio.com/2010-04-01/Accounts/%1/Messages.json")
+                 .arg(m_accountSid));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader,
+                      "application/x-www-form-urlencoded");
+
+    // Basic Auth
+    QByteArray creds = (m_accountSid + ":" + m_authToken).toUtf8().toBase64();
+    request.setRawHeader("Authorization", "Basic " + creds);
+
+    // Corps
+    QUrlQuery params;
+    params.addQueryItem("To",   to);
+    params.addQueryItem("From", m_fromNumber);
+    params.addQueryItem("Body", body);
+
+    m_manager->post(request, params.toString(QUrl::FullyEncoded).toUtf8());
+    return true;
+}
+
+void SMS::onReplyFinished(QNetworkReply* reply)
+{
+    if (reply->error() == QNetworkReply::NoError) {
+        emit envoiReussi();
+    } else {
+        emit envoiEchoue(reply->errorString());
+    }
+    reply->deleteLater();
 }
