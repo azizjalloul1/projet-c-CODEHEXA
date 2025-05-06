@@ -21,10 +21,25 @@ Accueil::Accueil(QWidget *parent) :
     mainWindow = new MainWindow(this);
     mainWindow->setAccueil(this);  // on donne à MainWindow l'accès à Accueil
 
+    mainWindowv = new MainWindowv(this);
+    mainWindow->setAccueil(this);
+
+    mainWindowstock = new MainWindowstock(this);
+    mainWindowstock->setAccueil(this);
 
     connect(ui->employee, &QPushButton::clicked, this, [=]() {
         this->hide();
         mainWindow->show();
+    });
+
+    connect(ui->vehicule, &QPushButton::clicked, this, [=]() {
+        this->hide();
+        mainWindowv->show();
+    });
+
+    connect(ui->stock, &QPushButton::clicked, this, [=]() {
+        this->hide();
+        mainWindowstock->show();
     });
 
 }

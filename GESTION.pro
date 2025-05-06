@@ -8,6 +8,7 @@ QT += quick qml
 QT += quickwidgets
 QT += quick widgets positioning location
 
+
 pannes_txt.files = $$PWD/pannes.txt
 pannes_txt.path = $$OUT_PWD
 INSTALLS += pannes_txt
@@ -25,10 +26,12 @@ SOURCES += \
     connexion.cpp \
     employee.cpp \
     vehicules.cpp\
+    stock.cpp \
     loginwidget.cpp \
-    main.cpp \
+    main.cpp\
     mainwindow.cpp \
     mainwindowv.cpp \
+    mainwindowstock.cpp\
     mdprestwindow.cpp
 
 HEADERS += \
@@ -36,8 +39,12 @@ HEADERS += \
     connexion.h \
     employee.h \
     vehicules.h \
+    stock.h \
+    AnimatedDialog.h \
+    CustomComboBox.h \
     mainwindow.h \
     mainwindowv.h\
+    mainwindowstock.h \
     loginwidget.h \
     mdprestwindow.h
 
@@ -46,6 +53,7 @@ FORMS += \
     accueil.ui \
     loginwidget.ui \
     mainwindowv.ui\
+    mainwindowstock.ui\
     mainwindow.ui
 
 # Default rules for deployment.

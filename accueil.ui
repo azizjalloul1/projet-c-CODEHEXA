@@ -113,6 +113,20 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="examen">
+       <property name="text">
+        <string>Gestion des Examens</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Gestion des Fournisseur</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>

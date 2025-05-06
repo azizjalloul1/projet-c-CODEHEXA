@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include "mainwindow.h"
+#include "mainwindowv.h"
+#include "mainwindowstock.h"
 #include <QPixmap>
 
 namespace Ui {
@@ -22,6 +24,8 @@ public:
 private:
     Ui::accueil *ui;
     MainWindow *mainWindow;
+    MainWindowv *mainWindowv;
+    MainWindowstock *mainWindowstock;
     QString userId;
     QString userRole;
 };
