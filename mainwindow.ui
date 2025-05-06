@@ -2,15 +2,23 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+<<<<<<< HEAD
   <property name="enabled">
    <bool>true</bool>
   </property>
+=======
+>>>>>>> origin/gestion-de-véhicules
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
+<<<<<<< HEAD
     <width>998</width>
     <height>768</height>
+=======
+    <width>982</width>
+    <height>861</height>
+>>>>>>> origin/gestion-de-véhicules
    </rect>
   </property>
   <property name="windowTitle">
@@ -112,6 +120,7 @@
      }
    </string>
    </property>
+<<<<<<< HEAD
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QTabWidget" name="tabWidget">
@@ -127,6 +136,26 @@
        </property>
        <attribute name="title">
         <string>Ajout</string>
+=======
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <widget class="QStatusBar" name="statusbar"/>
+    </item>
+    <item row="0" column="0">
+     <widget class="QMenuBar" name="menubar"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="tabAjout">
+       <attribute name="title">
+        <string>Ajouter</string>
+>>>>>>> origin/gestion-de-véhicules
        </attribute>
        <layout class="QVBoxLayout" name="layoutAjout">
         <item>
@@ -135,6 +164,7 @@
            <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
           </property>
           <item>
+<<<<<<< HEAD
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
              <widget class="QPushButton" name="retour">
@@ -174,6 +204,32 @@ font-family: &quot;Arial Rounded MT&quot;;
              </widget>
             </item>
            </layout>
+=======
+           <widget class="QLabel" name="label_6">
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>16</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LayoutDirection::LeftToRight</enum>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+                font-size: 16pt;
+                font-weight: bold;
+             </string>
+            </property>
+            <property name="text">
+             <string>Ajouter une Vehicule</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+>>>>>>> origin/gestion-de-véhicules
           </item>
           <item>
            <widget class="QLabel" name="label">
@@ -189,25 +245,102 @@ font-family: &quot;Arial Rounded MT&quot;;
               <height>30</height>
              </size>
             </property>
+<<<<<<< HEAD
             <property name="styleSheet">
              <string notr="true">font-family: &quot;Arial Rounded MT&quot;;</string>
             </property>
             <property name="text">
              <string>ID :</string>
+=======
+            <property name="text">
+             <string>Marque :</string>
+>>>>>>> origin/gestion-de-véhicules
             </property>
            </widget>
           </item>
           <item>
+<<<<<<< HEAD
            <widget class="QLineEdit" name="idInput">
+=======
+           <widget class="QComboBox" name="marque">
+>>>>>>> origin/gestion-de-véhicules
             <property name="maximumSize">
              <size>
               <width>16777215</width>
               <height>50</height>
              </size>
             </property>
+<<<<<<< HEAD
             <property name="placeholderText">
              <string>Insérer l'identifiant </string>
             </property>
+=======
+            <item>
+             <property name="text">
+              <string>Choisir une marque</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Citroen</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>DFSK</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Fiat</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Ford</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hyundai</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Isuzu</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Mercedes</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Opel</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Peugeot</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Renault</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Toyota</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Volkswagen</string>
+             </property>
+            </item>
+>>>>>>> origin/gestion-de-véhicules
            </widget>
           </item>
           <item>
@@ -220,6 +353,7 @@ font-family: &quot;Arial Rounded MT&quot;;
             </property>
             <property name="font">
              <font>
+<<<<<<< HEAD
               <family>Arial Rounded MT</family>
               <pointsize>-1</pointsize>
              </font>
@@ -229,10 +363,19 @@ font-family: &quot;Arial Rounded MT&quot;;
             </property>
             <property name="text">
              <string>Mot de passe :</string>
+=======
+              <family>Arial</family>
+              <pointsize>-1</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Type :</string>
+>>>>>>> origin/gestion-de-véhicules
             </property>
            </widget>
           </item>
           <item>
+<<<<<<< HEAD
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
              <widget class="QLineEdit" name="MDPInput">
@@ -281,18 +424,114 @@ font-family: &quot;Arial Rounded MT&quot;;
           </item>
           <item>
            <widget class="QLineEdit" name="email">
+=======
+           <widget class="QComboBox" name="type">
+>>>>>>> origin/gestion-de-véhicules
             <property name="maximumSize">
              <size>
               <width>16777215</width>
               <height>50</height>
              </size>
             </property>
+<<<<<<< HEAD
             <property name="placeholderText">
              <string>Insèrer le E-mail de vérification</string>
+=======
+            <item>
+             <property name="text">
+              <string>Choisir un type</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Camions</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Bennes</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Remorques</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_8">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Matricule :</string>
+>>>>>>> origin/gestion-de-véhicules
             </property>
            </widget>
           </item>
           <item>
+<<<<<<< HEAD
+=======
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLineEdit" name="matricule1">
+              <property name="maximumSize">
+               <size>
+                <width>300</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="placeholderText">
+               <string>Insèrer la premiere partie de matricule</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_13">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"> font-size: 12pt;</string>
+              </property>
+              <property name="lineWidth">
+               <number>3</number>
+              </property>
+              <property name="text">
+               <string>TN</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="matricule2">
+              <property name="maximumSize">
+               <size>
+                <width>300</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="placeholderText">
+               <string>Insèrer la deuxième partie de matricule</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+>>>>>>> origin/gestion-de-véhicules
            <widget class="QLabel" name="label_3">
             <property name="maximumSize">
              <size>
@@ -300,26 +539,58 @@ font-family: &quot;Arial Rounded MT&quot;;
               <height>30</height>
              </size>
             </property>
+<<<<<<< HEAD
             <property name="styleSheet">
              <string notr="true">font-family: &quot;Arial Rounded MT&quot;;
 </string>
             </property>
             <property name="text">
              <string>Nom :</string>
+=======
+            <property name="text">
+             <string>Statut :</string>
+>>>>>>> origin/gestion-de-véhicules
             </property>
            </widget>
           </item>
           <item>
+<<<<<<< HEAD
            <widget class="QLineEdit" name="nomInput">
+=======
+           <widget class="QComboBox" name="statut">
+>>>>>>> origin/gestion-de-véhicules
             <property name="maximumSize">
              <size>
               <width>16777215</width>
               <height>50</height>
              </size>
             </property>
+<<<<<<< HEAD
             <property name="placeholderText">
              <string>Insérer le nom</string>
             </property>
+=======
+            <item>
+             <property name="text">
+              <string>choisir une status</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Disponible</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>En livraison</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>En maintenance</string>
+             </property>
+            </item>
+>>>>>>> origin/gestion-de-véhicules
            </widget>
           </item>
           <item>
@@ -330,22 +601,32 @@ font-family: &quot;Arial Rounded MT&quot;;
               <height>30</height>
              </size>
             </property>
+<<<<<<< HEAD
             <property name="styleSheet">
              <string notr="true">font-family: &quot;Arial Rounded MT&quot;;</string>
             </property>
             <property name="text">
              <string>Role :</string>
+=======
+            <property name="text">
+             <string>Volume du coffre :</string>
+>>>>>>> origin/gestion-de-véhicules
             </property>
            </widget>
           </item>
           <item>
+<<<<<<< HEAD
            <widget class="QComboBox" name="comboBox">
+=======
+           <widget class="QLineEdit" name="vcoffre">
+>>>>>>> origin/gestion-de-véhicules
             <property name="maximumSize">
              <size>
               <width>16777215</width>
               <height>50</height>
              </size>
             </property>
+<<<<<<< HEAD
             <property name="styleSheet">
              <string notr="true">background-color: #f1f1f1;</string>
             </property>
@@ -364,6 +645,11 @@ font-family: &quot;Arial Rounded MT&quot;;
               <string>Responsable</string>
              </property>
             </item>
+=======
+            <property name="placeholderText">
+             <string>Insèrer le volume du coffre</string>
+            </property>
+>>>>>>> origin/gestion-de-véhicules
            </widget>
           </item>
           <item>
@@ -374,22 +660,32 @@ font-family: &quot;Arial Rounded MT&quot;;
               <height>30</height>
              </size>
             </property>
+<<<<<<< HEAD
             <property name="styleSheet">
              <string notr="true">font-family: &quot;Arial Rounded MT&quot;;</string>
             </property>
             <property name="text">
              <string>Salaire :</string>
+=======
+            <property name="text">
+             <string>Id transporteur :</string>
+>>>>>>> origin/gestion-de-véhicules
             </property>
            </widget>
           </item>
           <item>
+<<<<<<< HEAD
            <widget class="QSpinBox" name="spinBox">
+=======
+           <widget class="QLineEdit" name="idtransporteur">
+>>>>>>> origin/gestion-de-véhicules
             <property name="maximumSize">
              <size>
               <width>16777215</width>
               <height>50</height>
              </size>
             </property>
+<<<<<<< HEAD
             <property name="styleSheet">
              <string notr="true">background-color: #f1f1f1;</string>
             </property>
@@ -398,10 +694,15 @@ font-family: &quot;Arial Rounded MT&quot;;
             </property>
             <property name="singleStep">
              <number>50</number>
+=======
+            <property name="placeholderText">
+             <string>Insèrer l'id transporteur</string>
+>>>>>>> origin/gestion-de-véhicules
             </property>
            </widget>
           </item>
           <item>
+<<<<<<< HEAD
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
              <widget class="QPushButton" name="addButton">
@@ -424,6 +725,19 @@ font-family: &quot;Arial Rounded MT&quot;;
              </widget>
             </item>
            </layout>
+=======
+           <widget class="QPushButton" name="addButton">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Ajouter</string>
+            </property>
+           </widget>
+>>>>>>> origin/gestion-de-véhicules
           </item>
          </layout>
         </item>
@@ -431,7 +745,11 @@ font-family: &quot;Arial Rounded MT&quot;;
       </widget>
       <widget class="QWidget" name="tabAffichage">
        <attribute name="title">
+<<<<<<< HEAD
         <string>Affichage</string>
+=======
+        <string>Afficher</string>
+>>>>>>> origin/gestion-de-véhicules
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
@@ -439,7 +757,11 @@ font-family: &quot;Arial Rounded MT&quot;;
           <item>
            <widget class="QLineEdit" name="searchLineEdit">
             <property name="placeholderText">
+<<<<<<< HEAD
              <string>Rechercher par nom...</string>
+=======
+             <string>Rechercher par matricul...</string>
+>>>>>>> origin/gestion-de-véhicules
             </property>
            </widget>
           </item>
@@ -453,13 +775,32 @@ font-family: &quot;Arial Rounded MT&quot;;
           <item>
            <widget class="QPushButton" name="triButton">
             <property name="text">
+<<<<<<< HEAD
              <string>Trier par Salaire</string>
+=======
+             <string>Trier par Marque</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnSimulateGPS">
+            <property name="text">
+             <string>Localiser</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnViewLatestGPS">
+            <property name="text">
+             <string>voir dans Map</string>
+>>>>>>> origin/gestion-de-véhicules
             </property>
            </widget>
           </item>
          </layout>
         </item>
         <item>
+<<<<<<< HEAD
          <widget class="QTableWidget" name="tableWidget">
           <column>
            <property name="text">
@@ -481,6 +822,90 @@ font-family: &quot;Arial Rounded MT&quot;;
             <string>SALAIRE</string>
            </property>
           </column>
+=======
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QTableWidget" name="tableWidget">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="columnCount">
+             <number>6</number>
+            </property>
+            <attribute name="horizontalHeaderDefaultSectionSize">
+             <number>152</number>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>MATRICULE</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>ID TRANSPORTEUR</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>MARQUE</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>TYPE</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>VOLUME DU COFFRE</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>STATUT</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item>
+           <widget class="QQuickWidget" name="quickWidget">
+            <property name="minimumSize">
+             <size>
+              <width>400</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="resizeMode">
+             <enum>QQuickWidget::ResizeMode::SizeRootObjectToView</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QFrame" name="chartContainer">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>250</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Shape::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Shadow::Raised</enum>
+          </property>
+>>>>>>> origin/gestion-de-véhicules
          </widget>
         </item>
         <item>
@@ -490,9 +915,15 @@ font-family: &quot;Arial Rounded MT&quot;;
       </widget>
       <widget class="QWidget" name="tabSuppression">
        <attribute name="title">
+<<<<<<< HEAD
         <string>Suppression</string>
        </attribute>
        <layout class="QVBoxLayout" name="layoutAjout">
+=======
+        <string>Suppremer</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="layoutsupp">
+>>>>>>> origin/gestion-de-véhicules
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <property name="sizeConstraint">
@@ -507,6 +938,7 @@ font-family: &quot;Arial Rounded MT&quot;;
              </size>
             </property>
             <property name="styleSheet">
+<<<<<<< HEAD
              <string notr="true"> font-size: 16pt;
    font-family: &quot;Arial Rounded MT&quot;;
 
@@ -515,6 +947,15 @@ font-family: &quot;Arial Rounded MT&quot;;
             </property>
             <property name="text">
              <string>Suppression d'un employée</string>
+=======
+             <string notr="true">
+              font-size: 16pt;
+              font-weight: bold;
+              </string>
+            </property>
+            <property name="text">
+             <string>Suppression d'une vehicule</string>
+>>>>>>> origin/gestion-de-véhicules
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -522,27 +963,163 @@ font-family: &quot;Arial Rounded MT&quot;;
            </widget>
           </item>
           <item>
+<<<<<<< HEAD
            <widget class="QLineEdit" name="SuppID">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
+=======
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLineEdit" name="matricule">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="placeholderText">
+               <string>Insérer La matricule à supprimer </string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="Supp_Button">
+          <property name="text">
+           <string>Supprimer</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabModification">
+       <attribute name="title">
+        <string>Modifier</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="label_15">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+            <pointsize>16</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LayoutDirection::LeftToRight</enum>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+                font-size: 16pt;
+                font-weight: bold;
+             </string>
+          </property>
+          <property name="text">
+           <string>Modification d'une Vehicule</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Matricule à modifier :</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <property name="spacing">
+           <number>3</number>
+          </property>
+          <item>
+           <widget class="QLineEdit" name="matricule1_2">
+            <property name="maximumSize">
+             <size>
+              <width>300</width>
+>>>>>>> origin/gestion-de-véhicules
               <height>50</height>
              </size>
             </property>
             <property name="placeholderText">
+<<<<<<< HEAD
              <string>Insérer L'ID à supprimer </string>
+=======
+             <string>Insèrer la premiere partie de matricule</string>
+>>>>>>> origin/gestion-de-véhicules
             </property>
            </widget>
           </item>
           <item>
+<<<<<<< HEAD
            <widget class="QPushButton" name="SuppButton">
             <property name="text">
              <string>Supprimer</string>
+=======
+           <widget class="QLabel" name="label_14">
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"> font-size: 12pt;</string>
+            </property>
+            <property name="lineWidth">
+             <number>3</number>
+            </property>
+            <property name="text">
+             <string>TN</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="matricule2_2">
+            <property name="maximumSize">
+             <size>
+              <width>300</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="placeholderText">
+             <string>Insèrer la deuxième partie de matricule</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="matricule_valider">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>1000</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>valide</string>
+>>>>>>> origin/gestion-de-véhicules
             </property>
            </widget>
           </item>
          </layout>
         </item>
+<<<<<<< HEAD
        </layout>
       </widget>
       <widget class="QWidget" name="tabModification">
@@ -752,11 +1329,337 @@ font-family: &quot;Arial Rounded MT&quot;;
          <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
+=======
+        <item>
+         <widget class="QLabel" name="label_9">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Marque :</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="marque_2">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>Choisir une marque</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Citroen</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>DFSK</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Fiat</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Ford</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Hyundai</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Isuzu</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Mercedes</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Opel</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Peugeot</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Renault</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Toyota</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Volkswagen</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_11">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Type :</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="type_2">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>Choisir un type</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Camions</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Bennes</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Remorques</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_12">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Statut :</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="statut_2">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>Disponible</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>En livraison</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>En maintenance</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_16">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Volume du coffre :</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="vcoffre_2">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="placeholderText">
+           <string>Insèrer le volume du coffre</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_17">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Id transporteur :</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="idtransporteur_2">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="placeholderText">
+           <string>Insèrer l'id transporteur</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="mod_button">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Modifier</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabDiagnostique">
+       <attribute name="title">
+        <string>Diagnostique</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QLineEdit" name="symptomSearchLineEdit">
+          <property name="inputMask">
+           <string/>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="placeholderText">
+           <string>Votre problemme..</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="symptomListWidget">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>500</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tabafficheerreur">
+          <property name="maximumSize">
+           <size>
+            <width>2000</width>
+            <height>300</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnNextSolution">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="accessibleName">
+           <string>next solution</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+color: rgb(255, 255, 255);
+font: 700 italic 16pt &quot;Segoe UI&quot;;</string>
+          </property>
+          <property name="text">
+           <string>autre solution</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+>>>>>>> origin/gestion-de-véhicules
       </widget>
      </widget>
     </item>
    </layout>
   </widget>
+<<<<<<< HEAD
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -769,6 +1672,16 @@ font-family: &quot;Arial Rounded MT&quot;;
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+=======
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QQuickWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">QtQuickWidgets/QQuickWidget</header>
+  </customwidget>
+ </customwidgets>
+>>>>>>> origin/gestion-de-véhicules
  <resources/>
  <connections/>
 </ui>
