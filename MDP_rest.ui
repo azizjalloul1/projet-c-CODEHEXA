@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MDPRestWindow</class>
+ <widget class="QDialog" name="MDPRestWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>499</width>
+    <height>468</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Réinitialisation du mot de passe</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-size: 16px; font-weight: bold;</string>
+     </property>
+     <property name="text">
+      <string>Réinitialisation du mot de passe</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="idInput">
+     <property name="placeholderText">
+      <string>Entrez votre ID</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="envoyerButton">
+     <property name="text">
+      <string>Envoyer le code</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="codeInput">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Entrez le code de vérification</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="validerButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Valider le code</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="nouveauMDPInput">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="cursor">
+      <cursorShape>IBeamCursor</cursorShape>
+     </property>
+     <property name="echoMode">
+      <enum>QLineEdit::EchoMode::Password</enum>
+     </property>
+     <property name="placeholderText">
+      <string>Nouveau mot de passe</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="changerButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Changer le mot de passe</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
