@@ -7,14 +7,14 @@
 #include "ui_mainwindow.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui { class MainWindowstock; }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow {
+class MainWindowstock : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindowstock(QWidget *parent = nullptr);
 
 private slots:
     void onajouterclicked();
@@ -37,7 +37,7 @@ private slots:
 
 
 private:
-    Ui::MainWindow *ui;            // UI pointer
+    Ui::MainWindowstock *ui;            // UI pointer
     QChartView *chartView;         // Member variable for the pie chart view
     void setupPieChartFrame();      // Function to set up the pie chart frame
     void onTabChanged(int index);

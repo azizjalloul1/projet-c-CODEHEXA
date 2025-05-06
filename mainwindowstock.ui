@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>MainWindowstock</class>
+ <widget class="QMainWindow" name="MainWindowstock">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -116,7 +116,7 @@
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabAjout">
        <attribute name="title">

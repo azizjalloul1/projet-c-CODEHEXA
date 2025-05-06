@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "mainwindowstock.h"
 #include "stock.h"
 #include <QMessageBox>
 #include <QSqlQueryModel>
@@ -7,32 +7,31 @@
 #include <QPainter>
 #include <QFileDialog>
 #include <QDateTime>
-#include "ui_mainwindow.h"
+#include "ui_mainwindowstock.h"
 #include <QtCharts/QPieSeries>
 #include <QtCharts/QChartView>
 #include <QtCharts/QChart>
 #include "CustomComboBox.h"
 #include "AnimatedDialog.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+MainWindowstock::MainWindowstock(QWidget *parent)
+    : QMainWindow(parent) , ui(new Ui::MainWindowstock)
 {
     ui->setupUi(this);
-    connect(ui->suppb, &QPushButton::clicked, this, &MainWindow::onsupprimerclicked);
-    connect(ui->addb, &QPushButton::clicked, this, &MainWindow::onajouterclicked);
-    connect(ui->modb, &QPushButton::clicked, this, &MainWindow::onmodifierclicked);
-    connect(ui->valider, &QPushButton::clicked, this, &MainWindow::onvaliderclicked);
-    connect(ui->affiche, &QTabWidget::currentChanged, this, &MainWindow::displayStocks);
-    connect(ui->triButton, &QPushButton::clicked, this, &MainWindow::onTriButtonClicked);
-    connect(ui->recherche, &QLineEdit::textChanged, this, &MainWindow::onRechercheTextChanged);
-    connect(ui->exportButton, &QPushButton::clicked, this, &MainWindow::exportToPDF);
-    connect(ui->affiche, &QTabWidget::currentChanged, this, &MainWindow::onTabChanged);
-    connect(ui->addb, &QPushButton::clicked, this, &MainWindow::ajouterFourniture);
+    connect(ui->suppb, &QPushButton::clicked, this, &MainWindowstock::onsupprimerclicked);
+    connect(ui->addb, &QPushButton::clicked, this, &MainWindowstock::onajouterclicked);
+    connect(ui->modb, &QPushButton::clicked, this, &MainWindowstock::onmodifierclicked);
+    connect(ui->valider, &QPushButton::clicked, this, &MainWindowstock::onvaliderclicked);
+    connect(ui->affiche, &QTabWidget::currentChanged, this, &MainWindowstock::displayStocks);
+    connect(ui->triButton, &QPushButton::clicked, this, &MainWindowstock::onTriButtonClicked);
+    connect(ui->recherche, &QLineEdit::textChanged, this, &MainWindowstock::onRechercheTextChanged);
+    connect(ui->exportButton, &QPushButton::clicked, this, &MainWindowstock::exportToPDF);
+    connect(ui->affiche, &QTabWidget::currentChanged, this, &MainWindowstock::onTabChanged);
+    connect(ui->addb, &QPushButton::clicked, this, &MainWindowstock::ajouterFourniture);
     populateFournisseurComboBox();
     displayStocks(); // Load stocks
-    connect(ui->idfournisseur, &CustomComboBox::popupShown, this, &MainWindow::populateFournisseurComboBox);
-    connect(ui->textbutton, &QPushButton::clicked, this, &MainWindow::exportToTextFile);
+    connect(ui->idfournisseur, &CustomComboBox::popupShown, this, &MainWindowstock::populateFournisseurComboBox);
+    connect(ui->textbutton, &QPushButton::clicked, this, &MainWindowstock::exportToTextFile);
 
 
 
@@ -42,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 }
 
-void MainWindow::onTabChanged(int index) {
+void MainWindowstock::onTabChanged(int index) {
     // Assuming your "Affichage" tab has index 0 (change this if needed)
     if (index == 1) {
         checkStockAlerts(); // Call alert only when Affichage tab is activated
@@ -52,7 +51,7 @@ void MainWindow::onTabChanged(int index) {
     }
 }
 
-void MainWindow::populateFournisseurComboBox() {
+void MainWindowstock::populateFournisseurComboBox() {
     qDebug() << "ComboBox opened! Populating...";
 
     ui->idfournisseur->clear();
@@ -79,7 +78,7 @@ void MainWindow::populateFournisseurComboBox() {
 
 
 
-void MainWindow::onajouterclicked()
+void MainWindowstock::onajouterclicked()
 {
     QString refText = ui->ref->text();
     QString prixText = ui->prix->text();
@@ -115,7 +114,7 @@ void MainWindow::onajouterclicked()
     }
 }
 
-void MainWindow::onsupprimerclicked()
+void MainWindowstock::onsupprimerclicked()
 {
     QString refText = ui->suppref->text();
 
@@ -136,7 +135,7 @@ void MainWindow::onsupprimerclicked()
     }
 }
 
-void MainWindow::onmodifierclicked()
+void MainWindowstock::onmodifierclicked()
 {
     int ref = ui->refmod->text().toInt();
     double prix = ui->prixmod->text().toDouble();
@@ -154,7 +153,7 @@ void MainWindow::onmodifierclicked()
     }
 }
 
-void MainWindow::onvaliderclicked()
+void MainWindowstock::onvaliderclicked()
 {
     QString refText = ui->refmod->text().trimmed();
 
@@ -183,7 +182,7 @@ void MainWindow::onvaliderclicked()
     }
 }
 
-void MainWindow::displayStocks()
+void MainWindowstock::displayStocks()
 {
     ui->table->setRowCount(0);
     QStringList headers = { "REF", "Type", "Prix Unitaire", "Quantité" };
@@ -205,7 +204,7 @@ void MainWindow::displayStocks()
 
 }
 
-void MainWindow::onTriButtonClicked()
+void MainWindowstock::onTriButtonClicked()
 {
     ui->table->setRowCount(0);
     Stock stock;
@@ -221,7 +220,7 @@ void MainWindow::onTriButtonClicked()
     }
 }
 
-void MainWindow::onRechercheTextChanged(const QString &text)
+void MainWindowstock::onRechercheTextChanged(const QString &text)
 {
     Stock stock;
     QList<Stock> stocks;
@@ -245,7 +244,7 @@ void MainWindow::onRechercheTextChanged(const QString &text)
     loadAndDisplayStock(ui->frame); // Optional: refresh stats while searching
 }
 
-void MainWindow::exportToPDF()
+void MainWindowstock::exportToPDF()
 {
     QString fileName = QFileDialog::getSaveFileName(this, "Save as PDF", "", "PDF Files (*.pdf)");
     if (fileName.isEmpty()) return;
@@ -315,7 +314,7 @@ void MainWindow::exportToPDF()
     QMessageBox::information(this, "Success", "Stock exported to PDF successfully!");
 }
 
-void MainWindow::loadAndDisplayStock(QFrame* frame) {
+void MainWindowstock::loadAndDisplayStock(QFrame* frame) {
     const int maxStock = 100000;
     int currentStock = 0;
 
@@ -378,7 +377,7 @@ void MainWindow::loadAndDisplayStock(QFrame* frame) {
 }
 
 
-void MainWindow::checkStockAlerts() {
+void MainWindowstock::checkStockAlerts() {
     const int maxStock = 100000;
     int currentStock = 0;
 
@@ -411,11 +410,11 @@ void MainWindow::checkStockAlerts() {
     dialog.exec();
 }
 
-void MainWindow::ajouterFourniture() {
+void MainWindowstock::ajouterFourniture() {
     QString refText = ui->ref->text();
     QString quantiteText = ui->quantite->text();
     QString prixText = ui->prix->text();
-   QString idFournisseurText = ui->idfournisseur->currentText(); // Getting selected item
+    QString idFournisseurText = ui->idfournisseur->currentText(); // Getting selected item
 
     // Validation
     if (refText.isEmpty() || quantiteText.isEmpty() || prixText.isEmpty() || idFournisseurText.isEmpty()) {
@@ -465,7 +464,7 @@ void MainWindow::ajouterFourniture() {
 }
 
 
-void MainWindow::afficherHistoriqueFourniture() {
+void MainWindowstock::afficherHistoriqueFourniture() {
     QSqlQuery query;
     query.prepare("SELECT REF, ID_FOURNISSEUR, DATE_FOURNITURE, QUANTITE, PRIX_TOTALE FROM FOURNIR");
 
@@ -499,7 +498,7 @@ void MainWindow::afficherHistoriqueFourniture() {
     ui->tableHistorique->resizeColumnsToContents();
 }
 
-void MainWindow::exportToTextFile()
+void MainWindowstock::exportToTextFile()
 {
     QString fileName = QFileDialog::getSaveFileName(this, "Exporter en fichier texte", "", "Fichier texte (*.txt)");
     if (fileName.isEmpty())
@@ -550,7 +549,6 @@ void MainWindow::exportToTextFile()
     file.close();
     QMessageBox::information(this, "Succès", "Table exportée en fichier texte avec succès !");
 }
-
 
 
 

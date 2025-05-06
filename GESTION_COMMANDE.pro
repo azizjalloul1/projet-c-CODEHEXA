@@ -13,18 +13,18 @@ CONFIG += c++17
 SOURCES += \
     connexion.cpp \
     main.cpp \
-    mainwindow.cpp \
+    mainwindowstock.cpp \
     stock.cpp
 
 HEADERS += \
     AnimatedDialog.h \
     CustomComboBox.h \
     connexion.h \
-    mainwindow.h \
+    mainwindowstock.h \
     stock.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindowstock.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
