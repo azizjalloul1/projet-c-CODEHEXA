@@ -66,7 +66,7 @@ void MDPRestWindow::envoyerCodeParEmail(const QString &email, const QString &cod
 
     // Définir les en-têtes
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    request.setRawHeader("api-key", "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");
+    request.setRawHeader("api-key", "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");
 
     // Construire le corps JSON
     QJsonObject json;

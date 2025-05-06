@@ -3,13 +3,7 @@ QT += sql
 QT += charts
 QT += printsupport
 QT += network
-
-# Ajouter le chemin des en-têtes
-#INCLUDEPATH += C:/Users/Nadim/Desktop/PROJET_QT/GESTION/include
-
-# Lier la bibliothèque statique
-#LIBS += -L"C:/Users/Nadim/Desktop/PROJET_QT/GESTION/lib" -lbcrypt -lmingw32
-
+QT += serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
