@@ -35,6 +35,7 @@ namespace {
 #ifdef QT_MOC_HAS_STRINGDATA
 struct qt_meta_stringdata_CLASSMainWindowENDCLASS_t {};
 constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers::stringData(
+<<<<<<< HEAD
     "MainWindow",
     "on_addButton_clicked",
     "",
@@ -70,6 +71,9 @@ constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers::string
     "id_E",
     "on_btn_stats_clicked"
 >>>>>>> origin/gestionetablissement
+=======
+    "MainWindow"
+>>>>>>> origin/gestionexamen
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -83,16 +87,21 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
        0,       // classname
        0,    0, // classinfo
 <<<<<<< HEAD
+<<<<<<< HEAD
       18,   14, // methods
 =======
        8,   14, // methods
 >>>>>>> origin/gestionetablissement
+=======
+       0,    0, // methods
+>>>>>>> origin/gestionexamen
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
        0,       // signalCount
 
+<<<<<<< HEAD
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
 <<<<<<< HEAD
        1,    0,  122,    2, 0x08,    1 /* Private */,
@@ -148,6 +157,8 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
 >>>>>>> origin/gestionetablissement
     QMetaType::Void,
 
+=======
+>>>>>>> origin/gestionexamen
        0        // eod
 };
 
@@ -159,6 +170,7 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
     nullptr,
     qt_incomplete_metaTypeArray<qt_meta_stringdata_CLASSMainWindowENDCLASS_t,
         // Q_OBJECT / Q_GADGET
+<<<<<<< HEAD
         QtPrivate::TypeAndForceComplete<MainWindow, std::true_type>,
         // method 'on_addButton_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
@@ -217,12 +229,16 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
         // method 'on_btn_stats_clicked'
 >>>>>>> origin/gestionetablissement
         QtPrivate::TypeAndForceComplete<void, std::false_type>
+=======
+        QtPrivate::TypeAndForceComplete<MainWindow, std::true_type>
+>>>>>>> origin/gestionexamen
     >,
     nullptr
 } };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
+<<<<<<< HEAD
     if (_c == QMetaObject::InvokeMetaMethod) {
         auto *_t = static_cast<MainWindow *>(_o);
         (void)_t;
@@ -257,6 +273,12 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         default: ;
         }
     }
+=======
+    (void)_o;
+    (void)_id;
+    (void)_c;
+    (void)_a;
+>>>>>>> origin/gestionexamen
 }
 
 const QMetaObject *MainWindow::metaObject() const
@@ -275,6 +297,7 @@ void *MainWindow::qt_metacast(const char *_clname)
 int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QMainWindow::qt_metacall(_c, _id, _a);
+<<<<<<< HEAD
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
@@ -296,6 +319,8 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         _id -= 8;
 >>>>>>> origin/gestionetablissement
     }
+=======
+>>>>>>> origin/gestionexamen
     return _id;
 }
 QT_WARNING_POP

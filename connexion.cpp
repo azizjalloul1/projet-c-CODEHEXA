@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "connexion.h"
 
 <<<<<<< HEAD
@@ -10,6 +11,14 @@
 #include <QDebug>
 
 >>>>>>> origin/gestion-de-fournisseur
+=======
+#include "connexion.h"
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QString>
+#include <QDebug>
+
+>>>>>>> origin/gestionexamen
 Connexion::Connexion()
 {
     db = QSqlDatabase::addDatabase("QODBC");
@@ -17,6 +26,7 @@ Connexion::Connexion()
 
 bool Connexion::ouvrirConnexion()
 {
+<<<<<<< HEAD
 <<<<<<< HEAD
     db.setDatabaseName("PROJET"); // Nom de la source de données ODBC
     db.setUserName("naadim");     // Nom d'utilisateur Oracle
@@ -41,12 +51,25 @@ bool Connexion::ouvrirConnexion()
     } else {
         qDebug() << "Connexion réussie à la base de données fournisseur_db";
 >>>>>>> origin/gestion-de-fournisseur
+=======
+
+    db.setDatabaseName("PROJET_QT.bd");//nom de la base
+    db.setUserName("imen");//utilisateur
+    db.setPassword("imen");//mot de passe
+
+    if (!db.open()) {
+        qDebug() << "Erreur de connexion : " << db.lastError().text();
+        return false;
+    } else {
+        qDebug() << "Connexion réussie !";
+>>>>>>> origin/gestionexamen
         return true;
     }
 }
 
 void Connexion::fermerConnexion()
 {
+<<<<<<< HEAD
 <<<<<<< HEAD
     db.close();
     qDebug() << "Connexion fermée.";
@@ -104,3 +127,13 @@ QSqlDatabase Connexion::getDatabase() const {
 }
 
 >>>>>>> origin/gestion-de-fournisseur
+=======
+    db.close();
+    qDebug() << "Connexion fermée.";
+}
+
+QString Connexion::getLastError() const
+{
+    return db.lastError().text();
+}
+>>>>>>> origin/gestionexamen
