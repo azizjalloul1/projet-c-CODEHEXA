@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef WINDOWEXAMEN_H
+#define WINDOWEXAMEN_H
 #include <QMainWindow>
 #include <QtCharts>
 #include <QChartView>

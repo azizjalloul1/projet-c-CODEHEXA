@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "windowexamen.h"
+#include "ui_windowexamen.h"
 #include "examen.h"
 #include <QMessageBox>
 #include <QDebug>
@@ -748,4 +748,3 @@ void MainWindow::lireDonneesArduino()
         }
     }
 }
-

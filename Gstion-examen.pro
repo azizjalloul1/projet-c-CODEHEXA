@@ -19,17 +19,17 @@ SOURCES += \
     connexion.cpp \
     examen.cpp \
     main.cpp \
-    mainwindow.cpp
+    windowexamen.cpp
 
 HEADERS += \
     connexion.h \
     examen.h \
-    mainwindow.h
+    windowexamen.h
 
 
 
 FORMS += \
-    mainwindow.ui
+    windowexamen.ui
 
 
 qnx: target.path = /tmp/$${TARGET}/bin
