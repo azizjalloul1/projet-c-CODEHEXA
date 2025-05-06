@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "connexion.h"
 
 <<<<<<< HEAD
@@ -29,10 +30,16 @@ void Connexion::fermerConnexion()
     db.close();
     qDebug() << "Connexion fermée.";
 =======
+=======
+
+#include "connexion.h"
+
+>>>>>>> origin/gestionetablissement
 Connection::Connection()
 {
 
 }
+<<<<<<< HEAD
 
 bool Connection::createconnect()
 {bool test=false;
@@ -50,4 +57,16 @@ bool Connection::createconnect()
 
     return  test;
 >>>>>>> origin/gestion-de-véhicules
+=======
+bool Connection::createconnect()
+{bool test=false;
+    QSqlDatabase db = QSqlDatabase::addDatabase("QODBC");
+    db.setDatabaseName("PROJET");
+    db.setUserName("meriam");//inserer nom de l'utilisateur
+    db.setPassword("123");//inserer mot de passe de cet utilisateur
+    if (db.open())
+        test=true;
+
+    return  test;
+>>>>>>> origin/gestionetablissement
 }

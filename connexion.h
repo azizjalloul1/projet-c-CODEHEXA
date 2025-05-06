@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 #ifndef CONNEXION_H
 #define CONNEXION_H
 
@@ -20,6 +21,8 @@ private:
 
 #endif // CONNEXION_H
 =======
+=======
+>>>>>>> origin/gestionetablissement
 #ifndef CONNECTION_H
 #define CONNECTION_H
 #include <QSqlDatabase>
@@ -34,4 +37,7 @@ public:
 };
 
 #endif // CONNECTION_H
+<<<<<<< HEAD
 >>>>>>> origin/gestion-de-véhicules
+=======
+>>>>>>> origin/gestionetablissement

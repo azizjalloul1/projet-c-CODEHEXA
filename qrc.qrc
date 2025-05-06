@@ -2,5 +2,9 @@
     <qresource prefix="/">
         <file>MapView.qml</file>
         <file>marker.png</file>
+<<<<<<< HEAD
+=======
+        <file>PathView.qml</file>
+>>>>>>> origin/gestionetablissement
     </qresource>
 </RCC>

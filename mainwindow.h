@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include <QTableWidget>
 #include <QMessageBox>
 
@@ -30,6 +31,17 @@
 // Ne pas inclure accueil.h ici
 class Accueil;
 
+=======
+#include <QMessageBox>
+#include <QGraphicsView>
+#include <QtCharts/QChart>
+#include <QChartView>
+#include "etablissement.h"
+#include "statswindow.h"
+#include <QModelIndex>
+#include <QGeoPositionInfoSource>
+#include <QGeoCoordinate>
+>>>>>>> origin/gestionetablissement
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -41,6 +53,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+<<<<<<< HEAD
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void setAccueil(Accueil *accueilWindow);
@@ -137,6 +150,40 @@ private:
     QStringList allSymptoms;
     QSerialPort *serial;
 >>>>>>> origin/gestion-de-véhicules
+=======
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+private slots:
+    void on_addButton_clicked();
+    void on_mod_button_clicked();
+    void on_SuppButton_clicked();
+    void on_aff_pdf_clicked();
+    void on_triComboBox_currentTextChanged(const QString &text);
+
+    void on_aff_rech_clicked();
+
+    void remplirChampsModification(const QString& id_E);
+    void on_btn_stats_clicked();
+    void on_tableView_Etablissements_clicked(const QModelIndex &index);
+    void mettreAJourPositionUtilisateur(const QGeoPositionInfo &info); // MODIFIER la signature
+
+    void on_btn_path_clicked();  // bouton pour afficher le chemin
+
+
+private:
+    Ui::MainWindow *ui;
+    Etablissement etablissement;
+    void afficherCarteEtablissements();
+    void afficherEtablissement();
+    void clearInputs();
+    void calculerCheminVersEtablissement(double destLat, double destLon);
+    QGeoPositionInfoSource *positionSource;
+    QGeoCoordinate currentPosition;
+    Etablissement getSelectedEtablissement();
+
+
+>>>>>>> origin/gestionetablissement
 };
 
 #endif // MAINWINDOW_H
