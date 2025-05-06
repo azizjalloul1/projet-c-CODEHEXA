@@ -51,6 +51,8 @@ private:
     void calculerCheminVersEtablissement(double destLat, double destLon);
     QGeoPositionInfoSource *positionSource;
     QGeoCoordinate currentPosition;
+    Etablissement getSelectedEtablissement();
+
 
 };
 

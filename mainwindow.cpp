@@ -16,6 +16,7 @@
 #include <QQmlEngine>          // pour QQmlEngine
 #include <QtQuickWidgets/QQuickWidget>  // pour QQuickWidget
 #include "PathWindow.h"
+#include <QGeoCoordinate>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -523,33 +524,37 @@ void MainWindow::mettreAJourPositionUtilisateur(const QGeoPositionInfo &info) {
         qDebug() << "Position actuelle mise à jour :" << currentPosition;
     }
 }
+Etablissement MainWindow::getSelectedEtablissement() {
+    QModelIndex index = ui->tableView_Etablissements->currentIndex();
+    if (!index.isValid()) return Etablissement();
 
+    int row = index.row();
+    QString id = ui->tableView_Etablissements->model()->index(row, 0).data().toString();
+    QString nom = ui->tableView_Etablissements->model()->index(row, 1).data().toString();
+    QString adresse = ui->tableView_Etablissements->model()->index(row, 2).data().toString();
+    QString contact = ui->tableView_Etablissements->model()->index(row, 3).data().toString();
+    QString type = ui->tableView_Etablissements->model()->index(row, 4).data().toString();
+    QString lat = ui->tableView_Etablissements->model()->index(row, 5).data().toString();
+    QString lon = ui->tableView_Etablissements->model()->index(row, 6).data().toString();
 
+    return Etablissement(id, nom, adresse, contact, type, lat, lon);
+}
 void MainWindow::on_btn_path_clicked()
 {
-    QModelIndex index = ui->tableView_Etablissements->currentIndex();
-    if (!index.isValid()) {
-        QMessageBox::warning(this, "Sélection manquante", "Veuillez sélectionner un établissement.");
+    Etablissement selected = getSelectedEtablissement();
+
+    if (selected.getLatitude().isEmpty() || selected.getLongitude().isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un établissement avec des coordonnées valides.");
         return;
     }
 
-    QString latStr = ui->tableView_Etablissements->model()->index(index.row(), 5).data().toString();
-    QString lonStr = ui->tableView_Etablissements->model()->index(index.row(), 6).data().toString();
+    double destLat = selected.getLatitude().toDouble();
+    double destLon = selected.getLongitude().toDouble();
 
-    latStr.remove(QRegularExpression("[^\\d\\.\\-]"));
-    lonStr.remove(QRegularExpression("[^\\d\\.\\-]"));
+    // ✅ Position fixe : Esprit Ariana
+    QGeoCoordinate from(36.8625, 10.1956);  // Fixé
+    QGeoCoordinate to(destLat, destLon);
 
-    bool okLat = false, okLon = false;
-    double latitude = latStr.toDouble(&okLat);
-    double longitude = lonStr.toDouble(&okLon);
-
-    if (!okLat || !okLon) {
-        QMessageBox::critical(this, "Erreur", "Coordonnées invalides.");
-        return;
-    }
-
-    QGeoCoordinate userPos(36.899256, 10.189198); // Position fixe : ESPRIT
-    QGeoCoordinate destination(latitude, longitude);
-
-    PathWindow::showPath(userPos, destination);
+    PathWindow *window = new PathWindow(from, to);
+    window->show();
 }

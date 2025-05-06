@@ -19,14 +19,14 @@ SOURCES += \
     etablissement.cpp \
     main.cpp \
     mainwindow.cpp \
-    pathview.cpp \
+    pathwindow.cpp \
     statswindow.cpp
 
 HEADERS += \
     connexion.h \
     etablissement.h \
     mainwindow.h \
-    pathview.h \
+    pathwindow.h \
     statswindow.h
 
 FORMS += \
