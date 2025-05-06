@@ -1,7 +1,15 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "connexion.h"
 
 <<<<<<< HEAD
+=======
+#include "connexion.h"
+#include <QSqlError>
+#include <QMessageBox>
+#include <QDebug>
+
+>>>>>>> origin/gestion-de-fournisseur
 Connexion::Connexion()
 {
     db = QSqlDatabase::addDatabase("QODBC");
@@ -9,6 +17,7 @@ Connexion::Connexion()
 
 bool Connexion::ouvrirConnexion()
 {
+<<<<<<< HEAD
     db.setDatabaseName("PROJET"); // Nom de la source de données ODBC
     db.setUserName("naadim");     // Nom d'utilisateur Oracle
     db.setPassword("0000");       // Mot de passe Oracle
@@ -21,12 +30,24 @@ bool Connexion::ouvrirConnexion()
         return false;
     } else {
         qDebug() << "Connexion réussie !";
+=======
+    db.setDatabaseName("PROJET");
+    db.setUserName("louka");
+    db.setPassword("louka");
+
+    if (!db.open()) {
+        qDebug() << "Erreur de connexion à la base de données :" << db.lastError().text();
+        return false;
+    } else {
+        qDebug() << "Connexion réussie à la base de données fournisseur_db";
+>>>>>>> origin/gestion-de-fournisseur
         return true;
     }
 }
 
 void Connexion::fermerConnexion()
 {
+<<<<<<< HEAD
     db.close();
     qDebug() << "Connexion fermée.";
 =======
@@ -70,3 +91,16 @@ bool Connection::createconnect()
     return  test;
 >>>>>>> origin/gestionetablissement
 }
+=======
+    if (db.isOpen()) {
+        db.close();
+        qDebug() << "Connexion fermée avec succès.";
+    }
+}
+
+// **Ajout de l'implémentation du getter pour db**
+QSqlDatabase Connexion::getDatabase() const {
+    return db;
+}
+
+>>>>>>> origin/gestion-de-fournisseur

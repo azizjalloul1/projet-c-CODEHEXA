@@ -4,6 +4,7 @@
  <widget class="QMainWindow" name="MainWindow">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   <property name="enabled">
    <bool>true</bool>
   </property>
@@ -11,10 +12,13 @@
 >>>>>>> origin/gestion-de-véhicules
 =======
 >>>>>>> origin/gestionetablissement
+=======
+>>>>>>> origin/gestion-de-fournisseur
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     <width>998</width>
@@ -37,12 +41,19 @@
    </size>
   </property>
 >>>>>>> origin/gestionetablissement
+=======
+    <width>1176</width>
+    <height>1067</height>
+   </rect>
+  </property>
+>>>>>>> origin/gestion-de-fournisseur
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
     <string notr="true">
+<<<<<<< HEAD
      QWidget {
 <<<<<<< HEAD
        background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 #E3F0FE, stop:1 #BBDEFB);
@@ -1338,10 +1349,156 @@ font-family: &quot;Arial Rounded MT&quot;;
           </property>
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignCenter</set>
+=======
+       QWidget {
+         background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 #E3F0FE, stop:1 #BBDEFB);
+         font-family: Arial, sans-serif;
+         font-size: 14px;
+       }
+
+       QLineEdit {
+         border: 2px solid #5c6bc0;
+         border-radius: 8px;
+         padding: 8px;
+         background-color: #f9f9f9;
+         color: #333;
+         font-size: 14px;
+
+       }
+
+       QLineEdit:focus {
+         border: 2px solid #3f51b5;
+         background-color: #e8eaf6;
+
+       }
+
+       QPushButton {
+         background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #2196F3, stop:1 #1976D2);
+         color: white;
+         border-radius: 8px;
+         padding: 12px;
+         font-size: 16px;
+         font-weight: bold;
+         border: none;
+
+
+       }
+
+       QPushButton:hover {
+         background: #1976D2;
+
+       }
+
+       QPushButton:pressed {
+         background: #0D47A1;
+
+       }
+
+       QPushButton:disabled {
+         background: #BBDEFB;
+         color: #757575;
+         ;
+       }
+
+       QTabWidget::pane {
+         border: 2px solid #3f51b5;
+         border-radius: 8px;
+         background: #ffffff;
+       }
+
+       QTabBar::tab {
+         background: #e3f2fd;
+         padding: 10px;
+         border-radius: 8px 8px 0 0;
+         color: #333;
+         font-weight: bold;
+       }
+
+       QTabBar::tab:selected {
+         background: #2196F3;
+         color: white;
+       }
+       QTableView {
+           border: 1px solid #5c6bc0;
+           gridline-color: #5c6bc0;
+           background-color: #ffffff;
+           color: black;
+           selection-background-color: #1976D2;
+           selection-color: black; /* Texte en blanc quand sélectionné */
+       }
+
+
+
+       QComboBox {
+         background-color: #f1f1f1;
+         border: 2px solid #5c6bc0;
+         border-radius: 8px;
+         padding: 5px;
+         font-size: 14px;
+       }
+
+       QTableWidget {
+         border: 1px solid #5c6bc0;
+         gridline-color: #5c6bc0;
+         background-color: #ffffff;
+       }
+
+       QTableWidget::item {
+         padding: 5px;
+       }
+
+       QTableWidget::item:selected {
+         background-color: #1976D2;
+         color: black;
+       }
+     </string>
+   </property>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>1121</width>
+      <height>1001</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="currentIndex">
+     <number>4</number>
+    </property>
+    <widget class="QWidget" name="tabAjout_2">
+     <attribute name="title">
+      <string>Ajout</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="layoutAjout_3">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <property name="sizeConstraint">
+         <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
+        </property>
+        <item>
+         <widget class="QLabel" name="label_8">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font-size: 16pt;
+color: rgb(0, 0, 0);
+font-family: &quot;Arial Rounded MT&quot;</string>
+          </property>
+          <property name="text">
+           <string>                                                    L'ajout D'un Fournisseur</string>
+>>>>>>> origin/gestion-de-fournisseur
           </property>
          </widget>
         </item>
         <item>
+<<<<<<< HEAD
          <widget class="QLabel" name="label_10">
           <property name="text">
            <string>Matricule à modifier :</string>
@@ -1792,6 +1949,8 @@ font-family: &quot;Arial Rounded MT&quot;;
        </widget>
 =======
         <item>
+=======
+>>>>>>> origin/gestion-de-fournisseur
          <widget class="QLabel" name="label_9">
           <property name="maximumSize">
            <size>
@@ -1799,12 +1958,21 @@ font-family: &quot;Arial Rounded MT&quot;;
             <height>30</height>
            </size>
           </property>
+<<<<<<< HEAD
           <property name="text">
            <string>Marque :</string>
+=======
+          <property name="styleSheet">
+           <string notr="true">color: rgb(31, 139, 231);</string>
+          </property>
+          <property name="text">
+           <string>ID</string>
+>>>>>>> origin/gestion-de-fournisseur
           </property>
          </widget>
         </item>
         <item>
+<<<<<<< HEAD
          <widget class="QComboBox" name="marque_2">
           <property name="minimumSize">
            <size>
@@ -1812,12 +1980,71 @@ font-family: &quot;Arial Rounded MT&quot;;
             <height>50</height>
            </size>
           </property>
+=======
+         <widget class="QLineEdit" name="lineEdit_Id">
           <property name="maximumSize">
            <size>
             <width>16777215</width>
             <height>50</height>
            </size>
           </property>
+          <property name="readOnly">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(31, 143, 235);</string>
+          </property>
+          <property name="text">
+           <string>Nom</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_Nom">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_10">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(31, 143, 236);</string>
+          </property>
+          <property name="text">
+           <string>num de télephone</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_NumTel">
+>>>>>>> origin/gestion-de-fournisseur
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+<<<<<<< HEAD
           <item>
            <property name="text">
             <string>Choisir une marque</string>
@@ -1883,6 +2110,8 @@ font-family: &quot;Arial Rounded MT&quot;;
             <string>Volkswagen</string>
            </property>
           </item>
+=======
+>>>>>>> origin/gestion-de-fournisseur
          </widget>
         </item>
         <item>
@@ -1893,12 +2122,21 @@ font-family: &quot;Arial Rounded MT&quot;;
             <height>30</height>
            </size>
           </property>
+<<<<<<< HEAD
           <property name="text">
            <string>Type :</string>
+=======
+          <property name="styleSheet">
+           <string notr="true">color: rgb(31, 143, 236);</string>
+          </property>
+          <property name="text">
+           <string>type de service</string>
+>>>>>>> origin/gestion-de-fournisseur
           </property>
          </widget>
         </item>
         <item>
+<<<<<<< HEAD
          <widget class="QComboBox" name="type_2">
           <property name="minimumSize">
            <size>
@@ -1906,35 +2144,382 @@ font-family: &quot;Arial Rounded MT&quot;;
             <height>50</height>
            </size>
           </property>
+=======
+         <widget class="QComboBox" name="comboBox_TypeService_2">
+>>>>>>> origin/gestion-de-fournisseur
           <property name="maximumSize">
            <size>
             <width>16777215</width>
             <height>50</height>
            </size>
           </property>
+<<<<<<< HEAD
           <item>
            <property name="text">
             <string>Choisir un type</string>
+=======
+          <property name="styleSheet">
+           <string notr="true">
+color: rgb(31, 141, 234);</string>
+          </property>
+          <item>
+           <property name="text">
+            <string/>
+>>>>>>> origin/gestion-de-fournisseur
            </property>
           </item>
           <item>
            <property name="text">
+<<<<<<< HEAD
             <string>Camions</string>
+=======
+            <string>Transporteur</string>
+>>>>>>> origin/gestion-de-fournisseur
            </property>
           </item>
           <item>
            <property name="text">
+<<<<<<< HEAD
             <string>Bennes</string>
+=======
+            <string>logistique</string>
+>>>>>>> origin/gestion-de-fournisseur
            </property>
           </item>
           <item>
            <property name="text">
+<<<<<<< HEAD
             <string>Remorques</string>
+=======
+            <string>informatique</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string> maintenance et réparation</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>sécurité</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Ressource Humaine et formation</string>
+>>>>>>> origin/gestion-de-fournisseur
            </property>
           </item>
          </widget>
         </item>
         <item>
+<<<<<<< HEAD
+=======
+         <widget class="QPushButton" name="btnAjouter">
+          <property name="text">
+           <string>Ajouter</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="tabAffichage_2">
+     <attribute name="title">
+      <string>Affichage</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="verticalLayout_6">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QPushButton" name="btnStatistiques">
+          <property name="text">
+           <string>statistique</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="btnRechercher">
+          <property name="placeholderText">
+           <string>Rechercher par nom...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnMeilleurFournisseur">
+          <property name="text">
+           <string>meuilleur fournisseur</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnExporterPDF">
+          <property name="text">
+           <string>Exporter en PDF</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnEnvoyerSMS">
+          <property name="text">
+           <string>ENVOYER</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox_Tri">
+          <item>
+           <property name="text">
+            <string>tri croissant </string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>tri décroissant</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="chartLayout_2">
+        <item>
+         <widget class="QTableView" name="tableView_Fournisseurs">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <attribute name="horizontalHeaderMinimumSectionSize">
+           <number>100</number>
+          </attribute>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>200</number>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="tabModification_2">
+     <attribute name="title">
+      <string>Modification</string>
+     </attribute>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>19</x>
+        <y>17</y>
+        <width>1031</width>
+        <height>661</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <property name="sizeConstraint">
+        <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_13">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font-size: 16pt;
+color: rgb(0, 0, 0);
+font-family: &quot;Arial Rounded MT&quot;</string>
+         </property>
+         <property name="text">
+          <string>                                            Modification D'un Fournisseur</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_14">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(31, 139, 231);</string>
+         </property>
+         <property name="text">
+          <string>ID</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_IdModif">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(31, 143, 236);</string>
+         </property>
+         <property name="currentIndex">
+          <number>-1</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(31, 143, 235);</string>
+         </property>
+         <property name="text">
+          <string>Nom</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_NomModif">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_15">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(31, 143, 236);</string>
+         </property>
+         <property name="text">
+          <string>num de télephone</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_NumTelModif">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_16">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(31, 143, 236);</string>
+         </property>
+         <property name="text">
+          <string>type de service</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_TypeServiceModif">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="toolTipDuration">
+          <number>1</number>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">
+color: rgb(31, 143, 236);</string>
+         </property>
+         <item>
+          <property name="text">
+           <string/>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Transporteur</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>logistique</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>informatique</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>sécurité</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string> maintenance et réparation</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Ressource Humaine et formation</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnModifier">
+         <property name="text">
+          <string>modifier</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tabSuppression_2">
+     <attribute name="title">
+      <string>Suppression</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="layoutAjout_4">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_8">
+        <property name="sizeConstraint">
+         <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
+        </property>
+        <item>
+>>>>>>> origin/gestion-de-fournisseur
          <widget class="QLabel" name="label_12">
           <property name="maximumSize">
            <size>
@@ -1942,6 +2527,7 @@ font-family: &quot;Arial Rounded MT&quot;;
             <height>30</height>
            </size>
           </property>
+<<<<<<< HEAD
           <property name="text">
            <string>Statut :</string>
           </property>
@@ -2110,10 +2696,36 @@ font: 700 italic 16pt &quot;Segoe UI&quot;;</string>
           </property>
           <property name="text">
            <string>autre solution</string>
+=======
+          <property name="styleSheet">
+           <string notr="true">color: rgb(31, 143, 236);
+</string>
+          </property>
+          <property name="text">
+           <string>ID</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_SuppID">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnSupprimer">
+          <property name="text">
+           <string>Supprimer</string>
+>>>>>>> origin/gestion-de-fournisseur
           </property>
          </widget>
         </item>
        </layout>
+<<<<<<< HEAD
 >>>>>>> origin/gestion-de-véhicules
 =======
           <width>889</width>
@@ -2134,22 +2746,50 @@ font: 700 italic 16pt &quot;Segoe UI&quot;;</string>
 <<<<<<< HEAD
 =======
 >>>>>>> origin/gestionetablissement
+=======
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Page</string>
+     </attribute>
+     <widget class="QTableView" name="tableView_Historique">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>11</y>
+        <width>1091</width>
+        <height>741</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+>>>>>>> origin/gestion-de-fournisseur
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
 <<<<<<< HEAD
+<<<<<<< HEAD
      <width>998</width>
 =======
      <width>933</width>
 >>>>>>> origin/gestionetablissement
      <height>26</height>
+=======
+     <width>1176</width>
+     <height>25</height>
+>>>>>>> origin/gestion-de-fournisseur
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
  </widget>
@@ -2166,6 +2806,8 @@ font: 700 italic 16pt &quot;Segoe UI&quot;;</string>
 >>>>>>> origin/gestion-de-véhicules
 =======
 >>>>>>> origin/gestionetablissement
+=======
+>>>>>>> origin/gestion-de-fournisseur
  <resources/>
  <connections/>
 </ui>

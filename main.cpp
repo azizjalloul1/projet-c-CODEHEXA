@@ -1,15 +1,19 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "connexion.h"
 #include "loginwidget.h"
 #include "accueil.h"
 #include <QApplication>
 #include <QMessageBox>
 =======
+=======
+>>>>>>> origin/gestion-de-fournisseur
 #include "mainwindow.h"
 #include "connexion.h"
 #include <QApplication>
 #include <QMessageBox>
+<<<<<<< HEAD
 #include <QGeoCoordinate>
 #include <QMetaType>
 #include <QQmlApplicationEngine>
@@ -89,4 +93,22 @@ int main(int argc, char *argv[]) {
 
     return a.exec();
 >>>>>>> origin/gestionetablissement
+=======
+
+int main(int argc, char *argv[]) {
+    QApplication a(argc, argv);
+
+    //  Connexion à la base de données
+    Connexion c;
+    bool test = c.ouvrirConnexion();
+
+    if (test) {
+        MainWindow w;  // Création de la fenêtre principale
+        w.show();      //  Affichage de la fenêtre principale
+        return a.exec();
+    } else {
+        QMessageBox::critical(nullptr, "Erreur", "Échec de la connexion à la base de données !");
+        return -1;
+    }
+>>>>>>> origin/gestion-de-fournisseur
 }
