@@ -41,10 +41,13 @@ MainWindowstock::MainWindowstock(QWidget *parent)
 
 }
 
+<<<<<<< HEAD
 void MainWindowstock::setAccueil(Accueil *accueilWindow) {
     this->accueil = accueilWindow;
 }
 
+=======
+>>>>>>> origin/gestion_stock
 void MainWindowstock::onTabChanged(int index) {
     // Assuming your "Affichage" tab has index 0 (change this if needed)
     if (index == 1) {

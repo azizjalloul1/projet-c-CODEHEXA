@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "connexion.h"
 
 <<<<<<< HEAD
@@ -91,6 +92,21 @@ bool Connection::createconnect()
     db.setDatabaseName("PROJET_QT");//inserer le nom de la source de données
     db.setUserName("youssef");//inserer nom de l'utilisateur
     db.setPassword("youssef");//inserer mot de passe de cet utilisateur
+=======
+#include "connexion.h"
+
+Connexion::Connexion()
+{
+
+}
+
+bool Connexion::createconnect()
+{bool test=false;
+    QSqlDatabase db = QSqlDatabase::addDatabase("QODBC");
+    db.setDatabaseName("PROJET");//inserer le nom de la source de données
+    db.setUserName("aziz");//inserer nom de l'utilisateur
+    db.setPassword("0000");//inserer mot de passe de cet utilisateur
+>>>>>>> origin/gestion_stock
 
     if (db.open())
         test=true;
@@ -100,6 +116,7 @@ bool Connection::createconnect()
 
 
     return  test;
+<<<<<<< HEAD
 >>>>>>> origin/gestion-de-véhicules
 =======
 bool Connection::createconnect()
@@ -137,3 +154,6 @@ QString Connexion::getLastError() const
     return db.lastError().text();
 }
 >>>>>>> origin/gestionexamen
+=======
+}
+>>>>>>> origin/gestion_stock

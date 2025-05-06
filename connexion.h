@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> origin/gestion-de-fournisseur
 #ifndef CONNEXION_H
@@ -51,20 +52,30 @@ private:
 =======
 =======
 >>>>>>> origin/gestionetablissement
+=======
+>>>>>>> origin/gestion_stock
 #ifndef CONNECTION_H
 #define CONNECTION_H
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 
+<<<<<<< HEAD
 class Connection
 {
 public:
     Connection();
+=======
+class Connexion
+{
+public:
+    Connexion();
+>>>>>>> origin/gestion_stock
     bool createconnect();
 };
 
 #endif // CONNECTION_H
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> origin/gestion-de-véhicules
 =======
@@ -81,3 +92,5 @@ private:
 =======
 #endif
 >>>>>>> origin/gestionexamen
+=======
+>>>>>>> origin/gestion_stock
