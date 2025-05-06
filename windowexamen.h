@@ -8,18 +8,18 @@
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class MainWindow;
+class WindowExamen;
 }
 
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
+class WindowExamen : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit WindowExamen(QWidget *parent = nullptr);
+    ~WindowExamen();
 
 
 private slots:
@@ -51,12 +51,11 @@ private slots:
 
     QPixmap QRCodeImage(const QString &text);
     void QRCode();
- void lireDonneesArduino();
+    void lireDonneesArduino();
     void ValeurSuperieuregaz(int valeurGaz);
-    //void lireDonneesArduino();
 
 private:
-    Ui::MainWindow *ui;
+    Ui::WindowExamen *ui;
     QChartView *chartView = nullptr;
     QSerialPort *arduino;
 

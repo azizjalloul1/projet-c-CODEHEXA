@@ -1,5 +1,6 @@
 #include "windowexamen.h"
 #include "ui_windowexamen.h"
+
 #include "examen.h"
 #include <QMessageBox>
 #include <QDebug>
@@ -26,9 +27,9 @@
 
 
 
-MainWindow::MainWindow(QWidget *parent)
+WindowExamen::WindowExamen(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::WindowExamen)
 {
     ui->setupUi(this);
 
@@ -56,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent)
     arduino->setFlowControl(QSerialPort::NoFlowControl);
 
     if (arduino->open(QIODevice::ReadOnly)) {
-        connect(arduino, &QSerialPort::readyRead, this, &MainWindow::lireDonneesArduino);
+        connect(arduino, &QSerialPort::readyRead, this, &WindowExamen::lireDonneesArduino);
         qDebug() << " Arduino connecté.";
     } else {
         qDebug() << " Erreur de connexion Arduino:" << arduino->errorString();
@@ -71,41 +72,41 @@ MainWindow::MainWindow(QWidget *parent)
     afficherExamens();
 
 
-    connect(ui->ajouter, &QPushButton::clicked, this, &MainWindow::ajouterExamen);
+    connect(ui->ajouter, &QPushButton::clicked, this, &WindowExamen::ajouterExamen);
 
 
-    connect(ui->modifier, &QPushButton::clicked, this, &MainWindow::modifierExamen);
-    connect(ui->codemod, QOverload<int>::of(&QComboBox::currentIndexChanged),this, &MainWindow::modif);
+    connect(ui->modifier, &QPushButton::clicked, this, &WindowExamen::modifierExamen);
+    connect(ui->codemod, QOverload<int>::of(&QComboBox::currentIndexChanged),this, &WindowExamen::modif);
 
-    connect(ui->supprimer, &QPushButton::clicked, this, &MainWindow::supprimerExamen);
-
-
-    connect(ui->exporter, &QPushButton::clicked, this, &MainWindow::ExporterPDF);
-
-    connect(ui->upload, &QPushButton::clicked, this, &MainWindow::uploadPDF);
-
-    connect(ui->recherche, &QLineEdit::textChanged, this, &MainWindow::CHERCHER);
-
-    connect(ui->stat, &QPushButton::clicked, this, &MainWindow::Statistiques);
+    connect(ui->supprimer, &QPushButton::clicked, this, &WindowExamen::supprimerExamen);
 
 
-    connect(ui->codebar, &QPushButton::clicked, this, &MainWindow::QRCode);
+    connect(ui->exporter, &QPushButton::clicked, this, &WindowExamen::ExporterPDF);
 
-    connect(ui->triComboBox,QOverload<int>::of(&QComboBox::currentIndexChanged),this,&MainWindow::TriCombo);
+    connect(ui->upload, &QPushButton::clicked, this, &WindowExamen::uploadPDF);
+
+    connect(ui->recherche, &QLineEdit::textChanged, this, &WindowExamen::CHERCHER);
+
+    connect(ui->stat, &QPushButton::clicked, this, &WindowExamen::Statistiques);
+
+
+    connect(ui->codebar, &QPushButton::clicked, this, &WindowExamen::QRCode);
+
+    connect(ui->triComboBox,QOverload<int>::of(&QComboBox::currentIndexChanged),this,&WindowExamen::TriCombo);
 
 
 
 
 }
 
-MainWindow::~MainWindow()
+WindowExamen::~WindowExamen()
 {
     delete ui;
 }
 
 //AFFICHER
 
-void MainWindow::afficherExamens()
+void WindowExamen::afficherExamens()
 {
     QList<Examen> examens = Examen::afficherExamens();
     ui->tabaffiche->setRowCount(0);
@@ -127,7 +128,7 @@ void MainWindow::afficherExamens()
 }
 
 //AJOUTER
-void MainWindow::ajouterExamen()
+void WindowExamen::ajouterExamen()
 {
     QString code = ui->codeajout->text().trimmed();
     QString matiere = ui->matajout->currentText();
@@ -190,7 +191,7 @@ void MainWindow::ajouterExamen()
 
 
 //MODIFIER
-void MainWindow::remplirCombo()
+void WindowExamen::remplirCombo()
 {
     ui->codemod->clear();
     QList<Examen> examens = Examen::afficherExamens();
@@ -198,7 +199,7 @@ void MainWindow::remplirCombo()
         ui->codemod->addItem(exam.getCodeExamen());
     }
 }
-void MainWindow::modif(int i)
+void WindowExamen::modif(int i)
 {
     QString code = ui->codemod->itemText(i);
 
@@ -223,7 +224,7 @@ void MainWindow::modif(int i)
         qDebug() << "Erreur lors de la récupération des données : " << query.lastError().text();
     }
 }
-void MainWindow::modifierExamen() {
+void WindowExamen::modifierExamen() {
     QString code = ui->codemod->currentText().trimmed();
     QString matiere = ui->matmod->currentText().trimmed();
     QString niveau = ui->nivmod->currentText().trimmed();
@@ -280,7 +281,7 @@ void MainWindow::modifierExamen() {
 
 
 //SUPPRIMER
-void MainWindow::supprimerExamen()
+void WindowExamen::supprimerExamen()
 {
     QString code = ui->codesup->text().trimmed();
 
@@ -336,7 +337,7 @@ void MainWindow::supprimerExamen()
 
 
 //PDF
-void MainWindow::ExporterPDF() {
+void WindowExamen::ExporterPDF() {
     QString fileName = QFileDialog::getSaveFileName(this, "Exporter en PDF", "", "Fichier PDF (*.pdf)");
     if (fileName.isEmpty()) return;
 
@@ -367,7 +368,7 @@ void MainWindow::ExporterPDF() {
                          "footer { text-align: center; font-size: 10px; color: #888; margin-top: 30px; }"
                          "</style></head><body>";
 
-    pdfContent += "<img src=\"C:\\2A12\\2\\projet c++\\Gstion-examen\\img.png\" width=\"80\" style=\"float: left; margin-top: 10px; margin-left: 10px;\" />";
+    pdfContent += "<img src=\"C:\\2A12\\2\\projet c++\\Gstion-examen\\img.png\" width=\"80\" style=\"float: left; margin-top: -20px; margin-left: 10px;\" />";
     pdfContent += "<h1>Liste des Examens</h1>";
 
     pdfContent += "<table><tr>"
@@ -401,7 +402,7 @@ void MainWindow::ExporterPDF() {
 
 
 //TRI
-void MainWindow::TRIC()
+void WindowExamen::TRIC()
 {
     int rowCount = ui->tabaffiche->rowCount();
 
@@ -431,7 +432,7 @@ void MainWindow::TRIC()
     }
 }
 
-void MainWindow::TRID()
+void WindowExamen::TRID()
 {
     int rowCount = ui->tabaffiche->rowCount();
 
@@ -461,7 +462,7 @@ void MainWindow::TRID()
 }
 
 
-void MainWindow::TRIDATE()
+void WindowExamen::TRIDATE()
 {
     int rowCount = ui->tabaffiche->rowCount();
 
@@ -484,7 +485,7 @@ void MainWindow::TRIDATE()
             ui->tabaffiche->setItem(i, j, rows[i][j]);
 }
 
-void MainWindow::TriCombo(int i) {
+void WindowExamen::TriCombo(int i) {
     switch (i) {
     case 0: TRIC(); break;
     case 1: TRID(); break;
@@ -497,7 +498,7 @@ void MainWindow::TriCombo(int i) {
 
 
 //RECHERCHE
-void MainWindow::CHERCHER(const QString &texte)
+void WindowExamen::CHERCHER(const QString &texte)
 {
     for (int row = 0; row < ui->tabaffiche->rowCount(); ++row) {
         QTableWidgetItem *itemId = ui->tabaffiche->item(row, 0);
@@ -516,7 +517,7 @@ void MainWindow::CHERCHER(const QString &texte)
 
 
 //STAT
-void MainWindow::Statistiques() {
+void WindowExamen::Statistiques() {
     QSqlQuery query("SELECT NIVEAU, SUM(QUANTITE) FROM EXAMEN GROUP BY NIVEAU");
 
     QPieSeries *series = new QPieSeries();
@@ -560,7 +561,7 @@ void MainWindow::Statistiques() {
 
 
 //UPLOAD PDF
-void MainWindow::uploadPDF()
+void WindowExamen::uploadPDF()
 {
     QString filePath = QFileDialog::getOpenFileName(this, "Sélectionner un fichier PDF", "", "Fichiers PDF (*.pdf)");
 
@@ -574,7 +575,7 @@ void MainWindow::uploadPDF()
 
 
 //QRCODE
-QPixmap MainWindow::QRCodeImage(const QString &text)
+QPixmap WindowExamen::QRCodeImage(const QString &text)
 {
     qDebug() << "Texte à encoder dans le QR:" << text;
 
@@ -606,7 +607,7 @@ QPixmap MainWindow::QRCodeImage(const QString &text)
 
 
 
-void MainWindow::QRCode()
+void WindowExamen::QRCode()
 {
     QString fileName = QFileDialog::getSaveFileName(this, "Exporter le PDF avec les QR codes", "", "Fichier PDF (*.pdf)");
     if (fileName.isEmpty()) return;
@@ -666,7 +667,7 @@ void MainWindow::QRCode()
 }
 
 //ALERTE
-void MainWindow::ValeurSuperieuregaz(int valeurGaz) {
+void WindowExamen::ValeurSuperieuregaz(int valeurGaz) {
     qDebug() << " Valeur reçue : " << valeurGaz;
 
     int etat = (valeurGaz > 400) ? 1 : 0;
@@ -729,7 +730,7 @@ void MainWindow::ValeurSuperieuregaz(int valeurGaz) {
 }
 
 
-void MainWindow::lireDonneesArduino()
+void WindowExamen::lireDonneesArduino()
 {
     QByteArray data = arduino->readAll();
     QString ligne = QString::fromUtf8(data).trimmed();
