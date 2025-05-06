@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAINWINDOWE_H
+#define MAINWINDOWE_H
 
 #include <QMainWindow>
 #include <QMessageBox>
@@ -13,17 +13,17 @@
 #include <QGeoCoordinate>
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class MainWindow;
+class MainWindowE;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
+class MainWindowE : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit MainWindowE(QWidget *parent = nullptr);
+    ~MainWindowE();
 
 private slots:
     void on_addButton_clicked();
@@ -43,7 +43,7 @@ private slots:
 
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindowE *ui;
     Etablissement etablissement;
     void afficherCarteEtablissements();
     void afficherEtablissement();
@@ -56,4 +56,4 @@ private:
 
 };
 
-#endif // MAINWINDOW_H
+#endif // MAINWINDOWE_H

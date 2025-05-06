@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "mainwindowE.h"
+#include "ui_mainwindowE.h"
 #include <QMessageBox>
 #include <QSqlQueryModel>
 #include <QFileDialog>
@@ -18,8 +18,8 @@
 #include "PathWindow.h"
 #include <QGeoCoordinate>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindowE::MainWindowE(QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::MainWindowE) {
     ui->setupUi(this);
     currentPosition = QGeoCoordinate(36.899, 10.19); // ✔️ ESPRIT Petite Ariana
 
@@ -124,32 +124,32 @@ MainWindow::MainWindow(QWidget *parent)
     ui->mod_adresse->setValidator(lettreValidator);
 
     // Connexions des boutons
-    connect(ui->ajout_button, &QPushButton::clicked, this, &MainWindow::on_addButton_clicked);
-    connect(ui->SuppButton, &QPushButton::clicked, this, &MainWindow::on_SuppButton_clicked);
-    connect(ui->mod_button, &QPushButton::clicked, this, &MainWindow::on_mod_button_clicked);
-    connect(ui->aff_pdf, &QPushButton::clicked, this, &MainWindow::on_aff_pdf_clicked);
-    connect(ui->aff_rech, &QLineEdit::textChanged, this, &MainWindow::on_aff_rech_clicked);
-    connect(ui->triComboBox, &QComboBox::currentTextChanged, this, &MainWindow::on_triComboBox_currentTextChanged);
-    connect(ui->mod_id, &QLineEdit::textChanged, this, &MainWindow::remplirChampsModification);
-    connect(ui->btn_stats, &QPushButton::clicked, this, &MainWindow::on_btn_stats_clicked);
+    connect(ui->ajout_button, &QPushButton::clicked, this, &MainWindowE::on_addButton_clicked);
+    connect(ui->SuppButton, &QPushButton::clicked, this, &MainWindowE::on_SuppButton_clicked);
+    connect(ui->mod_button, &QPushButton::clicked, this, &MainWindowE::on_mod_button_clicked);
+    connect(ui->aff_pdf, &QPushButton::clicked, this, &MainWindowE::on_aff_pdf_clicked);
+    connect(ui->aff_rech, &QLineEdit::textChanged, this, &MainWindowE::on_aff_rech_clicked);
+    connect(ui->triComboBox, &QComboBox::currentTextChanged, this, &MainWindowE::on_triComboBox_currentTextChanged);
+    connect(ui->mod_id, &QLineEdit::textChanged, this, &MainWindowE::remplirChampsModification);
+    connect(ui->btn_stats, &QPushButton::clicked, this, &MainWindowE::on_btn_stats_clicked);
     connect(ui->tableView_Etablissements, &QTableView::clicked,
-            this, &MainWindow::on_tableView_Etablissements_clicked);
-    connect(ui->btn_path, &QPushButton::clicked, this, &MainWindow::on_btn_path_clicked);
+            this, &MainWindowE::on_tableView_Etablissements_clicked);
+    connect(ui->btn_path, &QPushButton::clicked, this, &MainWindowE::on_btn_path_clicked);
 
 
 
 }
 
-MainWindow::~MainWindow() {
+MainWindowE::~MainWindowE() {
     delete ui;
 }
-void MainWindow::afficherEtablissement() {
+void MainWindowE::afficherEtablissement() {
     QSqlQueryModel *model = new QSqlQueryModel(this);
     model->setQuery("SELECT ID_E, NOM, ADRESSE, CONTACT, TYPE_ETABLISSEMENT, LATITUDE, LONGITUDE FROM ETABLISSEMENT");
     ui->tableView_Etablissements->setModel(model);
 }
 
-void MainWindow::afficherCarteEtablissements() {
+void MainWindowE::afficherCarteEtablissements() {
     QList<Etablissement> etablissements = Etablissement::afficherEtablissement();
 
     QVariantList markers;
@@ -168,7 +168,7 @@ void MainWindow::afficherCarteEtablissements() {
 }
 
 
-void MainWindow::clearInputs() {
+void MainWindowE::clearInputs() {
     ui->ajout_id->clear();
     ui->ajout_nom->clear();
     ui->ajout_adresse->clear();
@@ -187,7 +187,7 @@ void MainWindow::clearInputs() {
     ui->aff_rech->clear();
 }
 
-void MainWindow::on_addButton_clicked() {
+void MainWindowE::on_addButton_clicked() {
     QString id_E = ui->ajout_id->text().trimmed();
     QString nom = ui->ajout_nom->text().trimmed();
     QString adresse = ui->ajout_adresse->text().trimmed();
@@ -238,7 +238,7 @@ void MainWindow::on_addButton_clicked() {
     }
 }
 
-void MainWindow::on_mod_button_clicked() {
+void MainWindowE::on_mod_button_clicked() {
     QString id_E = ui->mod_id->text().trimmed();
     QString nom = ui->mod_nom->text().trimmed();
     QString adresse = ui->mod_adresse->text().trimmed();
@@ -295,7 +295,7 @@ void MainWindow::on_mod_button_clicked() {
 }
 
 
-void MainWindow::remplirChampsModification(const QString& id_E) {
+void MainWindowE::remplirChampsModification(const QString& id_E) {
     QSqlQuery query;
     query.prepare("SELECT NOM, ADRESSE, CONTACT, TYPE_ETABLISSEMENT FROM ETABLISSEMENT WHERE ID_E = :id_E");
     query.bindValue(":id_E", id_E);
@@ -317,7 +317,7 @@ void MainWindow::remplirChampsModification(const QString& id_E) {
         ui->mod_longitude->clear();
     }
 }
-void MainWindow::on_aff_rech_clicked() {
+void MainWindowE::on_aff_rech_clicked() {
     QString rech_nom = ui->aff_rech->text().trimmed();
     QSqlQueryModel *model = new QSqlQueryModel(this);
     QSqlQuery query;
@@ -348,7 +348,7 @@ void MainWindow::on_aff_rech_clicked() {
 }
 
 
-void MainWindow::on_SuppButton_clicked() {
+void MainWindowE::on_SuppButton_clicked() {
     QString id_E = ui->SuppID->text().trimmed();
     if (id_E.isEmpty()) {
         QMessageBox::warning(this, "Erreur", "Veuillez entrer un ID.");
@@ -363,7 +363,7 @@ void MainWindow::on_SuppButton_clicked() {
         QMessageBox::critical(this, "Erreur", "Suppression échouée !");
     }
 }
-void MainWindow::on_aff_pdf_clicked() {
+void MainWindowE::on_aff_pdf_clicked() {
     QString fileName = QFileDialog::getSaveFileName(this, "Exporter en PDF", "", "Fichier PDF (*.pdf)");
     if (fileName.isEmpty()) return;
 
@@ -440,7 +440,7 @@ void MainWindow::on_aff_pdf_clicked() {
 }
 
 
-void MainWindow::on_triComboBox_currentTextChanged(const QString &text) {
+void MainWindowE::on_triComboBox_currentTextChanged(const QString &text) {
     QSqlQueryModel *model = new QSqlQueryModel(this);
     QSqlQuery query;
 
@@ -459,11 +459,11 @@ void MainWindow::on_triComboBox_currentTextChanged(const QString &text) {
 }
 
 
-void MainWindow::on_btn_stats_clicked() {
+void MainWindowE::on_btn_stats_clicked() {
     StatsWindow *stats = new StatsWindow(this);
     stats->exec();
 }
-void MainWindow::on_tableView_Etablissements_clicked(const QModelIndex &index) {
+void MainWindowE::on_tableView_Etablissements_clicked(const QModelIndex &index) {
     int row = index.row();
 
     QString nom = ui->tableView_Etablissements->model()->index(row, 1).data().toString();
@@ -491,7 +491,7 @@ void MainWindow::on_tableView_Etablissements_clicked(const QModelIndex &index) {
         QMessageBox::warning(this, "Erreur", "Impossible de convertir les coordonnées.");
     }
 }
-void MainWindow::calculerCheminVersEtablissement(double destLat, double destLon) {
+void MainWindowE::calculerCheminVersEtablissement(double destLat, double destLon) {
     if (!currentPosition.isValid()) {
         QMessageBox::warning(this, "Erreur", "Position actuelle invalide.");
         return;
@@ -518,13 +518,13 @@ void MainWindow::calculerCheminVersEtablissement(double destLat, double destLon)
         );
 }
 
-void MainWindow::mettreAJourPositionUtilisateur(const QGeoPositionInfo &info) {
+void MainWindowE::mettreAJourPositionUtilisateur(const QGeoPositionInfo &info) {
     if (info.isValid()) {
         currentPosition = info.coordinate();
         qDebug() << "Position actuelle mise à jour :" << currentPosition;
     }
 }
-Etablissement MainWindow::getSelectedEtablissement() {
+Etablissement MainWindowE::getSelectedEtablissement() {
     QModelIndex index = ui->tableView_Etablissements->currentIndex();
     if (!index.isValid()) return Etablissement();
 
@@ -539,7 +539,7 @@ Etablissement MainWindow::getSelectedEtablissement() {
 
     return Etablissement(id, nom, adresse, contact, type, lat, lon);
 }
-void MainWindow::on_btn_path_clicked()
+void MainWindowE::on_btn_path_clicked()
 {
     Etablissement selected = getSelectedEtablissement();
 

@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "mainwindowE.h"
 #include "connexion.h"
 #include <QApplication>
 #include <QMessageBox>
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     Connection c;
     bool test = c.createconnect();
 
-    MainWindow w;
+    MainWindowE w;
     if (test) {
         w.show();
         QMessageBox::information(nullptr, QObject::tr("Database ouverte"),

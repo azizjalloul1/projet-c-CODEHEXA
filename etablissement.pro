@@ -18,19 +18,19 @@ SOURCES += \
     connexion.cpp \
     etablissement.cpp \
     main.cpp \
-    mainwindow.cpp \
+    mainwindowE.cpp \
     pathwindow.cpp \
     statswindow.cpp
 
 HEADERS += \
     connexion.h \
     etablissement.h \
-    mainwindow.h \
+    mainwindowE.h \
     pathwindow.h \
     statswindow.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindowE.ui
 
 
 qnx: target.path = /tmp/$${TARGET}/bin
