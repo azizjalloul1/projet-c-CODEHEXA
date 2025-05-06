@@ -1,0 +1,31 @@
+symptome;composant;cause;solution1;solution2;solution3;id
+Ne démarre pas;Batterie;Déchargée;Recharger;Remplacer;Appeler un mécano;101
+Fumée blanche;Joint de culasse;Fuite;Changer le joint;Vérifier le moteur;Aller au garage;102
+Moteur cale;Filtre à carburant;Encrassé;Nettoyer le filtre;Remplacer le filtre;Faire une vidange;103
+Bruits étranges;Transmission;Usure;Faire un diagnostic;Changer les pièces;Lubrifier la transmission;104
+Surchauffe;Radiateur;Bouché;Nettoyer le radiateur;Changer le liquide;Remplacer le radiateur;105
+Vibration volant;Roues;Mauvais équilibrage;Faire un équilibrage;Changer pneus;Vérifier suspension;106
+Freins mous;Liquide de frein;Fuite;Ajouter du liquide;Purger le système;Changer le maître-cylindre;107
+Perte de puissance;Turbo;Défaillance;Nettoyer le turbo;Vérifier durites;Remplacer le turbo;108
+Démarrage lent;Bougies;Usées;Changer les bougies;Nettoyer les bougies;Vérifier l’allumage;109
+Voyant moteur;Capteur oxygène;Défectueux;Scanner le moteur;Changer le capteur;Faire un entretien complet;110
+Fuite d'huile;Carter moteur;Fissuré;Changer le carter;Ajouter de l’huile;Aller au garage;111
+Clim ne fonctionne pas;Compresseur;Cassé;Changer compresseur;Vérifier gaz;Faire recharger clim;112
+Pédale d’embrayage molle;Embrayage;Usé;Changer disque;Vérifier câble;Remplacer tout le kit;113
+Direction dure;Pompe de direction;Manque d’huile;Remplir huile;Changer pompe;Vérifier crémaillère;114
+Batterie se décharge vite;Alternateur;HS;Changer alternateur;Contrôler courroie;Faire un test batterie;115
+Témoin ABS allumé;Capteur ABS;Déconnecté ou cassé;Vérifier capteur;Remplacer capteur;Nettoyer connecteurs;116
+Consommation excessive;Injection;Problème d'injecteurs;Nettoyer injecteurs;Changer injecteurs;Vérifier ECU;117
+Éclairage faible;Alternateur;Charge insuffisante;Changer alternateur;Vérifier courroie;Contrôler tension batterie;118
+Essuie-glaces bloqués;Moteur essuie-glaces;Moteur HS;Changer moteur;Vérifier relais;Remplacer fusible;119
+Voiture tire à droite;Géométrie;Mauvais alignement;Faire un parallélisme;Vérifier pression pneus;Vérifier suspension;120
+Fuite de liquide de refroidissement;Durite;Percée;Changer durite;Ajouter liquide;Vérifier colliers;121
+Bruits de freinage;Plaquettes;Usure;Changer plaquettes;Nettoyer disques;Contrôler étriers;122
+Odeur d'essence;Conduit carburant;Fuite;Localiser fuite;Remplacer conduit;Vérifier serrage;123
+Ventilation ne souffle pas;Résistance soufflerie;Défaillante;Changer résistance;Vérifier connectique;Changer moteur ventilation;124
+Boîte de vitesses difficile;Embrayage;Défaillant;Changer embrayage;Purger système hydraulique;Contrôler boîte;125
+Ralenti instable;Capteur ralenti;Défectueux;Nettoyer papillon;Changer capteur;Vérifier prise d'air;126
+Clignotants rapides;Ampoule;Grillée;Changer ampoule;Vérifier fusible;Changer relais;127
+Freins qui grincent;Disques de frein;Usés;Changer disques;Nettoyer surface;Vérifier plaquettes;128
+Vitre électrique bloquée;Moteur vitre;Cassé;Changer moteur;Réinitialiser système;Vérifier interrupteur;129
+Code défaut P0171;Mélange air/carburant;Pauvre;Changer capteur MAF;Vérifier durites;Nettoyer papillon;130

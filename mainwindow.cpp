@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
      connect(ui->triButton, &QPushButton::clicked, this, &MainWindow::trierParSalaire);
      connect(ui->valider, &QPushButton::clicked, this, &MainWindow::validerMotDePasse);
      connect(ui->id_valide, &QPushButton::clicked, this, &MainWindow::verifierIdExistant);
-     connect(ui->mod_bouton, &QPushButton::clicked, this, &MainWindow::modifierEmploye);
+     connect(ui->mod_bouton_emp, &QPushButton::clicked, this, &MainWindow::modifierEmploye);
      connect(ui->searchLineEdit, &QLineEdit::textChanged, this, &MainWindow::rechercherEmploye);
 
     afficherEmployes();

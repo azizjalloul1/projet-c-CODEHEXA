@@ -116,7 +116,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tabAjout">
        <property name="maximumSize">
@@ -659,7 +659,7 @@ font-family: &quot;Arial Rounded MT&quot;;
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="mod_bouton">
+          <widget class="QPushButton" name="mod_bouton_emp">
            <property name="text">
             <string>Modifier</string>
            </property>

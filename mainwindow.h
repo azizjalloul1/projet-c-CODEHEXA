@@ -27,7 +27,7 @@
 #include <QProcess>
 
 // Ne pas inclure accueil.h ici
-class Accueil; // 🔧 Solution
+class Accueil;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

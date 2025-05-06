@@ -1,11 +1,15 @@
 release/accueil.o
 release/connexion.o
 release/employee.o
+release/vehicules.o
 release/loginwidget.o
 release/main.o
 release/mainwindow.o
+release/mainwindowv.o
 release/mdprestwindow.o
+release/qrc_qrc.o
 release/moc_accueil.o
-release/moc_loginwidget.o
 release/moc_mainwindow.o
+release/moc_mainwindowv.o
+release/moc_loginwidget.o
 release/moc_mdprestwindow.o

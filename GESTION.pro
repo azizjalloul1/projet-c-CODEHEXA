@@ -4,6 +4,13 @@ QT += charts
 QT += printsupport
 QT += network
 QT += serialport
+QT += quick qml
+QT += quickwidgets
+QT += quick widgets positioning location
+
+pannes_txt.files = $$PWD/pannes.txt
+pannes_txt.path = $$OUT_PWD
+INSTALLS += pannes_txt
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,26 +24,35 @@ SOURCES += \
     accueil.cpp \
     connexion.cpp \
     employee.cpp \
+    vehicules.cpp\
     loginwidget.cpp \
     main.cpp \
     mainwindow.cpp \
+    mainwindowv.cpp \
     mdprestwindow.cpp
 
 HEADERS += \
     accueil.h \
     connexion.h \
     employee.h \
-    loginwidget.h \
+    vehicules.h \
     mainwindow.h \
+    mainwindowv.h\
+    loginwidget.h \
     mdprestwindow.h
 
 FORMS += \
     MDP_rest.ui \
     accueil.ui \
     loginwidget.ui \
+    mainwindowv.ui\
     mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+ qrc.qrc
+DISTFILES +=

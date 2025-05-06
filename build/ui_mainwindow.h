@@ -81,7 +81,7 @@ public:
     QLineEdit *mod_nom;
     QLabel *label_12;
     QSpinBox *mod_salaire;
-    QPushButton *mod_bouton;
+    QPushButton *mod_bouton_emp;
     QWidget *horizontalLayoutWidget;
     QHBoxLayout *horizontalLayout_3;
     QLineEdit *mod_id;
@@ -494,10 +494,10 @@ public:
 
         verticalLayout_3->addWidget(mod_salaire);
 
-        mod_bouton = new QPushButton(verticalLayoutWidget);
-        mod_bouton->setObjectName("mod_bouton");
+        mod_bouton_emp = new QPushButton(verticalLayoutWidget);
+        mod_bouton_emp->setObjectName("mod_bouton_emp");
 
-        verticalLayout_3->addWidget(mod_bouton);
+        verticalLayout_3->addWidget(mod_bouton_emp);
 
         horizontalLayoutWidget = new QWidget(tabModification);
         horizontalLayoutWidget->setObjectName("horizontalLayoutWidget");
@@ -551,7 +551,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -600,7 +600,7 @@ public:
         label_9->setText(QCoreApplication::translate("MainWindow", "E-mail :", nullptr));
         label_11->setText(QCoreApplication::translate("MainWindow", "Nom :", nullptr));
         label_12->setText(QCoreApplication::translate("MainWindow", "Salaire :", nullptr));
-        mod_bouton->setText(QCoreApplication::translate("MainWindow", "Modifier", nullptr));
+        mod_bouton_emp->setText(QCoreApplication::translate("MainWindow", "Modifier", nullptr));
         mod_id->setPlaceholderText(QCoreApplication::translate("MainWindow", "Ins\303\251rer ID \303\240 modifier ", nullptr));
         id_valide->setText(QCoreApplication::translate("MainWindow", "valide", nullptr));
         label_10->setText(QCoreApplication::translate("MainWindow", "ID \303\240 modifier :", nullptr));
