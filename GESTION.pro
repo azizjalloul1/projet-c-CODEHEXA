@@ -4,13 +4,17 @@ QT += charts
 QT += printsupport
 QT += network
 QT += serialport
-QT += quick qml
+QT += quick
+QT += positioning
+QT += location
 QT += quickwidgets
-QT += quick widgets positioning location
+
+
 
 pannes_txt.files = $$PWD/pannes.txt
 pannes_txt.path = $$OUT_PWD
 INSTALLS += pannes_txt
+HEADERS += qrcodegen.hpp
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,24 +25,42 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    accueil.cpp \
     connexion.cpp \
     employee.cpp \
     vehicules.cpp\
+    stock.cpp \
+    examen.cpp \
+    fournisseur.cpp \
     loginwidget.cpp \
-    main.cpp \
+    main.cpp\
     mainwindow.cpp \
     mainwindowv.cpp \
-    mdprestwindow.cpp
+    mainwindowstock.cpp\
+    windowexamen.cpp \
+    mainwindowF.cpp \
+    mdprestwindow.cpp \
+    sms.cpp \
+    smtpclient.cpp \
+    accueil.cpp
 
 HEADERS += \
-    accueil.h \
     connexion.h \
     employee.h \
     vehicules.h \
+    stock.h \
+    examen.h \
+    AnimatedDialog.h \
+    CustomComboBox.h \
     mainwindow.h \
     mainwindowv.h\
+    mainwindowstock.h \
+    windowexamen.h \
     loginwidget.h \
+    accueil.h \
+    fournisseur.h \
+    mainwindowF.h \
+    sms.h \
+    smtpclient.h \
     mdprestwindow.h
 
 FORMS += \
@@ -46,6 +68,9 @@ FORMS += \
     accueil.ui \
     loginwidget.ui \
     mainwindowv.ui\
+    mainwindowstock.ui\
+    windowexamen.ui \
+    mainwindowF.ui \
     mainwindow.ui
 
 # Default rules for deployment.

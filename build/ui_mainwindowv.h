@@ -42,6 +42,8 @@ public:
     QWidget *tabAjout;
     QVBoxLayout *layoutAjout;
     QVBoxLayout *verticalLayout;
+    QHBoxLayout *horizontalLayout_3;
+    QPushButton *r3;
     QLabel *label_6;
     QLabel *label;
     QComboBox *marque;
@@ -230,6 +232,14 @@ public:
         verticalLayout = new QVBoxLayout();
         verticalLayout->setObjectName("verticalLayout");
         verticalLayout->setSizeConstraint(QLayout::SizeConstraint::SetMaximumSize);
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName("horizontalLayout_3");
+        r3 = new QPushButton(tabAjout);
+        r3->setObjectName("r3");
+        r3->setMaximumSize(QSize(70, 16777215));
+
+        horizontalLayout_3->addWidget(r3);
+
         label_6 = new QLabel(tabAjout);
         label_6->setObjectName("label_6");
         QFont font;
@@ -244,7 +254,10 @@ public:
 "             "));
         label_6->setAlignment(Qt::AlignmentFlag::AlignCenter);
 
-        verticalLayout->addWidget(label_6);
+        horizontalLayout_3->addWidget(label_6);
+
+
+        verticalLayout->addLayout(horizontalLayout_3);
 
         label = new QLabel(tabAjout);
         label->setObjectName("label");
@@ -430,7 +443,7 @@ public:
         QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
         tableWidget->setHorizontalHeaderItem(5, __qtablewidgetitem5);
         tableWidget->setObjectName("tableWidget");
-        tableWidget->setMinimumSize(QSize(0, 0));
+        tableWidget->setMinimumSize(QSize(900, 0));
         tableWidget->setMaximumSize(QSize(16777215, 16777215));
         tableWidget->setColumnCount(6);
         tableWidget->horizontalHeader()->setDefaultSectionSize(152);
@@ -439,7 +452,8 @@ public:
 
         quickWidget = new QQuickWidget(tabAffichage);
         quickWidget->setObjectName("quickWidget");
-        quickWidget->setMinimumSize(QSize(400, 0));
+        quickWidget->setMinimumSize(QSize(0, 0));
+        quickWidget->setMaximumSize(QSize(800, 16777215));
         quickWidget->setResizeMode(QQuickWidget::ResizeMode::SizeRootObjectToView);
 
         horizontalLayout_4->addWidget(quickWidget);
@@ -684,7 +698,7 @@ public:
 
         retranslateUi(MainWindowv);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindowv);
@@ -693,6 +707,7 @@ public:
     void retranslateUi(QMainWindow *MainWindowv)
     {
         MainWindowv->setWindowTitle(QCoreApplication::translate("MainWindowv", "MainWindow", nullptr));
+        r3->setText(QCoreApplication::translate("MainWindowv", "retour", nullptr));
         label_6->setText(QCoreApplication::translate("MainWindowv", "Ajouter une Vehicule", nullptr));
         label->setText(QCoreApplication::translate("MainWindowv", "Marque :", nullptr));
         marque->setItemText(0, QCoreApplication::translate("MainWindowv", "Choisir une marque", nullptr));
@@ -752,7 +767,7 @@ public:
         label_7->setText(QCoreApplication::translate("MainWindowv", "Suppression d'une vehicule", nullptr));
         matricule->setPlaceholderText(QCoreApplication::translate("MainWindowv", "Ins\303\251rer La matricule \303\240 supprimer ", nullptr));
         Supp_Button->setText(QCoreApplication::translate("MainWindowv", "Supprimer", nullptr));
-        tabWidget->setTabText(tabWidget->indexOf(tabSuppression), QCoreApplication::translate("MainWindowv", "Suppremer", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(tabSuppression), QCoreApplication::translate("MainWindowv", "Supprimer", nullptr));
         label_15->setText(QCoreApplication::translate("MainWindowv", "Modification d'une Vehicule", nullptr));
         label_10->setText(QCoreApplication::translate("MainWindowv", "Matricule \303\240 modifier :", nullptr));
         matricule1_2->setPlaceholderText(QCoreApplication::translate("MainWindowv", "Ins\303\250rer la premiere partie de matricule", nullptr));

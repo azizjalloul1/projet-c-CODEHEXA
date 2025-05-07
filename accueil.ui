@@ -113,6 +113,27 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="fournisseur">
+       <property name="text">
+        <string>Gestion des Fournisseurs</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="examen">
+       <property name="text">
+        <string>Gestion des examen</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="etablissement">
+       <property name="text">
+        <string>Gestion des Etablissement</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>

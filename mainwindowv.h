@@ -24,6 +24,7 @@ public:
 
 private slots:
 
+    void retour();
     void on_addButton_clicked();
     void on_mod_button_clicked();
     void on_matricule_valider_clicked();

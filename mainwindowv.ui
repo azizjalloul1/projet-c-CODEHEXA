@@ -122,7 +122,7 @@
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tabAjout">
        <attribute name="title">
@@ -135,30 +135,47 @@
            <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
           </property>
           <item>
-           <widget class="QLabel" name="label_6">
-            <property name="font">
-             <font>
-              <family>Arial</family>
-              <pointsize>16</pointsize>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::LayoutDirection::LeftToRight</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QPushButton" name="r3">
+              <property name="maximumSize">
+               <size>
+                <width>70</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>retour</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_6">
+              <property name="font">
+               <font>
+                <family>Arial</family>
+                <pointsize>16</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LayoutDirection::LeftToRight</enum>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">
                 font-size: 16pt;
                 font-weight: bold;
              </string>
-            </property>
-            <property name="text">
-             <string>Ajouter une Vehicule</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
-           </widget>
+              </property>
+              <property name="text">
+               <string>Ajouter une Vehicule</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <widget class="QLabel" name="label">
@@ -533,7 +550,7 @@
            <widget class="QTableWidget" name="tableWidget">
             <property name="minimumSize">
              <size>
-              <width>0</width>
+              <width>900</width>
               <height>0</height>
              </size>
             </property>
@@ -585,8 +602,14 @@
            <widget class="QQuickWidget" name="quickWidget">
             <property name="minimumSize">
              <size>
-              <width>400</width>
+              <width>0</width>
               <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>800</width>
+              <height>16777215</height>
              </size>
             </property>
             <property name="resizeMode">
@@ -619,7 +642,7 @@
       </widget>
       <widget class="QWidget" name="tabSuppression">
        <attribute name="title">
-        <string>Suppremer</string>
+        <string>Supprimer</string>
        </attribute>
        <layout class="QVBoxLayout" name="layoutsupp">
         <item>

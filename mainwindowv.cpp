@@ -21,11 +21,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QSerialPort>
-
-
-
-
-
+#include "accueil.h"
 
 MainWindowv::MainWindowv(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindowv)
@@ -89,6 +85,7 @@ MainWindowv::MainWindowv(QWidget *parent)
         qDebug() << "⚠️ Failed to open serial port:" << serial->errorString();
     }
 
+  connect(ui->r3, &QPushButton::clicked, this, &MainWindowv::retour);
 }
 
 
@@ -159,10 +156,16 @@ void MainWindowv::readFromArduino() {
 }
 
 
-
-
 MainWindowv::~MainWindowv() {
     delete ui;
+}
+
+void MainWindowv::retour()
+{
+    this->hide();           // cacher MainWindow
+    if (accueil) {
+        accueil->show();    // montrer Accueil
+    }
 }
 
 // Function to update QTableWidget

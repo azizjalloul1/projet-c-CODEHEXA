@@ -28,6 +28,9 @@ public:
     QPushButton *employee;
     QPushButton *stock;
     QPushButton *vehicule;
+    QPushButton *fournisseur;
+    QPushButton *examen;
+    QPushButton *etablissement;
 
     void setupUi(QWidget *accueil)
     {
@@ -67,6 +70,21 @@ public:
         vehicule->setObjectName("vehicule");
 
         verticalLayout_2->addWidget(vehicule);
+
+        fournisseur = new QPushButton(accueil);
+        fournisseur->setObjectName("fournisseur");
+
+        verticalLayout_2->addWidget(fournisseur);
+
+        examen = new QPushButton(accueil);
+        examen->setObjectName("examen");
+
+        verticalLayout_2->addWidget(examen);
+
+        etablissement = new QPushButton(accueil);
+        etablissement->setObjectName("etablissement");
+
+        verticalLayout_2->addWidget(etablissement);
 
 
         verticalLayout->addLayout(verticalLayout_2);
@@ -124,6 +142,9 @@ public:
         employee->setText(QCoreApplication::translate("accueil", "Gestion des employ\303\251es", nullptr));
         stock->setText(QCoreApplication::translate("accueil", "Gestion de stock ", nullptr));
         vehicule->setText(QCoreApplication::translate("accueil", "Gestion des v\303\251hicules", nullptr));
+        fournisseur->setText(QCoreApplication::translate("accueil", "Gestion des Fournisseurs", nullptr));
+        examen->setText(QCoreApplication::translate("accueil", "Gestion des examen", nullptr));
+        etablissement->setText(QCoreApplication::translate("accueil", "Gestion des Etablissement", nullptr));
     } // retranslateUi
 
 };

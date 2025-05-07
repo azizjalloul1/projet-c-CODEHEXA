@@ -19,12 +19,43 @@ Accueil::Accueil(QWidget *parent) :
 
 
     mainWindow = new MainWindow(this);
-    mainWindow->setAccueil(this);  // on donne à MainWindow l'accès à Accueil
+    mainWindow->setAccueil(this);
 
+    mainWindowv = new MainWindowv(this);
+    mainWindow->setAccueil(this);
+
+    mainWindowstock = new MainWindowstock(this);
+    mainWindowstock->setAccueil(this);
+
+    windowexam = new WindowExamen(this);
+    windowexam->setAccueil(this);
+
+    mainWindowF = new MainWindowF(this);
+    mainWindowF->setAccueil(this);
 
     connect(ui->employee, &QPushButton::clicked, this, [=]() {
         this->hide();
         mainWindow->show();
+    });
+
+    connect(ui->vehicule, &QPushButton::clicked, this, [=]() {
+        this->hide();
+        mainWindowv->show();
+    });
+
+    connect(ui->stock, &QPushButton::clicked, this, [=]() {
+        this->hide();
+        mainWindowstock->show();
+    });
+
+    connect(ui->examen, &QPushButton::clicked, this, [=]() {
+        this->hide();
+        windowexam->show();
+    });
+
+    connect(ui->fournisseur, &QPushButton::clicked, this, [=]() {
+        this->hide();
+        mainWindowF->show();
     });
 
 }
@@ -57,9 +88,11 @@ void Accueil::setUtilisateur(const QString &id, const QString &role)
     if (userRole == "Responsable") {
         ui->employee->hide();
         ui->vehicule->hide();
+        ui->etablissement->hide();
     }
     if (userRole == "Transporteur") {
         ui->employee->hide();
         ui->stock->hide();
+        ui->fournisseur->hide();
     }
 }
